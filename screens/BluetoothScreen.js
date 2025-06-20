@@ -42,10 +42,13 @@ const BluetoothScreen = () => {
         return;
       }
 
-      if (device?.name && !devices.find(d => d.id === device.id)) {
-        console.log('Trouvé:', device.name, device.id);
-        setDevices((prev) => [...prev, device]);
-      }
+    // Vérifie si cest la bonne adresse mac, a changer!!!!!!!!!!!!!!!!!!!!
+    if (device?.id === 'C8:D5:62:67:18:D9' && !devices.find(d => d.id === device.id)) {
+      console.log('Microcontrôleur trouvé:', device.name || '(sans nom)', device.id);
+      setDevices([device]);
+      manager.stopDeviceScan(); // stop qd on trouve
+      setLoading(false);
+    }
     });
 
     setTimeout(() => {
@@ -59,7 +62,7 @@ const BluetoothScreen = () => {
       const connected = await manager.connectToDevice(device.id);
       await connected.discoverAllServicesAndCharacteristics();
       setConnectedDevice(connected);
-      console.log('Connecté à : ', connected.name);
+      console.log('Connecté à : ', connected.name || '(aucun nom)');
 
       connected.monitorCharacteristicForService(
         SERVICE_UUID,
@@ -77,7 +80,7 @@ const BluetoothScreen = () => {
         }
       );
 
-      Alert.alert('Connecté', `Périphérique: ${connected.name}`);
+      Alert.alert('Connecté', `Périphérique: ${connected.name || '(aucun nom)'}`);
     } catch (err) {
       console.error('Erreur connexion:', err);
       Alert.alert('Erreur', 'Impossible de se connecter au ');
@@ -85,9 +88,7 @@ const BluetoothScreen = () => {
   };
 
   return (
-    // <SafeAreaView style={styles.safeContainer}>
     <View style={styles.container}>
-      {/* Animation background */}
       <LottieView
         source={require('../assets/animation/backgroundWelcomeScreen.json')}
         autoPlay
@@ -106,11 +107,16 @@ const BluetoothScreen = () => {
 
       <FlatList
         data={devices}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${item.id || 'inconnu'}-${index}`}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.device} onPress={() => connectToDevice(item)}>
-            <Text style={styles.deviceName}>{item.name}</Text>
-            <Text style={styles.deviceId}>{item.id}</Text>
+            <Text style={styles.deviceName}>Nom : {item.name || 'riennnnnnnnnnnnnn'}</Text>
+            <Text style={styles.deviceId}>Adresse mac : {item.id}</Text>
+            <Text style={styles.deviceId}>puissance signal (RSSI) : {item.rssi ?? 'noooo'}</Text>
+            {/* plus cest proche de 0, plus le signal est bon */}
+            <Text style={styles.deviceId}>Nom local?? : {item.localName || 'Nooooo'}</Text>
+            {/* <Text style={styles.deviceId}>Services : {item.serviceUUIDs?.join(', ') || 'Nononononono'}</Text> */}
+            {/* <Text style={styles.deviceId}>Manufacturer data : {item.manufacturerData || 'Nooooooooooon'}</Text> */}
           </TouchableOpacity>
         )}
       />
@@ -119,7 +125,6 @@ const BluetoothScreen = () => {
         <Button title="Rescanner" onPress={scanForDevices} color="#007acc" />
       </View>
     </View>
-    // </SafeAreaView>
   );
 };
 

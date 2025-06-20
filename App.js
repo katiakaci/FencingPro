@@ -1,20 +1,46 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function App() {
+import BienvenueScreen from './screens/BienvenueScreen';
+import SettingsScreen from './screens/SettingsScreen';
+import NameScreen from './screens/NameScreen';
+import AccueilScreen from './screens/AccueilScreen';
+import HistoriqueScreen from './screens/HistoriqueScreen';
+import BluetoothScreen from './screens/BluetoothScreen';
+
+import { LightColorProvider } from './context/LightColorContext';
+import { ModeProvider } from './context/ModeContext';
+
+const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+function MainDrawer() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Drawer.Navigator>
+      <Drawer.Screen name="Accueil" component={AccueilScreen} />
+      <Drawer.Screen name="Joueur 1" component={NameScreen} />
+      <Drawer.Screen name="Bluetooth" component={BluetoothScreen} />
+      <Drawer.Screen name="Historique" component={HistoriqueScreen} />
+      <Drawer.Screen name="Réglages" component={SettingsScreen} />
+    </Drawer.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  return (
+    <ModeProvider>
+      <LightColorProvider>
+
+
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
+            <Stack.Screen name="Main" component={MainDrawer} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </LightColorProvider>
+    </ModeProvider>
+  );
+}

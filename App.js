@@ -12,6 +12,7 @@ import BluetoothScreen from './screens/BluetoothScreen';
 
 import { LightColorProvider } from './context/LightColorContext';
 import { ModeProvider } from './context/ModeContext';
+import { TouchProvider } from './context/TouchContext';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -31,16 +32,16 @@ function MainDrawer() {
 export default function App() {
   return (
     <ModeProvider>
-      <LightColorProvider>
-
-
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
-            <Stack.Screen name="Main" component={MainDrawer} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </LightColorProvider>
+      <TouchProvider>
+        <LightColorProvider>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
+              <Stack.Screen name="Main" component={MainDrawer} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </LightColorProvider>
+      </TouchProvider>
     </ModeProvider>
   );
 }

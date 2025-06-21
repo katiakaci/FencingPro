@@ -3,16 +3,20 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useMode } from '../context/ModeContext';
+import { useTouch } from '../context/TouchContext';
 
 export default function AccueilScreen({ route }) {
   const { mode } = useMode();
   const isSolo = mode === 'solo';
-
+  const { touchDetected } = useTouch();
   const [time, setTime] = useState(30 * 60);
   const [running, setRunning] = useState(true);
   const [bobScore, setBobScore] = useState(0);
   const [julieScore, setJulieScore] = useState(0);
   const { joueur1 } = route.params || {};
+
+  const barColorLeft = touchDetected ? 'lime' : '#ddd';
+  const barColorRight = touchDetected ? '#ddd' : 'white';
 
   useEffect(() => {
     let timer = null;
@@ -48,8 +52,8 @@ export default function AccueilScreen({ route }) {
 
       {/* Barres */}
       <View style={styles.barContainer}>
-        <View style={[styles.half, { backgroundColor: 'lime' }]} />
-        {!isSolo && <View style={[styles.half, { backgroundColor: 'white' }]} />}
+        <View style={[styles.half, { backgroundColor: barColorLeft }]} />
+        {!isSolo && <View style={[styles.half, { backgroundColor: barColorRight }]} />}
       </View>
 
       {/* Chrono et boutons */}

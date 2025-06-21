@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, PermissionsAndroid, Platform, Alert, ActivityIndicator, Button, Dimensions } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
 import base64 from 'react-native-base64';
-import LottieView from 'lottie-react-native';
+
+import { useTouch } from '../context/TouchContext';
 
 const SERVICE_UUID = '12345678-1234-5678-1234-56789abcdef0';
 const CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef1';
@@ -12,6 +13,7 @@ const BluetoothScreen = () => {
   const [manager] = useState(new BleManager());
   const [connectedDevice, setConnectedDevice] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { setTouchDetected } = useTouch();
 
   useEffect(() => {
     if (Platform.OS === 'android') requestPermissions();
@@ -42,13 +44,10 @@ const BluetoothScreen = () => {
         return;
       }
 
-    // Vérifie si cest la bonne adresse mac, a changer!!!!!!!!!!!!!!!!!!!!
-    if (device?.id === 'C8:D5:62:67:18:D9' && !devices.find(d => d.id === device.id)) {
-      console.log('Microcontrôleur trouvé:', device.name || '(sans nom)', device.id);
-      setDevices([device]);
-      manager.stopDeviceScan(); // stop qd on trouve
-      setLoading(false);
-    }
+      // Vérifie si cest la bonne adresse mac, a changer!!!!!!!!!!!!!!!!!!!!
+      if (device?.id === 'C8:D5:62:67:18:D9' && !devices.find(d => d.id === device.id)) {
+        console.log('Microcontrôleur trouvé:', device.name || '(sans nom)', device.id);
+        setDevices([device]);
     });
 
     setTimeout(() => {
@@ -76,6 +75,10 @@ const BluetoothScreen = () => {
             const decoded = base64.decode(characteristic.value);
             const boolValue = decoded.charCodeAt(0) !== 0;
             console.log('Notification reçue:', boolValue);
+            if (boolValue) {
+              setTouchDetected(true);
+              setTimeout(() => setTouchDetected(false), 500); // Réinitialise après 0.5s
+            }
           }
         }
       );
@@ -89,14 +92,6 @@ const BluetoothScreen = () => {
 
   return (
     <View style={styles.container}>
-      <LottieView
-        source={require('../assets/animation/backgroundWelcomeScreen.json')}
-        autoPlay
-        loop
-        resizeMode="cover"
-        style={styles.backgroundAnimation}
-      />
-
       <Text style={styles.title}>Périphériques Bluetooth à proximité</Text>
 
       {loading && <ActivityIndicator size="large" color="#007acc" style={{ marginVertical: 20 }} />}
@@ -114,7 +109,7 @@ const BluetoothScreen = () => {
             <Text style={styles.deviceId}>Adresse mac : {item.id}</Text>
             <Text style={styles.deviceId}>puissance signal (RSSI) : {item.rssi ?? 'noooo'}</Text>
             {/* plus cest proche de 0, plus le signal est bon */}
-            <Text style={styles.deviceId}>Nom local?? : {item.localName || 'Nooooo'}</Text>
+            {/* <Text style={styles.deviceId}>Nom local?? : {item.localName || 'Nooooo'}</Text> */}
             {/* <Text style={styles.deviceId}>Services : {item.serviceUUIDs?.join(', ') || 'Nononononono'}</Text> */}
             {/* <Text style={styles.deviceId}>Manufacturer data : {item.manufacturerData || 'Nooooooooooon'}</Text> */}
           </TouchableOpacity>

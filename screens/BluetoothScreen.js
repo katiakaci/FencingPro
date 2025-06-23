@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, PermissionsAndroid, Platform, Alert, ActivityIndicator, Button, Dimensions } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
 import base64 from 'react-native-base64';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTouch } from '../context/TouchContext';
 
@@ -48,6 +49,9 @@ const BluetoothScreen = () => {
       if (device?.id === 'C8:D5:62:67:18:D9' && !devices.find(d => d.id === device.id)) {
         console.log('Microcontrôleur trouvé:', device.name || '(sans nom)', device.id);
         setDevices([device]);
+        manager.stopDeviceScan(); // stop qd on trouve
+        setLoading(false);
+      }
     });
 
     setTimeout(() => {
@@ -91,35 +95,39 @@ const BluetoothScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Périphériques Bluetooth à proximité</Text>
+    <SafeAreaView style={{ flex: 1 }}>
 
-      {loading && <ActivityIndicator size="large" color="#007acc" style={{ marginVertical: 20 }} />}
 
-      {!loading && devices.length === 0 && (
-        <Text style={styles.noDeviceText}>Aucun périphérique trouvé</Text>
-      )}
+      <View style={styles.container}>
+        <Text style={styles.title}>Périphériques Bluetooth à proximité</Text>
 
-      <FlatList
-        data={devices}
-        keyExtractor={(item, index) => `${item.id || 'inconnu'}-${index}`}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.device} onPress={() => connectToDevice(item)}>
-            <Text style={styles.deviceName}>Nom : {item.name || 'riennnnnnnnnnnnnn'}</Text>
-            <Text style={styles.deviceId}>Adresse mac : {item.id}</Text>
-            <Text style={styles.deviceId}>puissance signal (RSSI) : {item.rssi ?? 'noooo'}</Text>
-            {/* plus cest proche de 0, plus le signal est bon */}
-            {/* <Text style={styles.deviceId}>Nom local?? : {item.localName || 'Nooooo'}</Text> */}
-            {/* <Text style={styles.deviceId}>Services : {item.serviceUUIDs?.join(', ') || 'Nononononono'}</Text> */}
-            {/* <Text style={styles.deviceId}>Manufacturer data : {item.manufacturerData || 'Nooooooooooon'}</Text> */}
-          </TouchableOpacity>
+        {loading && <ActivityIndicator size="large" color="#007acc" style={{ marginVertical: 20 }} />}
+
+        {!loading && devices.length === 0 && (
+          <Text style={styles.noDeviceText}>Aucun périphérique trouvé</Text>
         )}
-      />
 
-      <View style={styles.buttonContainer}>
-        <Button title="Rescanner" onPress={scanForDevices} color="#007acc" />
+        <FlatList
+          data={devices}
+          keyExtractor={(item, index) => `${item.id || 'inconnu'}-${index}`}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.device} onPress={() => connectToDevice(item)}>
+              <Text style={styles.deviceName}>Nom : {item.name || 'module casque'}</Text>
+              <Text style={styles.deviceId}>Adresse mac : {item.id}</Text>
+              <Text style={styles.deviceId}>puissance signal (RSSI) : {item.rssi ?? 'noooo'}</Text>
+              {/* plus cest proche de 0, plus le signal est bon */}
+              {/* <Text style={styles.deviceId}>Nom local?? : {item.localName || 'Nooooo'}</Text> */}
+              {/* <Text style={styles.deviceId}>Services : {item.serviceUUIDs?.join(', ') || 'Nononononono'}</Text> */}
+              {/* <Text style={styles.deviceId}>Manufacturer data : {item.manufacturerData || 'Nooooooooooon'}</Text> */}
+            </TouchableOpacity>
+          )}
+        />
+
+        <View style={styles.buttonContainer}>
+          <Button title="Rescanner" onPress={scanForDevices} color="#007acc" />
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

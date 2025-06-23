@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform} from 'react-native';
 
 export default function NameScreen({ navigation }) {
   const [playerName, setPlayerName] = useState('');
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
   },
   weaponText: {
     fontSize: 16,
+    fontFamily: Platform.OS === 'android' ? 'monospace' : 'Courier',
   },
   okButton: {
     marginTop: 20,

@@ -2,6 +2,8 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as SystemUI from 'expo-system-ui';
+import { useEffect } from 'react';
 
 import BienvenueScreen from './screens/BienvenueScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -30,6 +32,11 @@ function MainDrawer() {
 }
 
 export default function App() {
+
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync('#00C2CB');
+  }, []);
+
   return (
     <ModeProvider>
       <TouchProvider>

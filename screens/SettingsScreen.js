@@ -18,8 +18,7 @@ export default function SettingsScreen() {
 
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-  const [language, setLanguage] = useState('fr'); // vérifier francais pas défaut ou anglais ?
+  const [language, setLanguage] = useState('fr');
 
   const toggleMode = () => {
     setMode(mode === 'solo' ? 'multi' : 'solo');
@@ -29,59 +28,68 @@ export default function SettingsScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Réglages</Text>
 
-      {/* Mode solo/multijoueur */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Mode : {mode === 'solo' ? 'Solo' : 'Multijoueur'}</Text>
-        <Switch value={mode === 'solo'} onValueChange={toggleMode} />
+      {/* Bloc Mode */}
+      <View style={styles.settingBlock}>
+        <Text style={styles.label}>Mode</Text>
+        <View style={styles.row}>
+          <Text style={styles.value}>{mode === 'solo' ? 'Solo' : 'Multijoueur'}</Text>
+          <Switch
+            value={mode === 'solo'}
+            onValueChange={toggleMode}
+            trackColor={{ false: '#ccc', true: '#0a3871' }}
+            thumbColor={'#fff'}
+          />
+        </View>
       </View>
 
       {/* Couleurs des lumières */}
-      <Text style={styles.sectionTitle}>Couleur des lumières</Text>
-      <View style={styles.colorOptions}>
-        {couleurs.map((color) => (
-          <TouchableOpacity
-            key={color}
-            onPress={() => setLightColor(color)}
-            style={[
-              styles.colorButton,
-              { backgroundColor: color },
-              lightColor === color && styles.colorSelected,
-            ]}
-          />
-        ))}
+      <View style={styles.settingBlock}>
+        <Text style={styles.label}>Couleurs des lumières</Text>
+        <View style={styles.colorRow}>
+          {couleurs.map((color) => (
+            <TouchableOpacity
+              key={color}
+              onPress={() => setLightColor(color)}
+              style={[
+                styles.colorDot,
+                { backgroundColor: color },
+                lightColor === color && styles.colorSelected,
+              ]}
+            />
+          ))}
+        </View>
       </View>
 
-      {/* Son */}
-      <View style={styles.row}>
+      {/* Son/Vibration */}
+      <View style={styles.settingBlock}>
         <Text style={styles.label}>Son</Text>
-        <Switch value={soundEnabled} onValueChange={setSoundEnabled} />
-      </View>
-
-      {/* Vibration */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Vibration</Text>
-        <Switch value={vibrationEnabled} onValueChange={setVibrationEnabled} />
-      </View>
-
-      {/* Thème */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Mode nuit</Text>
-        <Switch value={darkMode} onValueChange={setDarkMode} />
+        <Switch
+          value={soundEnabled}
+          onValueChange={setSoundEnabled}
+          trackColor={{ false: '#ccc', true: '#0a3871' }}
+          thumbColor={'#fff'}
+        />
+        <Text style={[styles.label, { marginTop: 20 }]}>Vibration</Text>
+        <Switch
+          value={vibrationEnabled}
+          onValueChange={setVibrationEnabled}
+          trackColor={{ false: '#ccc', true: '#0a3871' }}
+          thumbColor={'#fff'}
+        />
       </View>
 
       {/* Langue */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Langue : {language === 'fr' ? 'Français' : 'English'}</Text>
+      <View style={styles.languageRow}>
+        <Text style={styles.languageText}>Language</Text>
         <Pressable
-          onPress={() => setLanguage(language === 'fr' ? 'en' : 'fr')}
           style={styles.languageButton}
+          onPress={() => setLanguage(language === 'fr' ? 'en' : 'fr')}
         >
           <Text style={styles.languageButtonText}>
-            Changer en {language === 'fr' ? 'English' : 'Français'}
+            Change to {language === 'fr' ? 'English' : 'Français'}
           </Text>
         </Pressable>
       </View>
-
     </View>
   );
 }
@@ -89,53 +97,73 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#79D9C4',
     padding: 24,
   },
   title: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: 'bold',
-    marginBottom: 30,
+    color: '#002244',
     textAlign: 'center',
+    marginBottom: 24,
   },
-  sectionTitle: {
+  settingBlock: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    padding: 16,
+    borderRadius: 24,
+    marginBottom: 24,
+  },
+  label: {
     fontSize: 20,
     fontWeight: '600',
-    marginVertical: 16,
+    color: '#002244',
+    marginBottom: 8,
+    // lineHeight: 24,
+  },
+  value: {
+    fontSize: 18,
+    color: '#002244',
+    marginRight: 12,
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 12,
+    justifyContent: 'space-between',
   },
-  label: {
-    fontSize: 18,
-  },
-  colorOptions: {
+  colorRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+    justifyContent: 'space-around',
+    marginTop: 10,
   },
-  colorButton: {
+  colorDot: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    marginRight: 10,
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: '#fff',
   },
   colorSelected: {
-    borderColor: 'black',
+    borderColor: '#002244',
     borderWidth: 3,
   },
+  languageRow: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  languageText: {
+    fontSize: 18,
+    color: '#002244',
+    marginBottom: 12,
+  },
   languageButton: {
-    backgroundColor: '#007acc',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 18,
   },
   languageButtonText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 16,
+    fontWeight: '600',
   },
 });

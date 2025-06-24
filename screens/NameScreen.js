@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 export default function NameScreen({ navigation }) {
   const [playerName, setPlayerName] = useState('');
@@ -18,36 +18,40 @@ export default function NameScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.screenName}>
-      <Text style={styles.label}>Entrez le nom du joueur 1</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nom du joueur"
-        value={playerName}
-        onChangeText={setPlayerName}
-      />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 
-      <Text style={styles.label}>Sélectionnez votre arme</Text>
-      <View style={styles.weaponContainer}>
-        <TouchableOpacity
-          style={[styles.weaponButton, selectedWeapon === 'sabre' && styles.weaponSelected]}
-          onPress={() => handleWeaponSelect('sabre')}
-        >
-          <Text style={styles.weaponText}>Sabre</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.weaponButton, selectedWeapon === 'fleuret' && styles.weaponSelected]}
-          onPress={() => handleWeaponSelect('fleuret')}
-        >
-          <Text style={styles.weaponText}>Fleuret</Text>
+      <View style={styles.screenName}>
+        <Text style={styles.label}>Entrez le nom du joueur 1</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Nom du joueur"
+          value={playerName}
+          onChangeText={setPlayerName}
+        />
+
+        <Text style={styles.label}>Sélectionnez votre arme</Text>
+        <View style={styles.weaponContainer}>
+          <TouchableOpacity
+            style={[styles.weaponButton, selectedWeapon === 'sabre' && styles.weaponSelected]}
+            onPress={() => handleWeaponSelect('sabre')}
+          >
+            <Text style={styles.weaponText}>Sabre</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.weaponButton, selectedWeapon === 'fleuret' && styles.weaponSelected]}
+            onPress={() => handleWeaponSelect('fleuret')}
+          >
+            <Text style={styles.weaponText}>Fleuret</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.okButton} onPress={handleOk}>
+          <Text style={styles.okText}>OK</Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.okButton} onPress={handleOk}>
-        <Text style={styles.okText}>OK</Text>
-      </TouchableOpacity>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

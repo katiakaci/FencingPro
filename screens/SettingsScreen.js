@@ -28,7 +28,7 @@ export default function SettingsScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Réglages</Text>
 
-      {/* Bloc Mode */}
+      {/* Mode */}
       <View style={styles.settingBlock}>
         <Text style={styles.label}>Mode</Text>
         <View style={styles.row}>
@@ -62,33 +62,27 @@ export default function SettingsScreen() {
 
       {/* Son/Vibration */}
       <View style={styles.settingBlock}>
-        <Text style={styles.label}>Son</Text>
-        <Switch
-          value={soundEnabled}
-          onValueChange={setSoundEnabled}
-          trackColor={{ false: '#ccc', true: '#0a3871' }}
-          thumbColor={'#fff'}
-        />
-        <Text style={[styles.label, { marginTop: 20 }]}>Vibration</Text>
-        <Switch
-          value={vibrationEnabled}
-          onValueChange={setVibrationEnabled}
-          trackColor={{ false: '#ccc', true: '#0a3871' }}
-          thumbColor={'#fff'}
-        />
+        <View style={styles.row}>
+          <Text style={[styles.label, { flex: 1 }]}>Son</Text>
+          <Switch value={soundEnabled} onValueChange={setSoundEnabled} trackColor={{ false: '#ccc', true: '#0a3871' }} thumbColor={'#fff'} />
+        </View>
+
+        <View style={styles.row}>
+          <Text style={[styles.label, { flex: 1 }]}>Vibration</Text>
+          <Switch value={vibrationEnabled} onValueChange={setVibrationEnabled} trackColor={{ false: '#ccc', true: '#0a3871' }} thumbColor={'#fff'} />
+        </View>
       </View>
 
       {/* Langue */}
-      <View style={styles.languageRow}>
-        <Text style={styles.languageText}>Language</Text>
-        <Pressable
-          style={styles.languageButton}
-          onPress={() => setLanguage(language === 'fr' ? 'en' : 'fr')}
-        >
-          <Text style={styles.languageButtonText}>
-            Change to {language === 'fr' ? 'English' : 'Français'}
-          </Text>
-        </Pressable>
+      <View style={styles.settingBlock}>
+        <View style={styles.row}>
+          <Text style={[styles.label, { flex: 1 }]}>Langue</Text>
+          <Pressable style={styles.languageButton} onPress={() => setLanguage(language === 'fr' ? 'en' : 'fr')}>
+            <Text style={styles.languageButtonText}>
+              {language === 'fr' ? 'English' : 'Français'}
+            </Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -112,13 +106,13 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 24,
     marginBottom: 24,
+    justifyContent: 'center',
   },
   label: {
     fontSize: 20,
     fontWeight: '600',
     color: '#002244',
     marginBottom: 8,
-    // lineHeight: 24,
   },
   value: {
     fontSize: 18,

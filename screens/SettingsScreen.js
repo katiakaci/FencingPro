@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,23 +11,27 @@ import { useMode } from '../context/ModeContext';
 import { useLightColor } from '../context/LightColorContext';
 import LottieView from 'lottie-react-native';
 
+const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
+
 export default function SettingsScreen() {
   const { mode, setMode } = useMode();
   const { lightColor, setLightColor } = useLightColor();
-
-  const couleurs = ['lime', 'red', 'blue', 'yellow', 'purple'];
 
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
   const [language, setLanguage] = useState('fr');
 
-  const toggleMode = () => {
+  const toggleMode = useCallback(() => {
     setMode(mode === 'solo' ? 'multi' : 'solo');
-  };
+  }, [mode, setMode]);
+
+  const toggleLanguage = useCallback(() => {
+    setLanguage((prev) => (prev === 'fr' ? 'en' : 'fr'));
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Animation backgorund */}
+      {/* Animation background */}
       <LottieView
         source={require('../assets/animation/backgroundWelcomeScreen.json')}
         autoPlay
@@ -47,7 +51,7 @@ export default function SettingsScreen() {
             value={mode === 'solo'}
             onValueChange={toggleMode}
             trackColor={{ false: '#ccc', true: '#0a3871' }}
-            thumbColor={'#fff'}
+            thumbColor="#fff"
           />
         </View>
       </View>
@@ -56,7 +60,7 @@ export default function SettingsScreen() {
       <View style={styles.settingBlock}>
         <Text style={styles.label}>Couleurs des lumières</Text>
         <View style={styles.colorRow}>
-          {couleurs.map((color) => (
+          {COLORS.map((color) => (
             <TouchableOpacity
               key={color}
               onPress={() => setLightColor(color)}
@@ -65,6 +69,7 @@ export default function SettingsScreen() {
                 { backgroundColor: color },
                 lightColor === color && styles.colorSelected,
               ]}
+              accessibilityLabel={`Choisir la couleur ${color}`}
             />
           ))}
         </View>
@@ -74,12 +79,21 @@ export default function SettingsScreen() {
       <View style={styles.settingBlock}>
         <View style={styles.row}>
           <Text style={[styles.label, { flex: 1 }]}>Son</Text>
-          <Switch value={soundEnabled} onValueChange={setSoundEnabled} trackColor={{ false: '#ccc', true: '#0a3871' }} thumbColor={'#fff'} />
+          <Switch
+            value={soundEnabled}
+            onValueChange={setSoundEnabled}
+            trackColor={{ false: '#ccc', true: '#0a3871' }}
+            thumbColor="#fff"
+          />
         </View>
-
         <View style={styles.row}>
           <Text style={[styles.label, { flex: 1 }]}>Vibration</Text>
-          <Switch value={vibrationEnabled} onValueChange={setVibrationEnabled} trackColor={{ false: '#ccc', true: '#0a3871' }} thumbColor={'#fff'} />
+          <Switch
+            value={vibrationEnabled}
+            onValueChange={setVibrationEnabled}
+            trackColor={{ false: '#ccc', true: '#0a3871' }}
+            thumbColor="#fff"
+          />
         </View>
       </View>
 
@@ -87,7 +101,7 @@ export default function SettingsScreen() {
       <View style={styles.settingBlock}>
         <View style={styles.row}>
           <Text style={[styles.label, { flex: 1 }]}>Langue</Text>
-          <Pressable style={styles.languageButton} onPress={() => setLanguage(language === 'fr' ? 'en' : 'fr')}>
+          <Pressable style={styles.languageButton} onPress={toggleLanguage}>
             <Text style={styles.languageButtonText}>
               {language === 'fr' ? 'English' : 'Français'}
             </Text>
@@ -152,15 +166,6 @@ const styles = StyleSheet.create({
   colorSelected: {
     borderColor: '#002244',
     borderWidth: 3,
-  },
-  languageRow: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  languageText: {
-    fontSize: 18,
-    color: '#002244',
-    marginBottom: 12,
   },
   languageButton: {
     backgroundColor: '#007bff',

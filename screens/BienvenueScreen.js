@@ -37,12 +37,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backgroundAnimation: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height + 10,
-    zIndex: -1,
+    ...StyleSheet.absoluteFillObject,
+    // zIndex: -1,
   },
   contentWrapper: {
     flex: 1,

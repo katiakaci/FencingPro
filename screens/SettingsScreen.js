@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import { useMode } from '../context/ModeContext';
 import { useLightColor } from '../context/LightColorContext';
 import LottieView from 'lottie-react-native';
@@ -14,6 +16,7 @@ import LottieView from 'lottie-react-native';
 const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
 
 export default function SettingsScreen() {
+  const navigation = useNavigation();
   const { mode, setMode } = useMode();
   const { lightColor, setLightColor } = useLightColor();
 
@@ -40,72 +43,85 @@ export default function SettingsScreen() {
         style={styles.backgroundAnimation}
       />
 
-      <Text style={styles.title}>Réglages</Text>
-
-      {/* Mode */}
-      <View style={styles.settingBlock}>
-        <Text style={styles.label}>Mode</Text>
-        <View style={styles.row}>
-          <Text style={styles.value}>{mode === 'solo' ? 'Solo' : 'Multijoueur'}</Text>
-          <Switch
-            value={mode === 'solo'}
-            onValueChange={toggleMode}
-            trackColor={{ false: '#ccc', true: '#0a3871' }}
-            thumbColor="#fff"
-          />
-        </View>
+      {/* Header */}
+      <View style={styles.appBar}>
+        <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuButton}>
+          <Ionicons name="menu" size={32} color="#fff" />
+        </TouchableOpacity>
+        <Text style={styles.appBarTitle}>Réglages</Text>
       </View>
 
-      {/* Couleurs des lumières */}
-      <View style={styles.settingBlock}>
-        <Text style={styles.label}>Couleurs des lumières</Text>
-        <View style={styles.colorRow}>
-          {COLORS.map((color) => (
-            <TouchableOpacity
-              key={color}
-              onPress={() => setLightColor(color)}
-              style={[
-                styles.colorDot,
-                { backgroundColor: color },
-                lightColor === color && styles.colorSelected,
-              ]}
-              accessibilityLabel={`Choisir la couleur ${color}`}
+      {/* 2 petites barres blanches */}
+      <View style={styles.whiteSeparator} />
+      <View style={styles.whiteSeparator2} />
+
+      {/* Page principale */}
+      <View style={styles.contentWrapper}>
+        {/* Mode solo/multijoueurs*/}
+        <View style={styles.settingBlock}>
+          <Text style={styles.label}>Mode</Text>
+          <View style={styles.row}>
+            <Text style={styles.value}>{mode === 'solo' ? 'Solo' : 'Multijoueur'}</Text>
+            <Switch
+              value={mode === 'solo'}
+              onValueChange={toggleMode}
+              trackColor={{ false: '#ccc', true: '#0a3871' }}
+              thumbColor="#fff"
             />
-          ))}
+          </View>
         </View>
-      </View>
 
-      {/* Son/Vibration */}
-      <View style={styles.settingBlock}>
-        <View style={styles.row}>
-          <Text style={[styles.label, { flex: 1 }]}>Son</Text>
-          <Switch
-            value={soundEnabled}
-            onValueChange={setSoundEnabled}
-            trackColor={{ false: '#ccc', true: '#0a3871' }}
-            thumbColor="#fff"
-          />
+        {/* Couleurs des lumières */}
+        <View style={styles.settingBlock}>
+          <Text style={styles.label}>Couleurs des lumières</Text>
+          <View style={styles.colorRow}>
+            {COLORS.map((color) => (
+              <TouchableOpacity
+                key={color}
+                onPress={() => setLightColor(color)}
+                style={[
+                  styles.colorDot,
+                  { backgroundColor: color },
+                  lightColor === color && styles.colorSelected,
+                ]}
+                accessibilityLabel={`Choisir la couleur ${color}`}
+              />
+            ))}
+          </View>
         </View>
-        <View style={styles.row}>
-          <Text style={[styles.label, { flex: 1 }]}>Vibration</Text>
-          <Switch
-            value={vibrationEnabled}
-            onValueChange={setVibrationEnabled}
-            trackColor={{ false: '#ccc', true: '#0a3871' }}
-            thumbColor="#fff"
-          />
-        </View>
-      </View>
 
-      {/* Langue */}
-      <View style={styles.settingBlock}>
-        <View style={styles.row}>
-          <Text style={[styles.label, { flex: 1 }]}>Langue</Text>
-          <Pressable style={styles.languageButton} onPress={toggleLanguage}>
-            <Text style={styles.languageButtonText}>
-              {language === 'fr' ? 'English' : 'Français'}
-            </Text>
-          </Pressable>
+        {/* Son/Vibration */}
+        <View style={styles.settingBlock}>
+          <View style={styles.row}>
+            <Text style={[styles.label, { flex: 1 }]}>Son</Text>
+            <Switch
+              value={soundEnabled}
+              onValueChange={setSoundEnabled}
+              trackColor={{ false: '#ccc', true: '#0a3871' }}
+              thumbColor="#fff"
+            />
+          </View>
+          <View style={styles.row}>
+            <Text style={[styles.label, { flex: 1 }]}>Vibration</Text>
+            <Switch
+              value={vibrationEnabled}
+              onValueChange={setVibrationEnabled}
+              trackColor={{ false: '#ccc', true: '#0a3871' }}
+              thumbColor="#fff"
+            />
+          </View>
+        </View>
+
+        {/* Langue */}
+        <View style={styles.settingBlock}>
+          <View style={styles.row}>
+            <Text style={[styles.label, { flex: 1 }]}>Langue</Text>
+            <Pressable style={styles.languageButton} onPress={toggleLanguage}>
+              <Text style={styles.languageButtonText}>
+                {language === 'fr' ? 'English' : 'Français'}
+              </Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </View>
@@ -116,18 +132,45 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#79D9C4',
-    padding: 24,
+    padding: 0,
   },
   backgroundAnimation: {
     ...StyleSheet.absoluteFillObject,
   },
-  title: {
-    fontSize: 36,
+  appBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 90,
+    backgroundColor: 'rgba(74,171,232,0.30)',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    paddingBottom: 16,
+    paddingHorizontal: 16,
+    zIndex: 10,
+  },
+  menuButton: {
+    marginRight: 16,
+  },
+  appBarTitle: {
+    color: '#fff',
+    fontSize: 25,
     fontWeight: 'bold',
-    color: '#002244',
-    textAlign: 'center',
-    marginBottom: 24,
-    marginTop: 48,
+  },
+  whiteSeparator: {
+    height: 2,
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    width: '100%',
+    zIndex: 9,
+    marginTop: 90,
+  },
+  whiteSeparator2: {
+    height: 2,
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    width: '100%',
+    zIndex: 9,
+    marginTop: 2,
   },
   settingBlock: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -135,6 +178,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     marginBottom: 24,
     justifyContent: 'center',
+    marginHorizontal: 24,
   },
   label: {
     fontSize: 20,
@@ -178,5 +222,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  contentWrapper: {
+    flex: 1,
+    justifyContent: 'center',
   },
 });

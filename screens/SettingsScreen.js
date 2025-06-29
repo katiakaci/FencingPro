@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useMode } from '../context/ModeContext';
 import { useLightColor } from '../context/LightColorContext';
+import LottieView from 'lottie-react-native';
 
 export default function SettingsScreen() {
   const { mode, setMode } = useMode();
@@ -26,6 +27,15 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Animation backgorund */}
+      <LottieView
+        source={require('../assets/animation/backgroundWelcomeScreen.json')}
+        autoPlay
+        loop
+        resizeMode="cover"
+        style={styles.backgroundAnimation}
+      />
+
       <Text style={styles.title}>Réglages</Text>
 
       {/* Mode */}
@@ -93,6 +103,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#79D9C4',
     padding: 24,
+  },
+  backgroundAnimation: {
+    ...StyleSheet.absoluteFillObject,
   },
   title: {
     fontSize: 36,

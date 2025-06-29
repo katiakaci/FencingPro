@@ -6,11 +6,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useMode } from '../context/ModeContext';
 import { useTouch } from '../context/TouchContext';
+import { useLightColor } from '../context/LightColorContext';
 
 export default function AccueilScreen({ route }) {
   const { mode } = useMode();
   const isSolo = mode === 'solo';
   const { touchDetected } = useTouch();
+  const { lightColor } = useLightColor();
   const [time, setTime] = useState(30 * 60);
   const [running, setRunning] = useState(true);
   const [bobScore, setBobScore] = useState(0);
@@ -19,6 +21,8 @@ export default function AccueilScreen({ route }) {
 
   const barColorLeft = touchDetected ? 'lime' : '#ddd';
   const barColorRight = touchDetected ? '#ddd' : 'white';
+
+  const [flash, setFlash] = useState(false);
 
   useEffect(() => {
     let timer = null;
@@ -30,6 +34,8 @@ export default function AccueilScreen({ route }) {
 
   useEffect(() => {
     if (touchDetected) {
+      setFlash(true);
+      setTimeout(() => setFlash(false), 300); // 300ms de flash
       if (isSolo) {
         setBobScore(prev => prev + 1);
       } else {
@@ -65,8 +71,24 @@ export default function AccueilScreen({ route }) {
 
         {/* Barres */}
         <View style={styles.barContainer}>
-          <View style={[styles.half, { backgroundColor: barColorLeft }]} />
-          {!isSolo && <View style={[styles.half, { backgroundColor: barColorRight }]} />}
+          <View
+            style={[
+              styles.half,
+              {
+                backgroundColor: flash ? lightColor : barColorLeft, // Utilise la couleur choisie
+              },
+            ]}
+          />
+          {!isSolo && (
+            <View
+              style={[
+                styles.half,
+                {
+                  backgroundColor: barColorRight,
+                },
+              ]}
+            />
+          )}
         </View>
 
         {/* Chrono et boutons */}

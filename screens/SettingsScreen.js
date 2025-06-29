@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     color: '#002244',
     textAlign: 'center',
     marginBottom: 24,
+    marginTop: 48,
   },
   settingBlock: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',

@@ -23,6 +23,7 @@ function MainDrawer() {
   return (
     <Drawer.Navigator
       screenOptions={{
+        // headerShown: false, // a décommenter apres
         headerTransparent: true,
         headerTitle: '',
         headerTintColor: '#fff',

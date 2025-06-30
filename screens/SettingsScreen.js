@@ -59,15 +59,13 @@ export default function SettingsScreen() {
       <View style={styles.contentWrapper}>
         {/* Mode solo/multijoueurs*/}
         <View style={styles.settingBlock}>
-          <Text style={styles.label}>Mode</Text>
           <View style={styles.row}>
-            <Text style={styles.value}>{mode === 'solo' ? 'Solo' : 'Multijoueur'}</Text>
-            <Switch
-              value={mode === 'solo'}
-              onValueChange={toggleMode}
-              trackColor={{ false: '#ccc', true: '#0a3871' }}
-              thumbColor="#fff"
-            />
+            <Text style={[styles.label, { flex: 1 }]}>Mode</Text>
+            <Pressable style={styles.languageButton} onPress={toggleMode}>
+              <Text style={styles.languageButtonText}>
+                {mode === 'solo' ? 'Multijoueur' : 'Solo'}
+              </Text>
+            </Pressable>
           </View>
         </View>
 
@@ -131,10 +129,11 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   backgroundAnimation: {
     ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'black',
+    zIndex: -1,
   },
   appBar: {
     position: 'absolute',

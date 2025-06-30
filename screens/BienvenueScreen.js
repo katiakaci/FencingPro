@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   backgroundAnimation: {
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
+    backgroundColor: 'black',
   },
   contentWrapper: {
     flex: 1,

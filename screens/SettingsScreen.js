@@ -131,8 +131,7 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#79D9C4',
-    padding: 0,
+    backgroundColor: 'white',
   },
   backgroundAnimation: {
     ...StyleSheet.absoluteFillObject,

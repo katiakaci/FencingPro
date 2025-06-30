@@ -48,7 +48,7 @@ module.exports = {
                     androidNavigationBar: {
                         visible: 'immersive',
                         barStyle: 'light-content',
-                        backgroundColor: '#00c9a7',
+                        backgroundColor: '#000000',
                     },
                 },
             ],

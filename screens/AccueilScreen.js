@@ -182,7 +182,10 @@ const styles = StyleSheet.create({
   },
   half: {
     flex: 1,
-    minHeight: 80,
+    minHeight: 200,
+    borderWidth: 2,
+    borderColor: '#0a3871',
+    borderRadius: 20,
   },
   timerContainer: {
     height: 170,

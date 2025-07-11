@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LottieView from 'lottie-react-native';
 
 import { useMode } from '../context/ModeContext';
 import { useTouch } from '../context/TouchContext';
@@ -52,19 +53,27 @@ export default function AccueilScreen({ route }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      {/* Animation background */}
+      <LottieView
+        source={require('../assets/animation/backgroundWelcomeScreen.json')}
+        autoPlay
+        loop
+        resizeMode="cover"
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1 }}
+      />
       <View style={styles.container}>
-        <StatusBar style="auto" />
+        <StatusBar style="light" />
 
         {/* Scores */}
         <View style={styles.nameContainer}>
-          <View style={[styles.nameBox, { borderRightWidth: isSolo ? 0 : 1 }]}>
+          <View style={[styles.nameBox, { borderRightWidth: isSolo ? 0 : 2 }]}> 
             <Text style={styles.nameText}>{joueur1 || 'Bob'}</Text>
-            <Text style={styles.scoreText}>{bobScore}</Text>
+            <View style={styles.scoreCircle}><Text style={styles.scoreText}>{bobScore}</Text></View>
           </View>
           {!isSolo && (
             <View style={styles.nameBox}>
               <Text style={styles.nameText}>Julie</Text>
-              <Text style={styles.scoreText}>{julieScore}</Text>
+              <View style={styles.scoreCircle}><Text style={styles.scoreText}>{julieScore}</Text></View>
             </View>
           )}
         </View>
@@ -75,7 +84,10 @@ export default function AccueilScreen({ route }) {
             style={[
               styles.half,
               {
-                backgroundColor: flash ? lightColor : barColorLeft, // Utilise la couleur choisie
+                backgroundColor: flash ? lightColor : barColorLeft,
+                borderRadius: 20,
+                margin: 8,
+                boxShadow: flash ? '0 0 20px #fff' : undefined,
               },
             ]}
           />
@@ -85,6 +97,8 @@ export default function AccueilScreen({ route }) {
                 styles.half,
                 {
                   backgroundColor: barColorRight,
+                  borderRadius: 20,
+                  margin: 8,
                 },
               ]}
             />
@@ -93,16 +107,16 @@ export default function AccueilScreen({ route }) {
 
         {/* Chrono et boutons */}
         <View style={styles.timerContainer}>
-          <Text style={styles.timerText}>{formatTime(time)}</Text>
+          <View style={styles.timerBox}><Text style={styles.timerText}>{formatTime(time)}</Text></View>
           <View style={styles.buttonRow}>
-            <TouchableOpacity onPress={() => setRunning(!running)}>
-              <Ionicons name={running ? 'pause' : 'play'} size={28} color="#fff" />
+            <TouchableOpacity style={styles.iconButton} onPress={() => setRunning(!running)}>
+              <Ionicons name={running ? 'pause' : 'play'} size={28} color="#0a3871" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { setRunning(false); setTime(0); }}>
-              <Ionicons name="stop" size={28} color="tomato" />
+            <TouchableOpacity style={[styles.iconButton, { backgroundColor: 'tomato' }]} onPress={() => { setRunning(false); setTime(0); }}>
+              <Ionicons name="stop" size={28} color="#fff" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setTime(30 * 60)}>
-              <Ionicons name="refresh" size={28} color="#fff" />
+            <TouchableOpacity style={styles.iconButton} onPress={() => setTime(30 * 60)}>
+              <Ionicons name="refresh" size={28} color="#0a3871" />
             </TouchableOpacity>
           </View>
         </View>
@@ -114,47 +128,110 @@ export default function AccueilScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingTop: 0 // TODO enlever la marge blanche en haut apres
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
   },
   nameContainer: {
     flexDirection: 'row',
-    height: 80,
+    height: 100,
+    marginBottom: 8,
   },
   nameBox: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 18,
+    marginHorizontal: 4,
+    paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   nameText: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 4,
+    letterSpacing: 1,
+  },
+  scoreCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   scoreText: {
     fontSize: 24,
+    fontWeight: 'bold',
+    color: '#0a3871',
   },
   barContainer: {
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
   },
   half: {
     flex: 1,
+    minHeight: 80,
   },
   timerContainer: {
-    height: 110,
-    backgroundColor: '#666',
+    height: 130,
+    backgroundColor: 'rgba(255,255,255,0.10)',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 18,
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  timerBox: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   timerText: {
-    fontSize: 30,
-    color: '#fff',
-    // letterSpacing:2
-    //  fontVariant: ['tabular-nums'],
-    fontFamily: Platform.OS === 'android' ? 'monospace' : 'Courier', // Fixe pour Android
+    fontSize: 36,
+    color: '#0a3871',
+    fontWeight: 'bold',
+    fontFamily: Platform.OS === 'android' ? 'monospace' : 'Courier',
+    letterSpacing: 2,
+    textAlign: 'center',
   },
   buttonRow: {
     flexDirection: 'row',
     marginTop: 10,
     gap: 30,
+    justifyContent: 'center',
+  },
+  iconButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
 });

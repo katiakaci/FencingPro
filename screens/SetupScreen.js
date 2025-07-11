@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, Alert, A
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { BleManager } from 'react-native-ble-plx';
+import AccueilScreen from './AccueilScreen';
 
 const weapons = ['Sabre', 'Fleuret'];
 
@@ -25,8 +26,10 @@ export default function SetupScreen({ navigation }) {
         setLoading(false);
         return;
       }
-      if (device?.id && !devices.find(d => d.id === device.id)) {
-        setDevices(prev => [...prev, device]);
+      if (device?.id === 'C8:D5:62:67:18:D9' && !devices.find(d => d.id === device.id)) {
+        setDevices([device]);
+        manager.stopDeviceScan(); // Stop scan when found
+        setLoading(false);
       }
     });
     setTimeout(() => {
@@ -66,7 +69,7 @@ export default function SetupScreen({ navigation }) {
       Alert.alert('Erreur', 'Veuillez sélectionner une arme');
       return;
     }
-    navigation.replace('Accueil', {
+    navigation.replace('Main', {
       joueur1: player1,
       joueur2: player2,
       arme1: selectedWeapon,
@@ -84,7 +87,7 @@ export default function SetupScreen({ navigation }) {
           resizeMode="cover"
           style={styles.backgroundAnimation}
         />
-        <ScrollView contentContainerStyle={styles.contentWrapper} keyboardShouldPersistTaps="handled">
+        <ScrollView contentContainerStyle={styles.contentWrapper} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
           <Text style={styles.title}>Préparation</Text>
           {/* Mode */}
           <View style={styles.block}>
@@ -140,6 +143,9 @@ export default function SetupScreen({ navigation }) {
             <TouchableOpacity style={styles.scanButton} onPress={scanForDevices} disabled={loading || bleConnected}>
               <Text style={styles.scanText}>{bleConnected ? 'Connecté' : loading ? 'Scan...' : 'Scanner'}</Text>
             </TouchableOpacity>
+            {!bleConnected && !loading && devices.length === 0 && (
+              <Text style={styles.noDeviceText}>Aucun appareil trouvé</Text>
+            )}
             {!bleConnected && devices.length > 0 && (
               <View style={styles.deviceList}>
                 {devices.map((device) => (
@@ -159,6 +165,29 @@ export default function SetupScreen({ navigation }) {
             disabled={!canStart}
           >
             <Text style={styles.startText}>Commencer la partie</Text>
+          </TouchableOpacity>
+          {/* Bouton DEV : Commencer sans BLE */}
+          <TouchableOpacity
+            style={[styles.startButton, { backgroundColor: '#ffb347', marginTop: 8 }]}
+            onPress={() => {
+              if (!player1.trim() || (mode === 'multi' && !player2.trim())) {
+                Alert.alert('Erreur', 'Veuillez entrer le(s) nom(s) du ou des joueur(s)');
+                return;
+              }
+              if (!selectedWeapon) {
+                Alert.alert('Erreur', 'Veuillez sélectionner une arme');
+                return;
+              }
+              navigation.replace('Main', {
+                joueur1: player1,
+                joueur2: player2,
+                arme1: selectedWeapon,
+                mode,
+              });
+            }}
+            disabled={mode === 'solo' ? !player1.trim() || !selectedWeapon : !player1.trim() || !player2.trim() || !selectedWeapon}
+          >
+            <Text style={[styles.startText, { color: '#111' }]}>DEV : Commencer sans BLE</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -292,5 +321,13 @@ const styles = StyleSheet.create({
     color: '#111',
     fontWeight: 'bold',
     fontSize: 15,
+  },
+  noDeviceText: {
+    textAlign: 'center',
+    fontStyle: 'italic',
+    color: '#fff',
+    marginTop: 8,
+    marginBottom: 4,
+    fontSize: 13,
   },
 });

@@ -185,12 +185,14 @@ const styles = StyleSheet.create({
     minHeight: 80,
   },
   timerContainer: {
-    height: 130,
+    height: 170,
     backgroundColor: 'rgba(255,255,255,0.10)',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 18,
     marginBottom: 8,
+    paddingVertical: 24,
+    paddingHorizontal: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -220,6 +222,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     gap: 30,
     justifyContent: 'center',
+    marginBottom: 8,
   },
   iconButton: {
     width: 48,

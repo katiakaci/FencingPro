@@ -11,6 +11,7 @@ import NameScreen from './screens/NameScreen';
 import AccueilScreen from './screens/AccueilScreen';
 import HistoriqueScreen from './screens/HistoriqueScreen';
 import BluetoothScreen from './screens/BluetoothScreen';
+import SetupScreen from './screens/SetupScreen';
 
 import { LightColorProvider } from './context/LightColorContext';
 import { ModeProvider } from './context/ModeContext';
@@ -54,6 +55,7 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
               <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
+              <Stack.Screen name="Setup" component={SetupScreen} />
               <Stack.Screen name="Main" component={MainDrawer} />
             </Stack.Navigator>
           </NavigationContainer>

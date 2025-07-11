@@ -14,7 +14,7 @@ export default function BienvenueScreen({ navigation }) {
 
       <View style={styles.contentWrapper}>
         <Text style={styles.title}>FencingPro</Text>
-        <TouchableOpacity onPress={() => navigation.replace('Main')}>
+        <TouchableOpacity onPress={() => navigation.replace('Setup')}>
           <LottieView
             source={require('../assets/animation/playButton.json')}
             autoPlay

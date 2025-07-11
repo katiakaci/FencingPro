@@ -19,8 +19,8 @@ export default function AccueilScreen({ route }) {
   const [julieScore, setJulieScore] = useState(0);
   const { joueur1 } = route.params || {};
 
-  const barColorLeft = touchDetected ? 'lime' : '#ddd';
-  const barColorRight = touchDetected ? '#ddd' : 'white';
+  const barColorLeft = touchDetected ? 'lime' : 'white';
+  const barColorRight = touchDetected ? 'white' : 'white';
 
   const [flash, setFlash] = useState(false);
 
@@ -57,12 +57,12 @@ export default function AccueilScreen({ route }) {
 
         {/* Scores */}
         <View style={styles.nameContainer}>
-          <View style={[styles.nameBox, { backgroundColor: '#ddd', borderRightWidth: isSolo ? 0 : 1 }]}>
-            <Text style={styles.nameText}>{joueur1 || 'Bob'}</Text>  {/* changer nom!!! */}
+          <View style={[styles.nameBox, { borderRightWidth: isSolo ? 0 : 1 }]}>
+            <Text style={styles.nameText}>{joueur1 || 'Bob'}</Text>
             <Text style={styles.scoreText}>{bobScore}</Text>
           </View>
           {!isSolo && (
-            <View style={[styles.nameBox, { backgroundColor: '#ddd' }]}>
+            <View style={styles.nameBox}>
               <Text style={styles.nameText}>Julie</Text>
               <Text style={styles.scoreText}>{julieScore}</Text>
             </View>

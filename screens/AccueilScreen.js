@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,14 +12,17 @@ import { useLightColor } from '../context/LightColorContext';
 
 export default function AccueilScreen({ route }) {
   const { mode } = useMode();
-  const isSolo = mode === 'solo';
   const { touchDetected } = useTouch();
   const { lightColor } = useLightColor();
   const [time, setTime] = useState(30 * 60);
   const [running, setRunning] = useState(true);
   const [bobScore, setBobScore] = useState(0);
   const [julieScore, setJulieScore] = useState(0);
+  const [chrono, setChrono] = useState(0);
+  const [stopped, setStopped] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
   const { joueur1, joueur2, arme1 } = route.params || {};
+  const isSolo = mode === 'solo';
 
   const barColorLeft = touchDetected ? 'lime' : 'white';
   const barColorRight = touchDetected ? 'white' : 'white';
@@ -27,12 +30,14 @@ export default function AccueilScreen({ route }) {
   const [flash, setFlash] = useState(false);
 
   useEffect(() => {
-    let timer = null;
-    if (running) {
-      timer = setInterval(() => setTime((prev) => (prev > 0 ? prev - 1 : 0)), 1000);
+    let chronoTimer = null;
+    if (running && gameStarted) {
+      chronoTimer = setInterval(() => {
+        setChrono(prev => prev + 1);
+      }, 1000);
     }
-    return () => clearInterval(timer);
-  }, [running]);
+    return () => clearInterval(chronoTimer);
+  }, [running, gameStarted]);
 
   useEffect(() => {
     if (touchDetected) {
@@ -45,23 +50,6 @@ export default function AccueilScreen({ route }) {
       }
     }
   }, [touchDetected]);
-
-  // Chronomètre au lieu du timer
-  const [chrono, setChrono] = useState(0);
-
-  useEffect(() => {
-    let chronoTimer = null;
-    if (running) {
-      chronoTimer = setInterval(() => setChrono((prev) => prev + 1), 1000);
-    }
-    return () => clearInterval(chronoTimer);
-  }, [running]);
-
-  const formatChrono = (seconds) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const s = (seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
-  };
 
   // Sauvegarde du match
   const saveMatchToHistory = async () => {
@@ -92,6 +80,18 @@ export default function AccueilScreen({ route }) {
     }
   }, [time, running]);
 
+  useEffect(() => {
+    if (stopped) {
+      setRunning(false);
+    }
+  }, [stopped]);
+
+  const formatChrono = (seconds) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {/* Animation background */}
@@ -108,15 +108,19 @@ export default function AccueilScreen({ route }) {
         {/* Scores */}
         <View style={styles.nameContainer}>
           <View style={[styles.nameBox, { borderRightWidth: isSolo ? 0 : 2 }]}> 
-            <Text style={styles.nameText}>{joueur1 || 'Bob'}</Text>
+            <Text style={styles.nameText}>{joueur1 || 'Joueur 1'}</Text>
             <View style={styles.scoreCircle}><Text style={styles.scoreText}>{bobScore}</Text></View>
           </View>
           {!isSolo && (
             <View style={styles.nameBox}>
-              <Text style={styles.nameText}>Julie</Text>
+              <Text style={styles.nameText}>{joueur2 || 'Joueur 2'}</Text>
               <View style={styles.scoreCircle}><Text style={styles.scoreText}>{julieScore}</Text></View>
             </View>
           )}
+        </View>
+        {/* Affichage de l'arme */}
+        <View style={{ alignItems: 'center', marginBottom: 8 }}>
+          <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold', backgroundColor: 'rgba(0,0,0,0.18)', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 }}>{arme1 || 'Épée'}</Text>
         </View>
 
         {/* Barres */}
@@ -150,15 +154,70 @@ export default function AccueilScreen({ route }) {
         <View style={styles.timerContainer}>
           <View style={styles.timerBox}><Text style={styles.timerText}>{formatChrono(chrono)}</Text></View>
           <View style={styles.buttonRow}>
-            <TouchableOpacity style={styles.iconButton} onPress={() => setRunning(!running)}>
-              <Ionicons name={running ? 'pause' : 'play'} size={28} color="#0a3871" />
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.iconButton, { backgroundColor: 'tomato' }]} onPress={() => { setRunning(false); }}>
-              <Ionicons name="stop" size={28} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton} onPress={() => { setChrono(0); setRunning(true); }}>
-              <Ionicons name="refresh" size={28} color="#0a3871" />
-            </TouchableOpacity>
+            {!gameStarted ? (
+              <TouchableOpacity style={[styles.iconButton, { backgroundColor: '#00c9a7' }]} onPress={() => {
+                setGameStarted(true);
+                setRunning(true);
+                setStopped(false);
+              }}>
+                <Ionicons name="play" size={28} color="#fff" />
+              </TouchableOpacity>
+            ) : (
+              <>
+                <TouchableOpacity
+                  style={[styles.iconButton, { backgroundColor: running ? '#fff' : '#f7b731' }]}
+                  onPress={() => setRunning(r => !r)}
+                >
+                  <Ionicons name="pause" size={28} color={running ? '#0a3871' : '#fff'} />
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.iconButton, { backgroundColor: 'tomato' }]} onPress={() => {
+                  setRunning(false);
+                  setStopped(true);
+                  Alert.alert(
+                    'Partie terminée',
+                    'Voulez-vous enregistrer cette partie dans l’historique ?',
+                    [
+                      {
+                        text: 'Annuler',
+                        style: 'cancel',
+                        onPress: () => {
+                          setStopped(false);
+                          setBobScore(0);
+                          setJulieScore(0);
+                          setChrono(0);
+                          setGameStarted(false);
+                        },
+                      },
+                      {
+                        text: 'Enregistrer',
+                        style: 'default',
+                        onPress: () => {
+                          saveMatchToHistory();
+                          setStopped(false);
+                          setBobScore(0);
+                          setJulieScore(0);
+                          setChrono(0);
+                          setGameStarted(false);
+                        },
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+                }}>
+                  <Ionicons name="stop" size={28} color="#fff" />
+                </TouchableOpacity>
+                {/* Replay button only visible when game is started */}
+                <TouchableOpacity style={styles.iconButton} onPress={() => {
+                  setChrono(0);
+                  setRunning(false);
+                  setGameStarted(false);
+                  setBobScore(0);
+                  setJulieScore(0);
+                }}>
+                  <Ionicons name="refresh" size={28} color="#0a3871" />
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
       </View>

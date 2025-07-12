@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
@@ -12,6 +13,14 @@ import { useLightColor } from '../context/LightColorContext';
 
 export default function AccueilScreen({ route }) {
   const { mode } = useMode();
+  // Mettre le jeu en pause quand on quitte la page ou quand on ouvre le menu hamburger
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setRunning(false);
+      };
+    }, [])
+  );
   const { touchDetected } = useTouch();
   const { lightColor } = useLightColor();
   const [time, setTime] = useState(30 * 60);
@@ -70,7 +79,7 @@ export default function AccueilScreen({ route }) {
       const arr = data ? JSON.parse(data) : [];
       arr.unshift(match); // Ajoute en haut
       await AsyncStorage.setItem('matchHistory', JSON.stringify(arr));
-    } catch (e) {}
+    } catch (e) { }
   };
 
   // Appeler saveMatchToHistory quand la partie se termine
@@ -107,7 +116,7 @@ export default function AccueilScreen({ route }) {
 
         {/* Scores */}
         <View style={styles.nameContainer}>
-          <View style={[styles.nameBox, { borderRightWidth: isSolo ? 0 : 2 }]}> 
+          <View style={[styles.nameBox, { borderRightWidth: isSolo ? 0 : 2 }]}>
             <Text style={styles.nameText}>{joueur1 || 'Joueur 1'}</Text>
             <View style={styles.scoreCircle}><Text style={styles.scoreText}>{bobScore}</Text></View>
           </View>
@@ -220,6 +229,12 @@ export default function AccueilScreen({ route }) {
             )}
           </View>
         </View>
+        {/* Pause overlay */}
+        {gameStarted && !running && (
+          <TouchableOpacity style={styles.pauseOverlay} activeOpacity={0.8} onPress={() => setRunning(true)}>
+            <Ionicons name="pause" size={120} color="#fff" style={{ opacity: 0.9 }} />
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -339,5 +354,16 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
+  },
+  pauseOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
 });

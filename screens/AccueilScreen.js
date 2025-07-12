@@ -191,6 +191,14 @@ export default function AccueilScreen({ route }) {
                         style: 'cancel',
                         onPress: () => {
                           setStopped(false);
+                          setRunning(true);
+                        },
+                      },
+                      {
+                        text: 'Non',
+                        style: 'destructive',
+                        onPress: () => {
+                          setStopped(false);
                           setBobScore(0);
                           setJulieScore(0);
                           setChrono(0);
@@ -198,7 +206,7 @@ export default function AccueilScreen({ route }) {
                         },
                       },
                       {
-                        text: 'Enregistrer',
+                        text: 'Oui',
                         style: 'default',
                         onPress: () => {
                           saveMatchToHistory();

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LottieView from 'lottie-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useMode } from '../context/ModeContext';
 import { useTouch } from '../context/TouchContext';
@@ -18,7 +19,7 @@ export default function AccueilScreen({ route }) {
   const [running, setRunning] = useState(true);
   const [bobScore, setBobScore] = useState(0);
   const [julieScore, setJulieScore] = useState(0);
-  const { joueur1 } = route.params || {};
+  const { joueur1, joueur2, arme1 } = route.params || {};
 
   const barColorLeft = touchDetected ? 'lime' : 'white';
   const barColorRight = touchDetected ? 'white' : 'white';
@@ -45,11 +46,51 @@ export default function AccueilScreen({ route }) {
     }
   }, [touchDetected]);
 
-  const formatTime = (seconds) => {
+  // Chronomètre au lieu du timer
+  const [chrono, setChrono] = useState(0);
+
+  useEffect(() => {
+    let chronoTimer = null;
+    if (running) {
+      chronoTimer = setInterval(() => setChrono((prev) => prev + 1), 1000);
+    }
+    return () => clearInterval(chronoTimer);
+  }, [running]);
+
+  const formatChrono = (seconds) => {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
-    return `00:${m}:${s}`;
+    return `${m}:${s}`;
   };
+
+  // Sauvegarde du match
+  const saveMatchToHistory = async () => {
+    const now = new Date();
+    const dateStr = now.toLocaleString('en-US', {
+      month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true
+    });
+    const duration = formatChrono(chrono); // mm:ss
+    const match = {
+      players: mode === 'solo' ? `${joueur1 || 'Bob'}` : `${joueur1 || 'Bob'} vs ${joueur2 || 'Julie'}`,
+      score: mode === 'solo' ? `${bobScore}` : `${bobScore}–${julieScore}`,
+      weapon: arme1 || 'Épée',
+      duration,
+      date: dateStr,
+    };
+    try {
+      const data = await AsyncStorage.getItem('matchHistory');
+      const arr = data ? JSON.parse(data) : [];
+      arr.unshift(match); // Ajoute en haut
+      await AsyncStorage.setItem('matchHistory', JSON.stringify(arr));
+    } catch (e) {}
+  };
+
+  // Appeler saveMatchToHistory quand la partie se termine
+  useEffect(() => {
+    if (time === 0 && running === false) {
+      saveMatchToHistory();
+    }
+  }, [time, running]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -107,15 +148,15 @@ export default function AccueilScreen({ route }) {
 
         {/* Chrono et boutons */}
         <View style={styles.timerContainer}>
-          <View style={styles.timerBox}><Text style={styles.timerText}>{formatTime(time)}</Text></View>
+          <View style={styles.timerBox}><Text style={styles.timerText}>{formatChrono(chrono)}</Text></View>
           <View style={styles.buttonRow}>
             <TouchableOpacity style={styles.iconButton} onPress={() => setRunning(!running)}>
               <Ionicons name={running ? 'pause' : 'play'} size={28} color="#0a3871" />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.iconButton, { backgroundColor: 'tomato' }]} onPress={() => { setRunning(false); setTime(0); }}>
+            <TouchableOpacity style={[styles.iconButton, { backgroundColor: 'tomato' }]} onPress={() => { setRunning(false); }}>
               <Ionicons name="stop" size={28} color="#fff" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton} onPress={() => setTime(30 * 60)}>
+            <TouchableOpacity style={styles.iconButton} onPress={() => { setChrono(0); setRunning(true); }}>
               <Ionicons name="refresh" size={28} color="#0a3871" />
             </TouchableOpacity>
           </View>

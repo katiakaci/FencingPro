@@ -33,7 +33,7 @@ export default function HistoriqueScreen() {
       try {
         const data = await AsyncStorage.getItem('matchHistory');
         if (data) setMatchHistory(JSON.parse(data));
-      } catch (e) {}
+      } catch (e) { }
     };
     loadHistory();
   }, []);
@@ -177,7 +177,7 @@ export default function HistoriqueScreen() {
       <Text style={styles.sectionTitle}>STATISTICS</Text>
       <View style={styles.statsRow}>
         <View style={styles.statsBox}>
-          <Text style={styles.statsLabel}>Wins by Player</Text>
+          <Text style={styles.statsLabel}>Victoire par joueur</Text>
           <BarChart
             data={winsData}
             width={screenWidth * 0.42}
@@ -189,7 +189,7 @@ export default function HistoriqueScreen() {
           />
         </View>
         <View style={styles.statsBox}>
-          <Text style={styles.statsLabel}>Weapon Usage</Text>
+          <Text style={styles.statsLabel}>Armes utilisées</Text>
           <PieChart
             data={weaponData}
             width={screenWidth * 0.42}

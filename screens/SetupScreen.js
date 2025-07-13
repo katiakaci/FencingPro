@@ -17,7 +17,6 @@ export default function SetupScreen({ navigation }) {
   const [devices, setDevices] = useState([]);
   const [manager] = useState(new BleManager());
 
-  // BLE scan logic
   const scanForDevices = () => {
     setDevices([]);
     setLoading(true);
@@ -58,7 +57,7 @@ export default function SetupScreen({ navigation }) {
 
   const handleStart = () => {
     if (!bleConnected) {
-      Alert.alert('Erreur', 'Veuillez connecter l’appareil BLE');
+      Alert.alert('Erreur', "Veuillez connecter l'appareil BLE");
       return;
     }
     if (!player1.trim() || (mode === 'multi' && !player2.trim())) {

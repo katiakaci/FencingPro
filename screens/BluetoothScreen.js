@@ -45,8 +45,7 @@ const BluetoothScreen = () => {
         return;
       }
 
-      // Vérifie si cest la bonne adresse mac, a changer!!!!!!!!!!!!!!!!!!!!
-      if (device?.id === 'C8:D5:62:67:18:D9' && !devices.find(d => d.id === device.id)) {
+      if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE') && !devices.find(d => d.id === device.id)) {
         console.log('Microcontrôleur trouvé:', device.name || '(sans nom)', device.id);
         setDevices([device]);
         manager.stopDeviceScan(); // stop qd on trouve

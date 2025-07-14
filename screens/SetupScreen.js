@@ -25,7 +25,7 @@ export default function SetupScreen({ navigation }) {
         setLoading(false);
         return;
       }
-      if (device?.id === 'C8:D5:62:67:18:D9' && !devices.find(d => d.id === device.id)) {
+      if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE') && !devices.find(d => d.id === device.id)) {
         setDevices([device]);
         manager.stopDeviceScan(); // Stop scan when found
         setLoading(false);

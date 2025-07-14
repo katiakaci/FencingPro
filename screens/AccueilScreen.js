@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Audio } from 'expo-av';
 
 import { useMode } from '../context/ModeContext';
 import { useTouch } from '../context/TouchContext';
@@ -33,7 +34,7 @@ export default function AccueilScreen({ route }) {
   const { joueur1, joueur2, arme1 } = route.params || {};
   const isSolo = mode === 'solo';
 
-  const barColorLeft = touchDetected ? 'lime' : 'white';
+  const barColorLeft = touchDetected ? lightColor : 'white';
   const barColorRight = touchDetected ? 'white' : 'white';
 
   const [flash, setFlash] = useState(false);
@@ -50,12 +51,14 @@ export default function AccueilScreen({ route }) {
 
   useEffect(() => {
     if (touchDetected) {
+      playTouchSound();
       setFlash(true);
-      setTimeout(() => setFlash(false), 300); // 300ms de flash
+      
+      setTimeout(() => setFlash(false), 300);
       if (isSolo) {
         setBobScore(prev => prev + 1);
       } else {
-        setBobScore(prev => prev + 1); // ou selon l'arme reliée ?
+        setBobScore(prev => prev + 1);
       }
     }
   }, [touchDetected]);
@@ -99,6 +102,20 @@ export default function AccueilScreen({ route }) {
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
+  };
+
+  const playTouchSound = async () => {
+    try {
+      const { sound } = await Audio.Sound.createAsync(
+        require('../assets/notif_touch_detected.mp3')
+      );
+      await sound.playAsync();
+      sound.setOnPlaybackStatusUpdate(status => {
+        if (status.didJustFinish) sound.unloadAsync();
+      });
+    } catch (e) {
+      console.log('Erreur son:', e);
+    }
   };
 
   return (

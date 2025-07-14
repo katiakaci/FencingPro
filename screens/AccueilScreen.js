@@ -34,7 +34,7 @@ export default function AccueilScreen({ route }) {
   const { joueur1, joueur2, arme1 } = route.params || {};
   const isSolo = mode === 'solo';
 
-  const barColorLeft = touchDetected ? lightColor : 'white';
+  const barColorLeft = (touchDetected && gameStarted && running) ? lightColor : 'white';
   const barColorRight = touchDetected ? 'white' : 'white';
 
   const [flash, setFlash] = useState(false);
@@ -50,10 +50,13 @@ export default function AccueilScreen({ route }) {
   }, [running, gameStarted]);
 
   useEffect(() => {
+    // On ignore les touches si la partie n'est pas en cours
+    if (!gameStarted || !running) return;
+
     if (touchDetected) {
       playTouchSound();
       setFlash(true);
-      
+
       setTimeout(() => setFlash(false), 300);
       if (isSolo) {
         setBobScore(prev => prev + 1);
@@ -61,7 +64,7 @@ export default function AccueilScreen({ route }) {
         setBobScore(prev => prev + 1);
       }
     }
-  }, [touchDetected]);
+  }, [touchDetected, gameStarted, running]);
 
   // Sauvegarde du match
   const saveMatchToHistory = async () => {

@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useMode } from '../context/ModeContext';
 import { useLightColor } from '../context/LightColorContext';
 import LottieView from 'lottie-react-native';
+import { useBluetooth } from '../context/BluetoothContext';
 
 const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
 
@@ -19,6 +20,7 @@ export default function SettingsScreen() {
   const navigation = useNavigation();
   const { mode, setMode } = useMode();
   const { lightColor, setLightColor } = useLightColor();
+  const { sendVibrationSetting } = useBluetooth();
 
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
@@ -31,6 +33,11 @@ export default function SettingsScreen() {
   const toggleLanguage = useCallback(() => {
     setLanguage((prev) => (prev === 'fr' ? 'en' : 'fr'));
   }, []);
+
+  const onVibrationChange = (value) => {
+    setVibrationEnabled(value);
+    sendVibrationSetting(value); // envoie la commande BLE
+  };
 
   return (
     <View style={styles.container}>
@@ -103,7 +110,7 @@ export default function SettingsScreen() {
             <Text style={[styles.label, { flex: 1 }]}>Vibration</Text>
             <Switch
               value={vibrationEnabled}
-              onValueChange={setVibrationEnabled}
+              onValueChange={onVibrationChange}
               trackColor={{ false: '#ccc', true: '#0a3871' }}
               thumbColor="#fff"
             />

@@ -16,6 +16,7 @@ import SetupScreen from './screens/SetupScreen';
 import { LightColorProvider } from './context/LightColorContext';
 import { ModeProvider } from './context/ModeContext';
 import { TouchProvider } from './context/TouchContext';
+import { BluetoothProvider } from './context/BluetoothContext';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -49,18 +50,20 @@ export default function App() {
   }, []);
 
   return (
-    <ModeProvider>
-      <TouchProvider>
-        <LightColorProvider>
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
-              <Stack.Screen name="Setup" component={SetupScreen} />
-              <Stack.Screen name="Main" component={MainDrawer} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </LightColorProvider>
-      </TouchProvider>
-    </ModeProvider>
+    <BluetoothProvider>
+      <ModeProvider>
+        <TouchProvider>
+          <LightColorProvider>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
+                <Stack.Screen name="Setup" component={SetupScreen} />
+                <Stack.Screen name="Main" component={MainDrawer} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </LightColorProvider>
+        </TouchProvider>
+      </ModeProvider>
+    </BluetoothProvider>
   );
 }

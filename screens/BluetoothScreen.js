@@ -5,6 +5,7 @@ import base64 from 'react-native-base64';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTouch } from '../context/TouchContext';
+import { useBluetooth } from '../context/BluetoothContext';
 
 const SERVICE_UUID = '12345678-1234-5678-1234-56789abcdef0';
 const CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef1';
@@ -15,6 +16,7 @@ const BluetoothScreen = () => {
   const [connectedDevice, setConnectedDevice] = useState(null);
   const [loading, setLoading] = useState(false);
   const { setTouchDetected } = useTouch();
+  const { setDevice } = useBluetooth();
 
   useEffect(() => {
     if (Platform.OS === 'android') requestPermissions();
@@ -64,7 +66,7 @@ const BluetoothScreen = () => {
       const connected = await manager.connectToDevice(device.id);
       await connected.discoverAllServicesAndCharacteristics();
       setConnectedDevice(connected);
-      console.log('Connecté à : ', connected.name || '(aucun nom)');
+      setDevice(connected);
 
       connected.monitorCharacteristicForService(
         SERVICE_UUID,

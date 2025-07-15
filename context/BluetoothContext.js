@@ -16,11 +16,8 @@ export const BluetoothProvider = ({ children }) => {
     // Envoie la commande vibration au microcontrôleur
     const sendVibrationSetting = useCallback(async (enabled) => {
         if (!connectedDevice) return;
-        const value = enabled ? '0x01' : '0x00';
 
-        // 1 = 0x31
-        // 0 = 0x30
-
+        const value = enabled ? '1' : '0';
         console.log('Envoi vibration BLE:', value);
         try {
             await connectedDevice.writeCharacteristicWithResponseForService(

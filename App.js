@@ -13,6 +13,7 @@ import AccueilScreen from './screens/AccueilScreen';
 import HistoriqueScreen from './screens/HistoriqueScreen';
 import BluetoothScreen from './screens/BluetoothScreen';
 import SetupScreen from './screens/SetupScreen';
+import StatistiquesScreen from './screens/StatistiquesScreen';
 
 import { LightColorProvider } from './context/LightColorContext';
 import { ModeProvider } from './context/ModeContext';
@@ -36,6 +37,7 @@ function MainDrawer() {
       <Drawer.Screen name="Joueur 1" component={NameScreen} />
       <Drawer.Screen name="Bluetooth" component={BluetoothScreen} />
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
+      <Drawer.Screen name="Statistiques" component={StatistiquesScreen} />
       <Drawer.Screen name="Réglages" component={SettingsScreen} />
     </Drawer.Navigator>
   );
@@ -72,6 +74,16 @@ export default function App() {
                     options={{
                       headerShown: true,
                       title: 'Historique',
+                      headerStyle: { backgroundColor: '#00C2CB' },
+                      headerTintColor: '#fff',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="StatsFromWelcome"
+                    component={StatistiquesScreen}
+                    options={{
+                      headerShown: true,
+                      title: 'Statistiques',
                       headerStyle: { backgroundColor: '#00C2CB' },
                       headerTintColor: '#fff',
                     }}

@@ -24,11 +24,18 @@ export default function BienvenueScreen({ navigation }) {
           />
         </TouchableOpacity>
       </View>
-      {/* Boutons settings et stats en bas */}
+      {/* Boutons settings, historique et stats en bas */}
       <View style={styles.bottomBar}>
         <TouchableOpacity
           style={styles.bottomIconBtn}
           onPress={() => navigation.navigate('HistoriqueFromWelcome')}
+          accessibilityLabel="Historique"
+        >
+          <Ionicons name="time" size={15} color="#0a3871" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bottomIconBtn}
+          onPress={() => navigation.navigate('StatsFromWelcome')}
           accessibilityLabel="Statistiques"
         >
           <Ionicons name="stats-chart" size={15} color="#0a3871" />

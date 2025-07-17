@@ -1,24 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Animated, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Animated } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
-import { BarChart, PieChart } from 'react-native-chart-kit';
 import { Swipeable } from 'react-native-gesture-handler';
-
-const screenWidth = Dimensions.get('window').width;
-
-const initialMatchHistory = [];
-
-const winsData = {
-  labels: ['Alice', 'Bob', 'Charlie'],
-  datasets: [{ data: [2, 4, 3] }],
-};
-
-const weaponData = [
-  { name: 'Foil', population: 3, color: '#7bb6dd', legendFontColor: '#333', legendFontSize: 13 },
-  { name: 'Épée', population: 2, color: '#4a90e2', legendFontColor: '#333', legendFontSize: 13 },
-  { name: 'Sabre', population: 2, color: '#357ab7', legendFontColor: '#333', legendFontSize: 13 },
-];
 
 export default function HistoriqueScreen() {
   const [matchHistory, setMatchHistory] = useState([]);
@@ -96,44 +80,28 @@ export default function HistoriqueScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper} showsVerticalScrollIndicator={false}>
-      {/* Title & Actions */}
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
       <View style={styles.headerRow}>
-        <Text style={styles.title}>HISTORY & STATISTICS</Text>
-        <View style={styles.headerActions}>
-          <TouchableOpacity style={styles.actionBtn}>
-            <Ionicons name="download-outline" size={22} color="#333" />
-            <Text style={styles.actionText}>EXPORT</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtn}>
-            <Ionicons name="refresh-outline" size={22} color="#333" />
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.title}>Historique des matchs</Text>
+        <TouchableOpacity style={styles.actionBtn}>
+          <Ionicons name="download-outline" size={22} color="#333" />
+          <Text style={styles.actionText}>Sauvegarder</Text>
+        </TouchableOpacity>
       </View>
+
       {/* Bouton Trier */}
       <View style={styles.sortBar}>
         <TouchableOpacity style={styles.sortMenuBtn} onPress={() => setSortMenuVisible(true)}>
           <Ionicons name={sortOrder === 'desc' ? 'arrow-down' : 'arrow-up'} size={18} color="#357ab7" />
           <Text style={styles.sortMenuText}>Trier</Text>
-          <Ionicons name="chevron-down" size={16} color="#357ab7" style={{ marginLeft: 2 }} />
+          <Ionicons name="chevron-down" size={16} color="#357ab7" />
         </TouchableOpacity>
-        <Modal
-          visible={sortMenuVisible}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setSortMenuVisible(false)}
-        >
-          <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setSortMenuVisible(false)}>
+
+        <Modal visible={sortMenuVisible} transparent animationType="fade" onRequestClose={() => setSortMenuVisible(false)}>
+          <TouchableOpacity style={styles.modalOverlay} onPress={() => setSortMenuVisible(false)}>
             <View style={styles.sortDropdown}>
               {sortOptions.map(opt => (
-                <TouchableOpacity
-                  key={opt.key}
-                  style={styles.sortDropdownItem}
-                  onPress={() => {
-                    setSortBy(opt.key);
-                    setSortMenuVisible(false);
-                  }}
-                >
+                <TouchableOpacity key={opt.key} style={styles.sortDropdownItem} onPress={() => { setSortBy(opt.key); setSortMenuVisible(false); }}>
                   <Text style={[styles.sortDropdownText, sortBy === opt.key && { color: '#357ab7', fontWeight: 'bold' }]}>{opt.label}</Text>
                 </TouchableOpacity>
               ))}
@@ -147,16 +115,11 @@ export default function HistoriqueScreen() {
           </TouchableOpacity>
         </Modal>
       </View>
-      {/* Match History */}
-      <Text style={styles.sectionTitle}>MATCH HISTORY</Text>
+
+      {/* Liste des matchs */}
       <View style={styles.matchList}>
         {getSortedMatches().map((match, idx) => (
-          <Swipeable
-            key={idx}
-            ref={ref => swipeRefs.current[idx] = ref}
-            renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, idx)}
-            rightThreshold={40}
-          >
+          <Swipeable key={idx} ref={ref => swipeRefs.current[idx] = ref} renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, idx)}>
             <View style={styles.matchCard}>
               <View style={styles.matchRow}>
                 <View>
@@ -173,47 +136,9 @@ export default function HistoriqueScreen() {
           </Swipeable>
         ))}
       </View>
-      {/* Statistiques */}
-      <Text style={styles.sectionTitle}>STATISTICS</Text>
-      <View style={styles.statsRow}>
-        <View style={styles.statsBox}>
-          <Text style={styles.statsLabel}>Victoire par joueur</Text>
-          <BarChart
-            data={winsData}
-            width={screenWidth * 0.42}
-            height={140}
-            chartConfig={chartConfig}
-            fromZero
-            showValuesOnTopOfBars
-            style={{ borderRadius: 12 }}
-          />
-        </View>
-        <View style={styles.statsBox}>
-          <Text style={styles.statsLabel}>Armes utilisées</Text>
-          <PieChart
-            data={weaponData}
-            width={screenWidth * 0.42}
-            height={140}
-            chartConfig={chartConfig}
-            accessor={'population'}
-            backgroundColor={'transparent'}
-            paddingLeft={0}
-            style={{ borderRadius: 12 }}
-          />
-        </View>
-      </View>
     </ScrollView>
   );
 }
-
-const chartConfig = {
-  backgroundGradientFrom: '#fff',
-  backgroundGradientTo: '#fff',
-  color: (opacity = 1) => `rgba(53, 122, 183, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(51, 51, 51, ${opacity})`,
-  barPercentage: 0.6,
-  decimalPlaces: 0,
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -371,29 +296,6 @@ const styles = StyleSheet.create({
     color: '#888',
     marginTop: 2,
     textAlign: 'right',
-  },
-  statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-  },
-  statsBox: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 10,
-    width: screenWidth * 0.44,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.07,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  statsLabel: {
-    fontWeight: 'bold',
-    fontSize: 13,
-    color: '#333',
-    marginBottom: 6,
   },
   deleteBox: {
     backgroundColor: '#e74c3c',

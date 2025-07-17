@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
+
 import { useMode } from '../context/ModeContext';
 import { useLightColor } from '../context/LightColorContext';
-import LottieView from 'lottie-react-native';
 import { useBluetooth } from '../context/BluetoothContext';
 
 const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];

@@ -51,18 +51,6 @@ export default function SettingsScreen() {
         style={styles.backgroundAnimation}
       />
 
-      {/* Header */}
-      <View style={styles.appBar}>
-        <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.menuButton}>
-          <Ionicons name="menu" size={32} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.appBarTitle}>Réglages</Text>
-      </View>
-
-      {/* 2 petites barres blanches */}
-      <View style={styles.whiteSeparator} />
-      <View style={styles.whiteSeparator2} />
-
       {/* Page principale */}
       <View style={styles.contentWrapper}>
         {/* Mode solo/multijoueurs*/}
@@ -142,27 +130,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'black',
     zIndex: -1,
-  },
-  appBar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 90,
-    backgroundColor: 'rgba(74,171,232,0.30)',
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-    zIndex: 10,
-  },
-  menuButton: {
-    marginRight: 16,
-  },
-  appBarTitle: {
-    color: '#fff',
-    fontSize: 25,
-    fontWeight: 'bold',
   },
   whiteSeparator: {
     height: 2,

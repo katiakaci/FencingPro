@@ -4,6 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SystemUI from 'expo-system-ui';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import BienvenueScreen from './screens/BienvenueScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -41,26 +42,47 @@ function MainDrawer() {
 }
 
 export default function App() {
-
   useEffect(() => {
     SystemUI.setBackgroundColorAsync('#00C2CB');
   }, []);
 
   return (
-    <BluetoothProvider>
-      <ModeProvider>
-        <TouchProvider>
-          <LightColorProvider>
-            <NavigationContainer>
-              <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
-                <Stack.Screen name="Setup" component={SetupScreen} />
-                <Stack.Screen name="Main" component={MainDrawer} />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </LightColorProvider>
-        </TouchProvider>
-      </ModeProvider>
-    </BluetoothProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BluetoothProvider>
+        <ModeProvider>
+          <TouchProvider>
+            <LightColorProvider>
+              <NavigationContainer>
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
+                  <Stack.Screen name="Setup" component={SetupScreen} />
+                  <Stack.Screen
+                    name="SettingsFromWelcome"
+                    component={SettingsScreen}
+                    options={{
+                      headerShown: true,
+                      title: 'Réglages',
+                      headerStyle: { backgroundColor: '#00C2CB' },
+                      headerTintColor: '#fff',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="HistoriqueFromWelcome"
+                    component={HistoriqueScreen}
+                    options={{
+                      headerShown: true,
+                      title: 'Historique',
+                      headerStyle: { backgroundColor: '#00C2CB' },
+                      headerTintColor: '#fff',
+                    }}
+                  />
+                  <Stack.Screen name="Main" component={MainDrawer} />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </LightColorProvider>
+          </TouchProvider>
+        </ModeProvider>
+      </BluetoothProvider>
+    </GestureHandlerRootView>
   );
 }

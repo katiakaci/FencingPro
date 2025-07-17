@@ -28,14 +28,14 @@ export default function BienvenueScreen({ navigation }) {
       <View style={styles.bottomBar}>
         <TouchableOpacity
           style={styles.bottomIconBtn}
-          onPress={() => navigation.navigate('Main', { screen: 'Historique' })}
+          onPress={() => navigation.navigate('HistoriqueFromWelcome')}
           accessibilityLabel="Statistiques"
         >
           <Ionicons name="stats-chart" size={15} color="#0a3871" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.bottomIconBtn}
-          onPress={() => navigation.navigate('Main', { screen: 'Réglages' })}
+          onPress={() => navigation.navigate('SettingsFromWelcome')}
           accessibilityLabel="Réglages"
         >
           <Ionicons name="settings" size={15} color="#0a3871" />

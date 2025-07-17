@@ -35,10 +35,7 @@ function MainDrawer() {
       <Drawer.Screen name="Joueur 1" component={NameScreen} />
       <Drawer.Screen name="Bluetooth" component={BluetoothScreen} />
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
-      <Drawer.Screen
-        name="Réglages"
-        component={SettingsScreen}
-      />
+      <Drawer.Screen name="Réglages" component={SettingsScreen} />
     </Drawer.Navigator>
   );
 }

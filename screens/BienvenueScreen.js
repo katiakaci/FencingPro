@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function BienvenueScreen({ navigation }) {
   return (
@@ -21,6 +22,23 @@ export default function BienvenueScreen({ navigation }) {
             loop
             style={styles.playAnimation}
           />
+        </TouchableOpacity>
+      </View>
+      {/* Boutons settings et stats en bas */}
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+          style={styles.bottomIconBtn}
+          onPress={() => navigation.navigate('Historique')}
+          accessibilityLabel="Statistiques"
+        >
+          <Ionicons name="stats-chart" size={28} color="#ffffffff" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bottomIconBtn}
+          onPress={() => navigation.navigate('Réglages')}
+          accessibilityLabel="Réglages"
+        >
+          <Ionicons name="settings" size={28} color="#ffffffff" />
         </TouchableOpacity>
       </View>
     </View>
@@ -51,5 +69,27 @@ const styles = StyleSheet.create({
   playAnimation: {
     width: 300,
     height: 300,
+  },
+  bottomBar: {
+    position: 'absolute',
+    bottom: 32,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    zIndex: 20,
+  },
+  bottomIconBtn: {
+    backgroundColor: '#fff',
+    borderRadius: 24,
+    padding: 10,
+    marginHorizontal: 18,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

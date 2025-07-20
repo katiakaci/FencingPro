@@ -79,62 +79,67 @@ export default function HistoriqueScreen() {
     );
   };
 
+  const sortedMatches = getSortedMatches();
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Historique des matchs</Text>
-        <TouchableOpacity style={styles.actionBtn}>
-          <Ionicons name="download-outline" size={22} color="#333" />
-          <Text style={styles.actionText}>Sauvegarder</Text>
-        </TouchableOpacity>
-      </View>
 
-      {/* Bouton Trier */}
-      <View style={styles.sortBar}>
-        <TouchableOpacity style={styles.sortMenuBtn} onPress={() => setSortMenuVisible(true)}>
-          <Ionicons name={sortOrder === 'desc' ? 'arrow-down' : 'arrow-up'} size={18} color="#357ab7" />
-          <Text style={styles.sortMenuText}>Trier</Text>
-          <Ionicons name="chevron-down" size={16} color="#357ab7" />
-        </TouchableOpacity>
-
-        <Modal visible={sortMenuVisible} transparent animationType="fade" onRequestClose={() => setSortMenuVisible(false)}>
-          <TouchableOpacity style={styles.modalOverlay} onPress={() => setSortMenuVisible(false)}>
-            <View style={styles.sortDropdown}>
-              {sortOptions.map(opt => (
-                <TouchableOpacity key={opt.key} style={styles.sortDropdownItem} onPress={() => { setSortBy(opt.key); setSortMenuVisible(false); }}>
-                  <Text style={[styles.sortDropdownText, sortBy === opt.key && { color: '#357ab7', fontWeight: 'bold' }]}>{opt.label}</Text>
-                </TouchableOpacity>
-              ))}
-              <View style={styles.sortOrderRow}>
-                <TouchableOpacity onPress={() => setSortOrder(o => o === 'desc' ? 'asc' : 'desc')} style={styles.sortOrderBtn}>
-                  <Ionicons name={sortOrder === 'desc' ? 'arrow-down' : 'arrow-up'} size={16} color="#357ab7" />
-                  <Text style={styles.sortOrderText}>{sortOrder === 'desc' ? 'Décroissant' : 'Croissant'}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+      {/* Bouton Trier - seulement si il y a des matchs */}
+      {sortedMatches.length > 0 && (
+        <View style={styles.sortBar}>
+          <TouchableOpacity style={styles.sortMenuBtn} onPress={() => setSortMenuVisible(true)}>
+            <Ionicons name={sortOrder === 'desc' ? 'arrow-down' : 'arrow-up'} size={18} color="#357ab7" />
+            <Text style={styles.sortMenuText}>Trier</Text>
+            <Ionicons name="chevron-down" size={16} color="#357ab7" />
           </TouchableOpacity>
-        </Modal>
-      </View>
 
-      {/* Liste des matchs */}
-      <View style={styles.matchList}>
-        {getSortedMatches().map((match, idx) => (
-          <Swipeable key={idx} ref={ref => swipeRefs.current[idx] = ref} renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, idx)}>
-            <View style={styles.matchCard}>
-              <View style={styles.matchRow}>
-                <View>
-                  <Text style={styles.matchPlayers}>{match.players}</Text>
-                  <Text style={styles.matchWeapon}>{match.weapon}</Text>
-                  <Text style={styles.matchDuration}>{match.duration}</Text>
-                </View>
-                <View style={{ alignItems: 'flex-end' }}>
-                  <Text style={styles.matchScore}>{match.score}</Text>
-                  <Text style={styles.matchDate}>{match.date}</Text>
+          <Modal visible={sortMenuVisible} transparent animationType="fade" onRequestClose={() => setSortMenuVisible(false)}>
+            <TouchableOpacity style={styles.modalOverlay} onPress={() => setSortMenuVisible(false)}>
+              <View style={styles.sortDropdown}>
+                {sortOptions.map(opt => (
+                  <TouchableOpacity key={opt.key} style={styles.sortDropdownItem} onPress={() => { setSortBy(opt.key); setSortMenuVisible(false); }}>
+                    <Text style={[styles.sortDropdownText, sortBy === opt.key && { color: '#357ab7', fontWeight: 'bold' }]}>{opt.label}</Text>
+                  </TouchableOpacity>
+                ))}
+                <View style={styles.sortOrderRow}>
+                  <TouchableOpacity onPress={() => setSortOrder(o => o === 'desc' ? 'asc' : 'desc')} style={styles.sortOrderBtn}>
+                    <Ionicons name={sortOrder === 'desc' ? 'arrow-down' : 'arrow-up'} size={16} color="#357ab7" />
+                    <Text style={styles.sortOrderText}>{sortOrder === 'desc' ? 'Décroissant' : 'Croissant'}</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-            </View>
-          </Swipeable>
-        ))}
+            </TouchableOpacity>
+          </Modal>
+        </View>
+      )}
+
+      {/* Liste des matchs ou message vide */}
+      <View style={styles.matchList}>
+        {sortedMatches.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Ionicons name="calendar-outline" size={64} color="#ccc" />
+            <Text style={styles.emptyText}>Aucun match sauvegardé</Text>
+            <Text style={styles.emptySubtext}>Vos parties terminées apparaîtront ici</Text>
+          </View>
+        ) : (
+          sortedMatches.map((match, idx) => (
+            <Swipeable key={idx} ref={ref => swipeRefs.current[idx] = ref} renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, idx)}>
+              <View style={styles.matchCard}>
+                <View style={styles.matchRow}>
+                  <View>
+                    <Text style={styles.matchPlayers}>{match.players}</Text>
+                    <Text style={styles.matchWeapon}>{match.weapon}</Text>
+                    <Text style={styles.matchDuration}>{match.duration}</Text>
+                  </View>
+                  <View style={{ alignItems: 'flex-end' }}>
+                    <Text style={styles.matchScore}>{match.score}</Text>
+                    <Text style={styles.matchDate}>{match.date}</Text>
+                  </View>
+                </View>
+              </View>
+            </Swipeable>
+          ))
+        )}
       </View>
     </ScrollView>
   );
@@ -163,21 +168,6 @@ const styles = StyleSheet.create({
   headerActions: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  actionBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ececec',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    marginLeft: 8,
-  },
-  actionText: {
-    fontWeight: 'bold',
-    color: '#333',
-    marginLeft: 4,
-    fontSize: 13,
   },
   sortBar: {
     flexDirection: 'row',
@@ -254,6 +244,24 @@ const styles = StyleSheet.create({
   matchList: {
     marginBottom: 10,
   },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#666',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: '#999',
+    marginTop: 8,
+    textAlign: 'center',
+  },
   matchCard: {
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -304,6 +312,5 @@ const styles = StyleSheet.create({
     width: 70,
     height: '90%',
     borderRadius: 12,
-    // marginVertical: 5,
   },
 });

@@ -13,6 +13,7 @@ export const useSettings = () => {
 export const SettingsProvider = ({ children }) => {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
+  const [selectedSound, setSelectedSound] = useState('alert_touch.mp3');
 
   return (
     <SettingsContext.Provider value={{
@@ -20,6 +21,8 @@ export const SettingsProvider = ({ children }) => {
       setSoundEnabled,
       vibrationEnabled,
       setVibrationEnabled,
+      selectedSound,
+      setSelectedSound,
     }}>
       {children}
     </SettingsContext.Provider>

@@ -13,9 +13,21 @@ import { useTouch } from '../context/TouchContext';
 import { useLightColor } from '../context/LightColorContext';
 import { useSettings } from '../context/SettingsContext';
 
+const SOUND_FILES = {
+  'alert_touch.mp3': require('../assets/sound/alert_touch.mp3'),
+  'alert_touch2.mp3': require('../assets/sound/alert_touch2.mp3'),
+  'alert_touch3.mp3': require('../assets/sound/alert_touch3.mp3'),
+  'alert_touch4.mp3': require('../assets/sound/alert_touch4.mp3'),
+  'alert_touch5.mp3': require('../assets/sound/alert_touch5.mp3'),
+  'alert_touch6.mp3': require('../assets/sound/alert_touch6.mp3'),
+  'alert_touch7.mp3': require('../assets/sound/alert_touch7.mp3'),
+  'alert_touch8.mp3': require('../assets/sound/alert_touch8.mp3'),
+  'alert_touch9.mp3': require('../assets/sound/alert_touch9.mp3'),
+};
+
 export default function AccueilScreen({ route }) {
   const { mode } = useMode();
-  const { soundEnabled } = useSettings();
+  const { soundEnabled, selectedSound } = useSettings();
   // Mettre le jeu en pause quand on quitte la page ou quand on ouvre le menu hamburger
   useFocusEffect(
     React.useCallback(() => {
@@ -113,9 +125,13 @@ export default function AccueilScreen({ route }) {
     if (!soundEnabled) return;
     
     try {
-      const { sound } = await Audio.Sound.createAsync(
-        require('../assets/notif_touch_detected.mp3')
-      );
+      const soundAsset = SOUND_FILES[selectedSound];
+      if (!soundAsset) {
+        console.log('Fichier son non trouvé:', selectedSound);
+        return;
+      }
+      
+      const { sound } = await Audio.Sound.createAsync(soundAsset);
       await sound.playAsync();
       sound.setOnPlaybackStatusUpdate(status => {
         if (status.didJustFinish) sound.unloadAsync();

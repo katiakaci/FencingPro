@@ -1,4 +1,6 @@
 # Commandes
+adp pair [adresse ip]
+
 nvm use 20.17.0
 npx expo run:android (rebuild complètement)
 npx expo start (expiré)

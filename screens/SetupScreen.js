@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, Alert, ActivityIndicator, Keyboard, TouchableWithoutFeedback, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Keyboard, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { BleManager } from 'react-native-ble-plx';
-import AccueilScreen from './AccueilScreen';
 
 const weapons = ['Sabre', 'Fleuret'];
 
@@ -86,6 +85,15 @@ export default function SetupScreen({ navigation }) {
           resizeMode="cover"
           style={styles.backgroundAnimation}
         />
+
+        {/* Bouton retour */}
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.navigate('Bienvenue')}
+        >
+          <Ionicons name="arrow-back" size={20} color="#fff" />
+        </TouchableOpacity>
+
         <ScrollView contentContainerStyle={styles.contentWrapper} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
           <Text style={styles.title}>Préparation</Text>
           {/* Mode */}
@@ -202,6 +210,15 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
     backgroundColor: 'black',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 30,
+    left: 20,
+    zIndex: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 20,
+    padding: 1,
   },
   contentWrapper: {
     flex: 1,

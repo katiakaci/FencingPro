@@ -11,9 +11,11 @@ import { Audio } from 'expo-av';
 import { useMode } from '../context/ModeContext';
 import { useTouch } from '../context/TouchContext';
 import { useLightColor } from '../context/LightColorContext';
+import { useSettings } from '../context/SettingsContext';
 
 export default function AccueilScreen({ route }) {
   const { mode } = useMode();
+  const { soundEnabled } = useSettings();
   // Mettre le jeu en pause quand on quitte la page ou quand on ouvre le menu hamburger
   useFocusEffect(
     React.useCallback(() => {
@@ -108,6 +110,8 @@ export default function AccueilScreen({ route }) {
   };
 
   const playTouchSound = async () => {
+    if (!soundEnabled) return;
+    
     try {
       const { sound } = await Audio.Sound.createAsync(
         require('../assets/notif_touch_detected.mp3')

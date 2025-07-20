@@ -14,6 +14,7 @@ import LottieView from 'lottie-react-native';
 import { useMode } from '../context/ModeContext';
 import { useLightColor } from '../context/LightColorContext';
 import { useBluetooth } from '../context/BluetoothContext';
+import { useSettings } from '../context/SettingsContext';
 
 const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
 
@@ -22,9 +23,8 @@ export default function SettingsScreen() {
   const { mode, setMode } = useMode();
   const { lightColor, setLightColor } = useLightColor();
   const { sendVibrationSetting } = useBluetooth();
+  const { soundEnabled, setSoundEnabled, vibrationEnabled, setVibrationEnabled } = useSettings();
 
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [vibrationEnabled, setVibrationEnabled] = useState(true);
   const [language, setLanguage] = useState('fr');
 
   const toggleMode = useCallback(() => {

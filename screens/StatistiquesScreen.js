@@ -98,8 +98,6 @@ export default function StatistiquesScreen() {
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
-            <Text style={styles.title}>STATISTIQUES (FAUSSES DONNÉES POUR L'INSTANT!!!) </Text>
-
             {/* Graphique des victoires par joueur */}
             <View style={styles.statsBox}>
                 <Text style={styles.statsLabel}>🏆 Victoires par joueur</Text>
@@ -170,7 +168,8 @@ export default function StatistiquesScreen() {
                     chartConfig={chartConfig}
                     accessor={'population'}
                     backgroundColor={'transparent'}
-                    paddingLeft={0}
+                    paddingLeft={15}
+                    center={[10, 0]}
                     style={{ borderRadius: 8 }}
                 />
             </View>

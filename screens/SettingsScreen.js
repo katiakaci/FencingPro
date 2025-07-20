@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 
 import { useMode } from '../context/ModeContext';
@@ -19,7 +17,6 @@ import { useSettings } from '../context/SettingsContext';
 const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
 
 export default function SettingsScreen() {
-  const navigation = useNavigation();
   const { mode, setMode } = useMode();
   const { lightColor, setLightColor } = useLightColor();
   const { sendVibrationSetting } = useBluetooth();
@@ -32,7 +29,7 @@ export default function SettingsScreen() {
   }, [mode, setMode]);
 
   const toggleLanguage = useCallback(() => {
-    setLanguage((prev) => (prev === 'fr' ? 'en' : 'fr'));
+    setLanguage(prev => prev === 'fr' ? 'en' : 'fr');
   }, []);
 
   const onVibrationChange = (value) => {
@@ -42,7 +39,6 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Animation background */}
       <LottieView
         source={require('../assets/animation/backgroundWelcomeScreen.json')}
         autoPlay
@@ -51,14 +47,13 @@ export default function SettingsScreen() {
         style={styles.backgroundAnimation}
       />
 
-      {/* Page principale */}
       <View style={styles.contentWrapper}>
         {/* Mode solo/multijoueurs*/}
         <View style={styles.settingBlock}>
           <View style={styles.row}>
-            <Text style={[styles.label, { flex: 1 }]}>Mode</Text>
-            <Pressable style={styles.languageButton} onPress={toggleMode}>
-              <Text style={styles.languageButtonText}>
+            <Text style={styles.label}>Mode</Text>
+            <Pressable style={styles.actionButton} onPress={toggleMode}>
+              <Text style={styles.actionButtonText}>
                 {mode === 'solo' ? 'Multijoueur' : 'Solo'}
               </Text>
             </Pressable>
@@ -87,7 +82,7 @@ export default function SettingsScreen() {
         {/* Son/Vibration */}
         <View style={styles.settingBlock}>
           <View style={styles.row}>
-            <Text style={[styles.label, { flex: 1 }]}>Son</Text>
+            <Text style={styles.label}>Son</Text>
             <Switch
               value={soundEnabled}
               onValueChange={setSoundEnabled}
@@ -96,7 +91,7 @@ export default function SettingsScreen() {
             />
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { flex: 1 }]}>Vibration</Text>
+            <Text style={styles.label}>Vibration</Text>
             <Switch
               value={vibrationEnabled}
               onValueChange={onVibrationChange}
@@ -109,9 +104,9 @@ export default function SettingsScreen() {
         {/* Langue */}
         <View style={styles.settingBlock}>
           <View style={styles.row}>
-            <Text style={[styles.label, { flex: 1 }]}>Langue</Text>
-            <Pressable style={styles.languageButton} onPress={toggleLanguage}>
-              <Text style={styles.languageButtonText}>
+            <Text style={styles.label}>Langue</Text>
+            <Pressable style={styles.actionButton} onPress={toggleLanguage}>
+              <Text style={styles.actionButtonText}>
                 {language === 'fr' ? 'English' : 'Français'}
               </Text>
             </Pressable>
@@ -131,26 +126,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     zIndex: -1,
   },
-  whiteSeparator: {
-    height: 2,
-    backgroundColor: 'rgba(255,255,255,0.95)',
-    width: '100%',
-    zIndex: 9,
-    marginTop: 90,
-  },
-  whiteSeparator2: {
-    height: 2,
-    backgroundColor: 'rgba(255,255,255,0.95)',
-    width: '100%',
-    zIndex: 9,
-    marginTop: 2,
+  contentWrapper: {
+    flex: 1,
+    justifyContent: 'center',
   },
   settingBlock: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     padding: 16,
     borderRadius: 24,
     marginBottom: 24,
-    justifyContent: 'center',
     marginHorizontal: 24,
   },
   label: {
@@ -158,11 +142,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#002244',
     marginBottom: 8,
-  },
-  value: {
-    fontSize: 18,
-    color: '#002244',
-    marginRight: 12,
+    flex: 1,
   },
   row: {
     flexDirection: 'row',
@@ -185,19 +165,15 @@ const styles = StyleSheet.create({
     borderColor: '#002244',
     borderWidth: 3,
   },
-  languageButton: {
+  actionButton: {
     backgroundColor: '#007bff',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 18,
   },
-  languageButtonText: {
+  actionButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-  },
-  contentWrapper: {
-    flex: 1,
-    justifyContent: 'center',
   },
 });

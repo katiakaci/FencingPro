@@ -356,7 +356,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     padding: 12,
     borderRadius: 10,
     backgroundColor: '#f5f5f5',
@@ -367,8 +366,10 @@ const styles = StyleSheet.create({
     borderColor: '#007bff',
   },
   soundOptionText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#333',
+    flex: 1,
+    marginRight: 10,
   },
   selectedSoundText: {
     color: '#007bff',

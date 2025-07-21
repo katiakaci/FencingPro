@@ -44,9 +44,30 @@ export default function HistoriqueScreen() {
     let sorted = [...matchHistory];
     if (sortBy === 'date') {
       sorted.sort((a, b) => {
-        const da = new Date(a.date.split(', ')[1]);
-        const db = new Date(b.date.split(', ')[1]);
-        return sortOrder === 'desc' ? db - da : da - db;
+        const parseDate = (dateStr) => {
+          if (dateStr.includes(', ')) {
+            const [datePart, timePart] = dateStr.split(', ');
+            const [day, month, year] = datePart.split('/');
+            const [hour, minute] = timePart.split(':');
+            return new Date(year, month - 1, day, hour, minute);
+          }
+
+          if (dateStr.includes(' PM') || dateStr.includes(' AM')) {
+            return new Date(dateStr);
+          }
+
+          return new Date(dateStr);
+        };
+
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+
+        if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+          console.log('Date invalide:', a.date, b.date);
+          return 0;
+        }
+
+        return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
       });
     } else if (sortBy === 'duration') {
       const toSeconds = d => {
@@ -84,9 +105,34 @@ export default function HistoriqueScreen() {
 
   const sortedMatches = getSortedMatches();
 
+  const formatDateForDisplay = (dateStr) => {
+    try {
+      let date;
+
+      if (dateStr.includes(', ')) {
+        const [datePart, timePart] = dateStr.split(', ');
+        const [day, month, year] = datePart.split('/');
+        const [hour, minute] = timePart.split(':');
+        date = new Date(year, month - 1, day, hour, minute);
+      } else {
+        date = new Date(dateStr);
+      }
+
+      return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+    } catch (error) {
+      console.log('Erreur formatage date:', error);
+      return dateStr;
+    }
+  };
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
-
       {/* Bouton Trier - seulement si il y a des matchs */}
       {sortedMatches.length > 0 && (
         <View style={styles.sortBar}>
@@ -136,7 +182,7 @@ export default function HistoriqueScreen() {
                   </View>
                   <View style={{ alignItems: 'flex-end', minWidth: 90 }}>
                     <Text style={styles.matchScore}>{match.score}</Text>
-                    <Text style={styles.matchDate}>{match.date}</Text>
+                    <Text style={styles.matchDate}>{formatDateForDisplay(match.date)}</Text>
                   </View>
                 </View>
               </View>

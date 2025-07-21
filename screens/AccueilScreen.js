@@ -82,34 +82,29 @@ export default function AccueilScreen({ route }) {
     }
   }, [touchDetected, gameStarted, running]);
 
-  // Sauvegarde du match
-  const saveMatchToHistory = async () => {
-    const now = new Date();
-    const dateStr = now.toLocaleString('en-US', {
-      month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: true
-    });
-    const duration = formatChrono(chrono); // mm:ss
-    const match = {
-      players: mode === 'solo' ? `${joueur1 || 'Bob'}` : `${joueur1 || 'Bob'} vs ${joueur2 || 'Julie'}`,
-      score: mode === 'solo' ? `${bobScore}` : `${bobScore}–${julieScore}`,
-      weapon: arme1 || 'Épée',
-      duration,
-      date: dateStr,
-    };
+  const saveMatch = async () => {
     try {
-      const data = await AsyncStorage.getItem('matchHistory');
-      const arr = data ? JSON.parse(data) : [];
-      arr.unshift(match); // Ajoute en haut
-      await AsyncStorage.setItem('matchHistory', JSON.stringify(arr));
-    } catch (e) { }
-  };
+      const matchData = {
+        id: Date.now().toString(),
+        date: new Date().toLocaleString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }),
+        players: mode === 'solo' ? `${joueur1 || 'Joueur 1'}` : `${joueur1 || 'Joueur 1'} vs ${joueur2 || 'Joueur 2'}`,
+        weapon: arme1 || 'Épée',
+        score: mode === 'solo' ? `${bobScore}` : `${bobScore}–${julieScore}`,
+        duration: formatChrono(chrono),
+      };
 
-  // Appeler saveMatchToHistory quand la partie se termine
-  useEffect(() => {
-    if (time === 0 && running === false) {
-      saveMatchToHistory();
+      console.log('Match à sauvegarder:', matchData);
+      await addMatch(matchData);
+    } catch (error) {
+      console.log('Erreur lors de la sauvegarde:', error);
     }
-  }, [time, running]);
+  };
 
   useEffect(() => {
     if (stopped) {
@@ -251,7 +246,7 @@ export default function AccueilScreen({ route }) {
                         text: 'Oui',
                         style: 'default',
                         onPress: () => {
-                          saveMatchToHistory();
+                          saveMatch();
                           setStopped(false);
                           setBobScore(0);
                           setJulieScore(0);

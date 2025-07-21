@@ -35,7 +35,6 @@ const SOUNDS = [
   { name: 'Sonnette', file: 'alert_touch9.mp3' },
 ];
 
-// Mapping statique des fichiers audio
 const SOUND_FILES = {
   'alert_touch.mp3': require('../assets/sound/alert_touch.mp3'),
   'alert_touch2.mp3': require('../assets/sound/alert_touch2.mp3'),

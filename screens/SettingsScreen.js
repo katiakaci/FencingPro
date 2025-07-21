@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, Pressable, Modal, ScrollView, } from 'react-native';
+import { View, Text, StyleSheet, Switch, TouchableOpacity, Pressable, Modal, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
@@ -71,10 +71,7 @@ export default function SettingsScreen() {
   const playPreviewSound = async (soundFile) => {
     try {
       const soundAsset = SOUND_FILES[soundFile];
-      if (!soundAsset) {
-        console.log('Fichier son non trouvé:', soundFile);
-        return;
-      }
+      if (!soundAsset) return;
 
       const { sound } = await Audio.Sound.createAsync(soundAsset);
       await sound.playAsync();
@@ -86,19 +83,18 @@ export default function SettingsScreen() {
     }
   };
 
-  const selectSound = (soundFile) => {
+  const selectSound = useCallback((soundFile) => {
     setSelectedSound(soundFile);
     setShowSoundPicker(false);
-  };
+  }, [setSelectedSound]);
 
   const getSelectedSoundName = () => {
     const sound = SOUNDS.find(s => s.file === selectedSound);
-    return sound ? sound.name : 'Son par défaut';
+    return sound?.name || 'Son par défaut';
   };
 
   const resetAllData = useCallback(async () => {
     try {
-      // Supprimer toutes les données stockées
       await AsyncStorage.multiRemove([
         'matchHistory',
         'userStats',
@@ -106,7 +102,6 @@ export default function SettingsScreen() {
         'playerProfiles'
       ]);
 
-      // Réinitialiser l'historique via le contexte
       await clearHistory();
 
       // Réinitialiser les états
@@ -116,7 +111,6 @@ export default function SettingsScreen() {
       setVibrationEnabled(true);
       setSelectedSound('alert_touch.mp3');
       setLanguage('fr');
-
       setShowResetDialog(false);
 
       alert('Toutes les données ont été réinitialisées avec succès.');
@@ -341,7 +335,7 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     paddingVertical: 20,
-    paddingBottom: 40, // Espace en bas pour le scroll
+    paddingBottom: 40,
   },
   settingBlock: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -391,7 +385,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   soundRow: {
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
@@ -403,7 +396,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     flexDirection: 'row',
     alignItems: 'center',
-    // Supprimé maxWidth: 200 pour permettre au bouton de s'adapter au contenu
   },
   soundButtonText: {
     color: '#fff',

@@ -1,5 +1,5 @@
 # Commandes
-adp pair [adresse ip]
+adb pair 192.168.1.163:
 
 nvm use 20.17.0
 npx expo run:android (rebuild complètement)

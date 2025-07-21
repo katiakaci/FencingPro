@@ -129,12 +129,12 @@ export default function HistoriqueScreen() {
             <Swipeable key={idx} ref={ref => swipeRefs.current[idx] = ref} renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, idx)}>
               <View style={styles.matchCard}>
                 <View style={styles.matchRow}>
-                  <View>
+                  <View style={{ flex: 1 }}>
                     <Text style={styles.matchPlayers}>{match.players}</Text>
                     <Text style={styles.matchWeapon}>{match.weapon}</Text>
                     <Text style={styles.matchDuration}>{match.duration}</Text>
                   </View>
-                  <View style={{ alignItems: 'flex-end' }}>
+                  <View style={{ alignItems: 'flex-end', minWidth: 90 }}>
                     <Text style={styles.matchScore}>{match.score}</Text>
                     <Text style={styles.matchDate}>{match.date}</Text>
                   </View>
@@ -281,6 +281,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    flex: 1,
   },
   matchPlayers: {
     fontWeight: 'bold',
@@ -307,6 +308,7 @@ const styles = StyleSheet.create({
     color: '#888',
     marginTop: 2,
     textAlign: 'right',
+    minWidth: 90,
   },
   deleteBox: {
     backgroundColor: '#e74c3c',

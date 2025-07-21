@@ -33,11 +33,6 @@ module.exports = {
             ],
             package: "com.katiakaci.Fencing"
         },
-        // androidNavigationBar: {
-        //   visible: "immersive",
-        //   barStyle: "light-content",
-        //   backgroundColor: "#00c9a7"
-        // },
         web: {
             favicon: "./assets/logo.png"
         },

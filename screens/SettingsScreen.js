@@ -8,7 +8,9 @@ import {
   Pressable,
   Modal,
   ScrollView,
+  Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import LottieView from 'lottie-react-native';
@@ -17,6 +19,7 @@ import { useMode } from '../context/ModeContext';
 import { useLightColor } from '../context/LightColorContext';
 import { useBluetooth } from '../context/BluetoothContext';
 import { useSettings } from '../context/SettingsContext';
+import { useHistory } from '../context/HistoryContext';
 
 const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
 
@@ -49,17 +52,19 @@ export default function SettingsScreen() {
   const { mode, setMode } = useMode();
   const { lightColor, setLightColor } = useLightColor();
   const { sendVibrationSetting } = useBluetooth();
-  const { 
-    soundEnabled, 
-    setSoundEnabled, 
-    vibrationEnabled, 
+  const {
+    soundEnabled,
+    setSoundEnabled,
+    vibrationEnabled,
     setVibrationEnabled,
     selectedSound,
-    setSelectedSound 
+    setSelectedSound
   } = useSettings();
+  const { clearHistory } = useHistory();
 
   const [language, setLanguage] = useState('fr');
   const [showSoundPicker, setShowSoundPicker] = useState(false);
+  const [showResetDialog, setShowResetDialog] = useState(false);
 
   const toggleMode = useCallback(() => {
     setMode(mode === 'solo' ? 'multi' : 'solo');
@@ -81,7 +86,7 @@ export default function SettingsScreen() {
         console.log('Fichier son non trouvé:', soundFile);
         return;
       }
-      
+
       const { sound } = await Audio.Sound.createAsync(soundAsset);
       await sound.playAsync();
       sound.setOnPlaybackStatusUpdate(status => {
@@ -101,6 +106,36 @@ export default function SettingsScreen() {
     const sound = SOUNDS.find(s => s.file === selectedSound);
     return sound ? sound.name : 'Son par défaut';
   };
+
+  const resetAllData = useCallback(async () => {
+    try {
+      // Supprimer toutes les données stockées
+      await AsyncStorage.multiRemove([
+        'matchHistory',
+        'userStats',
+        'gameSettings',
+        'playerProfiles'
+      ]);
+
+      // Réinitialiser l'historique via le contexte
+      await clearHistory();
+
+      // Réinitialiser les états
+      setMode('solo');
+      setLightColor('lime');
+      setSoundEnabled(true);
+      setVibrationEnabled(true);
+      setSelectedSound('alert_touch.mp3');
+      setLanguage('fr');
+
+      setShowResetDialog(false);
+
+      alert('Toutes les données ont été réinitialisées avec succès.');
+    } catch (error) {
+      console.log('Erreur lors de la réinitialisation:', error);
+      alert('Erreur lors de la réinitialisation des données.');
+    }
+  }, [setMode, setLightColor, setSoundEnabled, setVibrationEnabled, setSelectedSound, clearHistory]);
 
   return (
     <View style={styles.container}>
@@ -155,13 +190,13 @@ export default function SettingsScreen() {
               thumbColor="#fff"
             />
           </View>
-          
+
           {/* Sélection du son */}
           {soundEnabled && (
             <View style={styles.row}>
               <Text style={[styles.label, { fontSize: 16 }]}>Sonnerie</Text>
-              <TouchableOpacity 
-                style={styles.soundButton} 
+              <TouchableOpacity
+                style={styles.soundButton}
                 onPress={() => setShowSoundPicker(true)}
               >
                 <Text style={styles.soundButtonText}>{getSelectedSoundName()}</Text>
@@ -191,11 +226,11 @@ export default function SettingsScreen() {
           <View style={styles.modalOverlay}>
             <View style={styles.soundModal}>
               <Text style={styles.modalTitle}>Choisir une sonnerie</Text>
-              
+
               <ScrollView style={styles.soundList}>
                 {SOUNDS.map((sound) => (
                   <View key={sound.file} style={styles.soundItem}>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       style={[
                         styles.soundOption,
                         selectedSound === sound.file && styles.selectedSoundOption
@@ -212,8 +247,8 @@ export default function SettingsScreen() {
                         <Ionicons name="checkmark" size={20} color="#007bff" />
                       )}
                     </TouchableOpacity>
-                    
-                    <TouchableOpacity 
+
+                    <TouchableOpacity
                       style={styles.playButton}
                       onPress={() => playPreviewSound(sound.file)}
                     >
@@ -223,7 +258,7 @@ export default function SettingsScreen() {
                 ))}
               </ScrollView>
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.closeModalButton}
                 onPress={() => setShowSoundPicker(false)}
               >
@@ -244,7 +279,58 @@ export default function SettingsScreen() {
             </Pressable>
           </View>
         </View>
+
+        {/* Réinitialisation */}
+        <View style={styles.settingBlock}>
+          <View style={styles.row}>
+            <Text style={styles.label}>Réinitialiser</Text>
+            <Pressable style={styles.resetButton} onPress={() => setShowResetDialog(true)}>
+              <Text style={styles.resetButtonText}>Tout effacer</Text>
+            </Pressable>
+          </View>
+          <Text style={styles.resetWarning}>
+            Supprime définitivement toutes les données (historique, statistiques, réglages)
+          </Text>
+        </View>
       </View>
+
+      {/* Modal confirmation réinitialisation */}
+      <Modal
+        visible={showResetDialog}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowResetDialog(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.resetModal}>
+            <Ionicons name="warning" size={48} color="#e74c3c" style={styles.warningIcon} />
+            <Text style={styles.resetModalTitle}>Réinitialiser toutes les données ?</Text>
+            <Text style={styles.resetModalText}>
+              Cette action supprimera définitivement :
+              {'\n'}• Tout l'historique des parties
+              {'\n'}• Toutes les statistiques
+              {'\n'}• Tous les réglages personnalisés
+              {'\n\n'}Cette action est irréversible.
+            </Text>
+
+            <View style={styles.resetButtonRow}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setShowResetDialog(false)}
+              >
+                <Text style={styles.cancelButtonText}>Annuler</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.confirmResetButton}
+                onPress={resetAllData}
+              >
+                <Text style={styles.confirmResetButtonText}>Tout effacer</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -389,6 +475,78 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   closeModalText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  resetButton: {
+    backgroundColor: '#e74c3c',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 18,
+  },
+  resetButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  resetWarning: {
+    fontSize: 12,
+    color: '#666',
+    fontStyle: 'italic',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  resetModal: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 24,
+    width: '90%',
+    maxWidth: 400,
+    alignItems: 'center',
+  },
+  warningIcon: {
+    marginBottom: 16,
+  },
+  resetModalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 16,
+    color: '#002244',
+  },
+  resetModalText: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'left',
+    marginBottom: 24,
+    lineHeight: 20,
+  },
+  resetButtonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  cancelButton: {
+    backgroundColor: '#6c757d',
+    padding: 12,
+    borderRadius: 12,
+    flex: 0.45,
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  confirmResetButton: {
+    backgroundColor: '#e74c3c',
+    padding: 12,
+    borderRadius: 12,
+    flex: 0.45,
+    alignItems: 'center',
+  },
+  confirmResetButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',

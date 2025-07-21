@@ -1,40 +1,43 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Animated } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
+import { useHistory } from '../context/HistoryContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function HistoriqueScreen() {
-  const [matchHistory, setMatchHistory] = useState([]);
+  const { matchHistory, deleteMatch, loadHistory } = useHistory();
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
   const [sortMenuVisible, setSortMenuVisible] = useState(false);
   const swipeRefs = useRef([]);
 
-  // Charger les parties sauvegardées
-  useEffect(() => {
-    const loadHistory = async () => {
-      try {
-        const data = await AsyncStorage.getItem('matchHistory');
-        if (data) setMatchHistory(JSON.parse(data));
-      } catch (e) { }
-    };
-    loadHistory();
-  }, []);
-
-  // Sauvegarder après suppression
-  useEffect(() => {
-    AsyncStorage.setItem('matchHistory', JSON.stringify(matchHistory));
-  }, [matchHistory]);
+  // Recharger quand l'écran devient actif
+  useFocusEffect(
+    useCallback(() => {
+      loadHistory();
+    }, [])
+  );
 
   const handleDelete = (index) => {
     if (swipeRefs.current[index]) {
       swipeRefs.current[index].close();
     }
     setTimeout(() => {
-      setMatchHistory(prev => prev.filter((_, i) => i !== index));
+      deleteMatch(index);
     }, 100);
   };
+
+  // Si l'historique est vide
+  if (matchHistory.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Ionicons name="calendar-outline" size={64} color="#ccc" />
+        <Text style={styles.emptyText}>Aucun match sauvegardé</Text>
+        <Text style={styles.emptySubtext}>Vos parties terminées apparaîtront ici</Text>
+      </View>
+    );
+  }
 
   // Tri
   const getSortedMatches = () => {

@@ -19,6 +19,7 @@ import { LightColorProvider } from './context/LightColorContext';
 import { ModeProvider } from './context/ModeContext';
 import { TouchProvider } from './context/TouchContext';
 import { BluetoothProvider } from './context/BluetoothContext';
+import { HistoryProvider } from './context/HistoryContext';
 import { SettingsProvider } from './context/SettingsContext';
 
 const Stack = createNativeStackNavigator();
@@ -56,43 +57,45 @@ export default function App() {
           <TouchProvider>
             <LightColorProvider>
               <SettingsProvider>
-                <NavigationContainer>
-                  <Stack.Navigator screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
-                    <Stack.Screen name="Setup" component={SetupScreen} />
-                    <Stack.Screen
-                      name="SettingsFromWelcome"
-                      component={SettingsScreen}
-                      options={{
-                        headerShown: true,
-                        title: 'Réglages',
-                        headerStyle: { backgroundColor: '#00C2CB' },
-                        headerTintColor: '#fff',
-                      }}
-                    />
-                    <Stack.Screen
-                      name="HistoriqueFromWelcome"
-                      component={HistoriqueScreen}
-                      options={{
-                        headerShown: true,
-                        title: 'Historique',
-                        headerStyle: { backgroundColor: '#00C2CB' },
-                        headerTintColor: '#fff',
-                      }}
-                    />
-                    <Stack.Screen
-                      name="StatsFromWelcome"
-                      component={StatistiquesScreen}
-                      options={{
-                        headerShown: true,
-                        title: 'Statistiques',
-                        headerStyle: { backgroundColor: '#00C2CB' },
-                        headerTintColor: '#fff',
-                      }}
-                    />
-                    <Stack.Screen name="Main" component={MainDrawer} />
-                  </Stack.Navigator>
-                </NavigationContainer>
+                <HistoryProvider>
+                  <NavigationContainer>
+                    <Stack.Navigator screenOptions={{ headerShown: false }}>
+                      <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
+                      <Stack.Screen name="Setup" component={SetupScreen} />
+                      <Stack.Screen
+                        name="SettingsFromWelcome"
+                        component={SettingsScreen}
+                        options={{
+                          headerShown: true,
+                          title: 'Réglages',
+                          headerStyle: { backgroundColor: '#00C2CB' },
+                          headerTintColor: '#fff',
+                        }}
+                      />
+                      <Stack.Screen
+                        name="HistoriqueFromWelcome"
+                        component={HistoriqueScreen}
+                        options={{
+                          headerShown: true,
+                          title: 'Historique',
+                          headerStyle: { backgroundColor: '#00C2CB' },
+                          headerTintColor: '#fff',
+                        }}
+                      />
+                      <Stack.Screen
+                        name="StatsFromWelcome"
+                        component={StatistiquesScreen}
+                        options={{
+                          headerShown: true,
+                          title: 'Statistiques',
+                          headerStyle: { backgroundColor: '#00C2CB' },
+                          headerTintColor: '#fff',
+                        }}
+                      />
+                      <Stack.Screen name="Main" component={MainDrawer} />
+                    </Stack.Navigator>
+                  </NavigationContainer>
+                </HistoryProvider>
               </SettingsProvider>
             </LightColorProvider>
           </TouchProvider>

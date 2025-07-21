@@ -12,6 +12,7 @@ import { useMode } from '../context/ModeContext';
 import { useTouch } from '../context/TouchContext';
 import { useLightColor } from '../context/LightColorContext';
 import { useSettings } from '../context/SettingsContext';
+import { useHistory } from '../context/HistoryContext';
 
 const SOUND_FILES = {
   'alert_touch.mp3': require('../assets/sound/alert_touch.mp3'),
@@ -28,6 +29,7 @@ const SOUND_FILES = {
 export default function AccueilScreen({ route }) {
   const { mode } = useMode();
   const { soundEnabled, selectedSound } = useSettings();
+  const { addMatch } = useHistory();
   // Mettre le jeu en pause quand on quitte la page ou quand on ouvre le menu hamburger
   useFocusEffect(
     React.useCallback(() => {
@@ -123,14 +125,14 @@ export default function AccueilScreen({ route }) {
 
   const playTouchSound = async () => {
     if (!soundEnabled) return;
-    
+
     try {
       const soundAsset = SOUND_FILES[selectedSound];
       if (!soundAsset) {
         console.log('Fichier son non trouvé:', selectedSound);
         return;
       }
-      
+
       const { sound } = await Audio.Sound.createAsync(soundAsset);
       await sound.playAsync();
       sound.setOnPlaybackStatusUpdate(status => {

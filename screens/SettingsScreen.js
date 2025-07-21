@@ -1,15 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Switch,
-  TouchableOpacity,
-  Pressable,
-  Modal,
-  ScrollView,
-  Alert,
-} from 'react-native';
+import { View, Text, StyleSheet, Switch, TouchableOpacity, Pressable, Modal, ScrollView, } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
@@ -196,7 +186,7 @@ export default function SettingsScreen() {
 
           {/* Sélection du son */}
           {soundEnabled && (
-            <View style={styles.row}>
+            <View style={styles.soundRow}>
               <TouchableOpacity
                 style={styles.soundButton}
                 onPress={() => setShowSoundPicker(true)}
@@ -400,6 +390,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  soundRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   soundButton: {
     backgroundColor: '#007bff',
     paddingVertical: 8,
@@ -407,7 +403,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     flexDirection: 'row',
     alignItems: 'center',
-    maxWidth: 200,
+    // Supprimé maxWidth: 200 pour permettre au bouton de s'adapter au contenu
   },
   soundButtonText: {
     color: '#fff',

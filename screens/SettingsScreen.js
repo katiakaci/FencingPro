@@ -146,7 +146,11 @@ export default function SettingsScreen() {
         style={styles.backgroundAnimation}
       />
 
-      <View style={styles.contentWrapper}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentWrapper}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Mode solo/multijoueurs*/}
         <View style={styles.settingBlock}>
           <View style={styles.row}>
@@ -193,7 +197,6 @@ export default function SettingsScreen() {
           {/* Sélection du son */}
           {soundEnabled && (
             <View style={styles.row}>
-              <Text style={[styles.label, { fontSize: 16 }]}>Sonnerie</Text>
               <TouchableOpacity
                 style={styles.soundButton}
                 onPress={() => setShowSoundPicker(true)}
@@ -214,58 +217,6 @@ export default function SettingsScreen() {
             />
           </View>
         </View>
-
-        {/* Modal sélection du son */}
-        <Modal
-          visible={showSoundPicker}
-          transparent
-          animationType="slide"
-          onRequestClose={() => setShowSoundPicker(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.soundModal}>
-              <Text style={styles.modalTitle}>Choisir une sonnerie</Text>
-
-              <ScrollView style={styles.soundList}>
-                {SOUNDS.map((sound) => (
-                  <View key={sound.file} style={styles.soundItem}>
-                    <TouchableOpacity
-                      style={[
-                        styles.soundOption,
-                        selectedSound === sound.file && styles.selectedSoundOption
-                      ]}
-                      onPress={() => selectSound(sound.file)}
-                    >
-                      <Text style={[
-                        styles.soundOptionText,
-                        selectedSound === sound.file && styles.selectedSoundText
-                      ]}>
-                        {sound.name}
-                      </Text>
-                      {selectedSound === sound.file && (
-                        <Ionicons name="checkmark" size={20} color="#007bff" />
-                      )}
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={styles.playButton}
-                      onPress={() => playPreviewSound(sound.file)}
-                    >
-                      <Ionicons name="play" size={16} color="#007bff" />
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </ScrollView>
-
-              <TouchableOpacity
-                style={styles.closeModalButton}
-                onPress={() => setShowSoundPicker(false)}
-              >
-                <Text style={styles.closeModalText}>Fermer</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
 
         {/* Langue */}
         <View style={styles.settingBlock}>
@@ -291,7 +242,59 @@ export default function SettingsScreen() {
             Supprime définitivement toutes les données (historique, statistiques, réglages)
           </Text>
         </View>
-      </View>
+      </ScrollView>
+
+      {/* Modal sélection du son */}
+      <Modal
+        visible={showSoundPicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowSoundPicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.soundModal}>
+            <Text style={styles.modalTitle}>Choisir une sonnerie</Text>
+
+            <ScrollView style={styles.soundList}>
+              {SOUNDS.map((sound) => (
+                <View key={sound.file} style={styles.soundItem}>
+                  <TouchableOpacity
+                    style={[
+                      styles.soundOption,
+                      selectedSound === sound.file && styles.selectedSoundOption
+                    ]}
+                    onPress={() => selectSound(sound.file)}
+                  >
+                    <Text style={[
+                      styles.soundOptionText,
+                      selectedSound === sound.file && styles.selectedSoundText
+                    ]}>
+                      {sound.name}
+                    </Text>
+                    {selectedSound === sound.file && (
+                      <Ionicons name="checkmark" size={20} color="#007bff" />
+                    )}
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.playButton}
+                    onPress={() => playPreviewSound(sound.file)}
+                  >
+                    <Ionicons name="play" size={16} color="#007bff" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
+
+            <TouchableOpacity
+              style={styles.closeModalButton}
+              onPress={() => setShowSoundPicker(false)}
+            >
+              <Text style={styles.closeModalText}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Modal confirmation réinitialisation */}
       <Modal
@@ -343,9 +346,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     zIndex: -1,
   },
-  contentWrapper: {
+  scrollView: {
     flex: 1,
-    justifyContent: 'center',
+  },
+  contentWrapper: {
+    paddingVertical: 20,
+    paddingBottom: 40, // Espace en bas pour le scroll
   },
   settingBlock: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',

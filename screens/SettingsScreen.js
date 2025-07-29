@@ -41,7 +41,7 @@ const SOUND_FILES = {
 export default function SettingsScreen() {
   const { mode, setMode } = useMode();
   const { lightColor, setLightColor } = useLightColor();
-  const { sendVibrationSetting } = useBluetooth();
+  const { sendVibrationSetting, sendColorSetting } = useBluetooth(); // Ajouter sendColorSetting
   const {
     soundEnabled,
     setSoundEnabled,
@@ -122,6 +122,15 @@ export default function SettingsScreen() {
     }
   }, [setMode, setLightColor, setSoundEnabled, setVibrationEnabled, setSelectedSound, clearHistory]);
 
+  // Fonction pour changer la couleur et l'envoyer via BLE
+  const handleColorChange = useCallback((color) => {
+    // console.log('Changement de couleur:', color);
+    setLightColor(color);
+    if (sendColorSetting) {
+      sendColorSetting(color);
+    }
+  }, [setLightColor, sendColorSetting]);
+
   return (
     <View style={styles.container}>
       <LottieView
@@ -156,7 +165,7 @@ export default function SettingsScreen() {
             {COLORS.map((color) => (
               <TouchableOpacity
                 key={color}
-                onPress={() => setLightColor(color)}
+                onPress={() => handleColorChange(color)} // Utiliser handleColorChange
                 style={[
                   styles.colorDot,
                   { backgroundColor: color },
@@ -363,8 +372,8 @@ export default function SettingsScreen() {
               }}
               maxWidth={Dimensions.get('window').width * 0.9}
               onColorChanged={useCallback((color) => {
-                setLightColor(color);
-              }, [setLightColor])}
+                handleColorChange(color); // Utiliser handleColorChange
+              }, [handleColorChange])}
             />
 
             <TouchableOpacity

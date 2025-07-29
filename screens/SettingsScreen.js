@@ -4,7 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import LottieView from 'lottie-react-native';
-
+import { ColorPicker } from '../components/ColorPicker';
+import { Dimensions } from 'react-native';
 import { useMode } from '../context/ModeContext';
 import { useLightColor } from '../context/LightColorContext';
 import { useBluetooth } from '../context/BluetoothContext';
@@ -54,6 +55,7 @@ export default function SettingsScreen() {
   const [language, setLanguage] = useState('fr');
   const [showSoundPicker, setShowSoundPicker] = useState(false);
   const [showResetDialog, setShowResetDialog] = useState(false);
+  const [showColorGradient, setShowColorGradient] = useState(false);
 
   const toggleMode = useCallback(() => {
     setMode(mode === 'solo' ? 'multi' : 'solo');
@@ -160,10 +162,30 @@ export default function SettingsScreen() {
                   { backgroundColor: color },
                   lightColor === color && styles.colorSelected,
                 ]}
-                accessibilityLabel={`Choisir la couleur ${color}`}
               />
             ))}
           </View>
+          <TouchableOpacity
+            style={[
+              styles.actionButton,
+              {
+                marginTop: 12,
+                backgroundColor: lightColor, // Utilise la couleur sélectionnée
+                borderWidth: 1,
+                borderColor: '#fff'
+              }
+            ]}
+            onPress={() => setShowColorGradient(true)}
+          >
+            <Text style={[
+              styles.actionButtonText,
+              {
+                color: lightColor === 'white' || lightColor === 'yellow' || lightColor === 'lime' ? '#002244' : '#fff'
+              }
+            ]}>
+              Autres couleurs
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Son/Vibration */}
@@ -317,6 +339,44 @@ export default function SettingsScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* modal des couleurs */}
+      <Modal
+        visible={showColorGradient}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowColorGradient(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.soundModal, { alignItems: 'center' }]}>
+            <Text style={styles.modalTitle}>Choisir une couleur</Text>
+
+            <ColorPicker
+              colors={['red', 'purple', 'blue', 'cyan', 'green', 'yellow', 'orange', 'black', 'white']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{
+                height: 40,
+                width: Dimensions.get('window').width * 0.9,
+                borderRadius: 20,
+                marginVertical: 30,
+              }}
+              maxWidth={Dimensions.get('window').width * 0.9}
+              onColorChanged={useCallback((color) => {
+                setLightColor(color);
+              }, [setLightColor])}
+            />
+
+            <TouchableOpacity
+              style={styles.closeModalButton}
+              onPress={() => setShowColorGradient(false)}
+            >
+              <Text style={styles.closeModalText}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
     </View>
   );
 }

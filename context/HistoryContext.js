@@ -35,7 +35,7 @@ export const HistoryProvider = ({ children }) => {
     }, []);
 
     const addMatch = useCallback(async (match) => {
-        console.log('🔄 addMatch appelé avec:', match);
+        console.log('addMatch appelé avec:', match);
 
         try {
             const currentData = await AsyncStorage.getItem('matchHistory');
@@ -43,12 +43,12 @@ export const HistoryProvider = ({ children }) => {
             const newHistory = [match, ...currentHistory];
 
             await AsyncStorage.setItem('matchHistory', JSON.stringify(newHistory));
-            console.log('💾 Sauvegardé dans AsyncStorage');
+            console.log('Sauvegardé dans AsyncStorage');
 
             setMatchHistory(newHistory);
-            console.log('✅ État mis à jour');
+            console.log('État mis à jour');
         } catch (e) {
-            console.log('❌ Erreur ajout match:', e);
+            console.log('Erreur ajout match:', e);
         }
     }, []);
 

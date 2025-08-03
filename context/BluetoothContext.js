@@ -1,9 +1,11 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
 import { Buffer } from 'buffer';
 import { BleManager } from 'react-native-ble-plx';
 
 const SERVICE_UUID = '12345678-1234-5678-1234-56789abcdef0';
-const CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef1';
+const TOUCH_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef1'; // Pour recevoir les touches
+const COLOR_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef2'; // Pour envoyer les couleurs
+const VIBRATION_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef3'; // Pour le moteur vibrant
 
 const BluetoothContext = createContext();
 
@@ -65,12 +67,20 @@ const getColorHex = (color) => {
 export const BluetoothProvider = ({ children }) => {
     const [manager] = useState(() => new BleManager());
     const [connectedDevice, setConnectedDevice] = useState(null);
+    const colorTimeoutRef = useRef(null);
+    const lastColorRef = useRef(null);
 
     const setDevice = (device) => setConnectedDevice(device);
 
-    // Envoie la couleur au microcontrôleur
+    // Envoie la couleur au microcontrôleur avec debounce
     const sendColorSetting = useCallback(async (color) => {
         const hexColor = getColorHex(color);
+        
+        // Éviter l'envoi de la même couleur
+        if (lastColorRef.current === hexColor) {
+            return;
+        }
+
         console.log('Envoi couleur BLE:', color, '->', hexColor);
 
         if (!connectedDevice) {
@@ -78,16 +88,27 @@ export const BluetoothProvider = ({ children }) => {
             return;
         }
 
-        try {
-            await connectedDevice.writeCharacteristicWithResponseForService(
-                SERVICE_UUID,
-                CHARACTERISTIC_UUID,
-                Buffer.from(hexColor).toString('base64')
-            );
-            console.log('COULEUR ENVOYEEEEE ✅✅✅');
-        } catch (e) {
-            console.log('COULEUR PAS ENVOYEE❌', e);
+        // Debounce : attendre 300ms avant d'envoyer
+        if (colorTimeoutRef.current) {
+            clearTimeout(colorTimeoutRef.current);
         }
+
+        colorTimeoutRef.current = setTimeout(async () => {
+            lastColorRef.current = hexColor;
+            
+            try {
+                await connectedDevice.writeCharacteristicWithResponseForService(
+                    SERVICE_UUID,
+                    COLOR_CHARACTERISTIC_UUID,
+                    Buffer.from(hexColor).toString('base64')
+                );
+                console.log('COULEUR ENVOYEEEEE ✅✅✅');
+            } catch (e) {
+                console.log('COULEUR PAS ENVOYEE❌', e);
+                // Reset en cas d'erreur pour permettre un nouvel essai
+                lastColorRef.current = null;
+            }
+        }, 300); // Attendre 300ms
     }, [connectedDevice]);
 
     // Envoie la commande vibration au microcontrôleur
@@ -99,9 +120,10 @@ export const BluetoothProvider = ({ children }) => {
         try {
             await connectedDevice.writeCharacteristicWithResponseForService(
                 SERVICE_UUID,
-                CHARACTERISTIC_UUID,
+                VIBRATION_CHARACTERISTIC_UUID,
                 Buffer.from(value).toString('base64')
             );
+            console.log('VIBRATION ENVOYEEEEE ✅✅✅');
         } catch (e) {
             console.log('❌ Erreur envoi vibration:', e);
         }

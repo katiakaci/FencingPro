@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, PermissionsAndroid, Platform, Alert, ActivityIndicator, Button, Dimensions } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
 import base64 from 'react-native-base64';
@@ -8,7 +8,9 @@ import { useTouch } from '../context/TouchContext';
 import { useBluetooth } from '../context/BluetoothContext';
 
 const SERVICE_UUID = '12345678-1234-5678-1234-56789abcdef0';
-const CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef1';
+const TOUCH_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef1'; // Pour recevoir les touches
+const COLOR_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef2'; // Pour envoyer les couleurs
+const VIBRATION_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef3'; // Pour le moteur vibrant
 
 const BluetoothScreen = () => {
   const [devices, setDevices] = useState([]);
@@ -47,7 +49,7 @@ const BluetoothScreen = () => {
         return;
       }
 
-      if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE') && !devices.find(d => d.id === device.id)) {
+      if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE' || device?.id === 'F5:51:69:D9:54:32') && !devices.find(d => d.id === device.id)) {
         console.log('Microcontrôleur trouvé:', device.name || '(sans nom)', device.id);
         setDevices([device]);
         manager.stopDeviceScan(); // stop qd on trouve
@@ -70,7 +72,7 @@ const BluetoothScreen = () => {
 
       connected.monitorCharacteristicForService(
         SERVICE_UUID,
-        CHARACTERISTIC_UUID,
+        TOUCH_CHARACTERISTIC_UUID,
         (error, characteristic) => {
           if (error) {
             console.error('Erreur notif:', error);
@@ -94,6 +96,42 @@ const BluetoothScreen = () => {
       Alert.alert('Erreur', 'Impossible de se connecter au ');
     }
   };
+
+  // Pour les couleurs
+  const sendColorSetting = useCallback(async (color) => {
+    if (!connectedDevice) return;
+
+    const hexColor = color.startsWith('#') ? color.slice(1) : color; // Enlève le '#' si présent
+
+    try {
+      await connectedDevice.writeCharacteristicWithResponseForService(
+        SERVICE_UUID,
+        COLOR_CHARACTERISTIC_UUID, // ← Caractéristique spécifique couleur
+        Buffer.from(hexColor).toString('base64')
+      );
+      console.log('Couleur envoyée:', hexColor);
+    } catch (error) {
+      console.error('Erreur envoi couleur:', error);
+    }
+  }, [connectedDevice]);
+
+  // Pour la vibration/moteur
+  const sendVibrationSetting = useCallback(async (enabled) => {
+    if (!connectedDevice) return;
+
+    const value = enabled ? '1' : '0';
+
+    try {
+      await connectedDevice.writeCharacteristicWithResponseForService(
+        SERVICE_UUID,
+        VIBRATION_CHARACTERISTIC_UUID, // ← Utilise la bonne caractéristique
+        Buffer.from(value).toString('base64')
+      );
+      console.log('Vibration envoyée:', value);
+    } catch (error) {
+      console.error('Erreur envoi vibration:', error);
+    }
+  }, [connectedDevice]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

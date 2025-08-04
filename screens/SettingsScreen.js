@@ -11,6 +11,7 @@ import { useLightColor } from '../context/LightColorContext';
 import { useBluetooth } from '../context/BluetoothContext';
 import { useSettings } from '../context/SettingsContext';
 import { useHistory } from '../context/HistoryContext';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
 
@@ -165,7 +166,7 @@ export default function SettingsScreen() {
             {COLORS.map((color) => (
               <TouchableOpacity
                 key={color}
-                onPress={() => handleColorChange(color)} // Utiliser handleColorChange
+                onPress={() => handleColorChange(color)}
                 style={[
                   styles.colorDot,
                   { backgroundColor: color },
@@ -174,26 +175,29 @@ export default function SettingsScreen() {
               />
             ))}
           </View>
+
           <TouchableOpacity
             style={[
-              styles.actionButton,
               {
                 marginTop: 12,
-                backgroundColor: lightColor, // Utilise la couleur sélectionnée
                 borderWidth: 1,
-                borderColor: '#fff'
+                borderColor: '#fff',
+                borderRadius: 18,
+                overflow: 'hidden',
               }
             ]}
             onPress={() => setShowColorGradient(true)}
           >
-            <Text style={[
-              styles.actionButtonText,
-              {
-                color: lightColor === 'white' || lightColor === 'yellow' || lightColor === 'lime' ? '#002244' : '#fff'
-              }
-            ]}>
-              Autres couleurs
-            </Text>
+            <LinearGradient
+              colors={['#FF0000', '#FF8000', '#FFFF00', '#00FF00', '#0080FF', '#8000FF']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradientButton}
+            >
+              <Text style={styles.gradientButtonText}>
+                Autres couleurs
+              </Text>
+            </LinearGradient>
           </TouchableOpacity>
         </View>
 
@@ -612,5 +616,20 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  gradientButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gradientButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
 });

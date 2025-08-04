@@ -17,6 +17,14 @@ class MainActivity : ReactActivity() {
     // This is required for expo-splash-screen.
     setTheme(R.style.AppTheme);
     super.onCreate(null)
+
+    window.decorView.systemUiVisibility = (
+      android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+      or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+      or android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+      or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+      or android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    )
   }
 
   /**

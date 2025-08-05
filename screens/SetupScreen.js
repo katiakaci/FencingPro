@@ -53,7 +53,7 @@ export default function SetupScreen({ navigation }) {
 
   const canStart = mode === 'solo'
     ? player1.trim() && selectedWeapon && bleConnected
-    : player1.trim() && player2.trim() && selectedWeapon && selectedWeapon2 && bleConnected; 
+    : player1.trim() && player2.trim() && selectedWeapon && selectedWeapon2 && bleConnected;
 
   const handleStart = () => {
     if (!bleConnected) {
@@ -251,10 +251,10 @@ const styles = StyleSheet.create({
     padding: 1,
   },
   contentWrapper: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 16,
+    paddingTop: 30,
+    paddingBottom: 40,
   },
   title: {
     fontSize: 24,

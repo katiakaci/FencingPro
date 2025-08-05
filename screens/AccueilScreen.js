@@ -163,7 +163,7 @@ export default function AccueilScreen({ route, navigation }) {
         autoPlay
         loop
         resizeMode="cover"
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1 }}
+        style={styles.backgroundAnimation}
       />
       <View style={styles.container}>
         <StatusBar style="light" />
@@ -315,6 +315,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 100,
     marginBottom: 8,
+  },
+  backgroundAnimation: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -1,
+    backgroundColor: 'black',
   },
   nameBox: {
     flex: 1,

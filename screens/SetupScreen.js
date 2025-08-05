@@ -11,6 +11,7 @@ export default function SetupScreen({ navigation }) {
   const [player1, setPlayer1] = useState('');
   const [player2, setPlayer2] = useState('');
   const [selectedWeapon, setSelectedWeapon] = useState(null);
+  const [selectedWeapon2, setSelectedWeapon2] = useState(null);
   const [bleConnected, setBleConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [devices, setDevices] = useState([]);
@@ -52,7 +53,7 @@ export default function SetupScreen({ navigation }) {
 
   const canStart = mode === 'solo'
     ? player1.trim() && selectedWeapon && bleConnected
-    : player1.trim() && player2.trim() && selectedWeapon && bleConnected;
+    : player1.trim() && player2.trim() && selectedWeapon && selectedWeapon2 && bleConnected; 
 
   const handleStart = () => {
     if (!bleConnected) {
@@ -63,14 +64,15 @@ export default function SetupScreen({ navigation }) {
       Alert.alert('Erreur', 'Veuillez entrer le(s) nom(s) du ou des joueur(s)');
       return;
     }
-    if (!selectedWeapon) {
-      Alert.alert('Erreur', 'Veuillez sélectionner une arme');
+    if (!selectedWeapon || (mode === 'multi' && !selectedWeapon2)) {
+      Alert.alert('Erreur', 'Veuillez sélectionner une arme pour chaque joueur');
       return;
     }
     navigation.replace('Main', {
       joueur1: player1,
       joueur2: player2,
       arme1: selectedWeapon,
+      arme2: selectedWeapon2,
       mode,
     });
   };
@@ -96,6 +98,7 @@ export default function SetupScreen({ navigation }) {
 
         <ScrollView contentContainerStyle={styles.contentWrapper} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
           <Text style={styles.title}>Préparation</Text>
+
           {/* Mode */}
           <View style={styles.block}>
             <Text style={styles.label}>Mode</Text>
@@ -108,6 +111,7 @@ export default function SetupScreen({ navigation }) {
               </TouchableOpacity>
             </View>
           </View>
+
           {/* Noms joueurs */}
           <View style={styles.block}>
             <Text style={styles.label}>Nom du joueur 1</Text>
@@ -129,9 +133,10 @@ export default function SetupScreen({ navigation }) {
               </>
             )}
           </View>
-          {/* Arme */}
+
+          {/* Arme joueur 1 */}
           <View style={styles.block}>
-            <Text style={styles.label}>Type d’arme</Text>
+            <Text style={styles.label}>Type d'arme - Joueur 1</Text>
             <View style={styles.row}>
               {weapons.map((weapon) => (
                 <TouchableOpacity
@@ -144,6 +149,25 @@ export default function SetupScreen({ navigation }) {
               ))}
             </View>
           </View>
+
+          {/* Arme joueur 2 (si mode multi) */}
+          {mode === 'multi' && (
+            <View style={styles.block}>
+              <Text style={styles.label}>Type d'arme - Joueur 2</Text>
+              <View style={styles.row}>
+                {weapons.map((weapon) => (
+                  <TouchableOpacity
+                    key={weapon}
+                    style={[styles.weaponButton, selectedWeapon2 === weapon && styles.selected]}
+                    onPress={() => setSelectedWeapon2(weapon)}
+                  >
+                    <Text style={styles.modeText}>{weapon}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          )}
+
           {/* Bluetooth */}
           <View style={styles.block}>
             <Text style={styles.label}>Appareil Bluetooth</Text>
@@ -165,6 +189,7 @@ export default function SetupScreen({ navigation }) {
             )}
             {loading && <ActivityIndicator size="small" color="#007acc" style={{ marginTop: 10 }} />}
           </View>
+
           {/* Bouton Commencer */}
           <TouchableOpacity
             style={[styles.startButton, !canStart && { opacity: 0.5 }]}
@@ -173,6 +198,7 @@ export default function SetupScreen({ navigation }) {
           >
             <Text style={styles.startText}>Commencer la partie</Text>
           </TouchableOpacity>
+
           {/* Bouton DEV : Commencer sans BLE */}
           <TouchableOpacity
             style={[styles.startButton, { backgroundColor: '#ffb347', marginTop: 8 }]}
@@ -181,18 +207,22 @@ export default function SetupScreen({ navigation }) {
                 Alert.alert('Erreur', 'Veuillez entrer le(s) nom(s) du ou des joueur(s)');
                 return;
               }
-              if (!selectedWeapon) {
-                Alert.alert('Erreur', 'Veuillez sélectionner une arme');
+              if (!selectedWeapon || (mode === 'multi' && !selectedWeapon2)) {
+                Alert.alert('Erreur', 'Veuillez sélectionner une arme pour chaque joueur');
                 return;
               }
               navigation.replace('Main', {
                 joueur1: player1,
                 joueur2: player2,
                 arme1: selectedWeapon,
+                arme2: selectedWeapon2,
                 mode,
               });
             }}
-            disabled={mode === 'solo' ? !player1.trim() || !selectedWeapon : !player1.trim() || !player2.trim() || !selectedWeapon}
+            disabled={mode === 'solo'
+              ? !player1.trim() || !selectedWeapon
+              : !player1.trim() || !player2.trim() || !selectedWeapon || !selectedWeapon2
+            }
           >
             <Text style={[styles.startText, { color: '#111' }]}>DEV : Commencer sans BLE</Text>
           </TouchableOpacity>

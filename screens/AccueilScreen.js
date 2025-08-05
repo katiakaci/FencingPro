@@ -289,16 +289,6 @@ export default function AccueilScreen({ route, navigation }) {
                 }}>
                   <Ionicons name="stop" size={28} color="#fff" />
                 </TouchableOpacity>
-                {/* Replay button only visible when game is started */}
-                <TouchableOpacity style={styles.iconButton} onPress={() => {
-                  setChrono(0);
-                  setRunning(false);
-                  setGameStarted(false);
-                  setBobScore(0);
-                  setJulieScore(0);
-                }}>
-                  <Ionicons name="refresh" size={28} color="#0a3871" />
-                </TouchableOpacity>
               </>
             )}
           </View>

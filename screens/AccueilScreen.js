@@ -26,10 +26,11 @@ const SOUND_FILES = {
   'alert_touch9.mp3': require('../assets/sound/alert_touch9.mp3'),
 };
 
-export default function AccueilScreen({ route }) {
+export default function AccueilScreen({ route, navigation }) {
   const { mode } = useMode();
   const { soundEnabled, selectedSound } = useSettings();
   const { addMatch } = useHistory();
+
   // Mettre le jeu en pause quand on quitte la page ou quand on ouvre le menu hamburger
   useFocusEffect(
     React.useCallback(() => {
@@ -47,8 +48,24 @@ export default function AccueilScreen({ route }) {
   const [chrono, setChrono] = useState(0);
   const [stopped, setStopped] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const { joueur1, joueur2, arme1 } = route.params || {};
-  const isSolo = mode === 'solo';
+  // Récupérer les paramètres de navigation
+  const {
+    joueur1,
+    joueur2,
+    arme1,
+    arme2,
+    device1,
+    device2,
+    mode: routeMode
+  } = route?.params || {};
+
+  console.log('AccueilScreen - Paramètres reçus:', route?.params);
+
+  const gameMode = routeMode || mode;
+  const isSolo = gameMode === 'solo';
+  const playerName = isSolo ? (joueur1 || 'Joueur') : (joueur1 || 'Joueur 1');
+  const player2Name = joueur2 || 'Joueur 2';
+  const weaponType = arme1 || 'Épée';
 
   const barColorLeft = (touchDetected && gameStarted && running) ? lightColor : 'white';
   const barColorRight = touchDetected ? 'white' : 'white';
@@ -93,9 +110,9 @@ export default function AccueilScreen({ route }) {
           hour: '2-digit',
           minute: '2-digit'
         }),
-        players: mode === 'solo' ? `${joueur1 || 'Joueur 1'}` : `${joueur1 || 'Joueur 1'} vs ${joueur2 || 'Joueur 2'}`,
-        weapon: arme1 || 'Épée',
-        score: mode === 'solo' ? `${bobScore}` : `${bobScore}–${julieScore}`,
+        players: isSolo ? playerName : `${playerName} vs ${player2Name}`,
+        weapon: weaponType,
+        score: isSolo ? `${bobScore}` : `${bobScore}–${julieScore}`,
         duration: formatChrono(chrono),
       };
 
@@ -154,19 +171,30 @@ export default function AccueilScreen({ route }) {
         {/* Scores */}
         <View style={styles.nameContainer}>
           <View style={[styles.nameBox, { borderRightWidth: isSolo ? 0 : 2 }]}>
-            <Text style={styles.nameText}>{joueur1 || 'Joueur 1'}</Text>
+            <Text style={styles.nameText}>{playerName}</Text>
             <View style={styles.scoreCircle}><Text style={styles.scoreText}>{bobScore}</Text></View>
           </View>
           {!isSolo && (
             <View style={styles.nameBox}>
-              <Text style={styles.nameText}>{joueur2 || 'Joueur 2'}</Text>
+              <Text style={styles.nameText}>{player2Name}</Text>
               <View style={styles.scoreCircle}><Text style={styles.scoreText}>{julieScore}</Text></View>
             </View>
           )}
         </View>
+
         {/* Affichage de l'arme */}
         <View style={{ alignItems: 'center', marginBottom: 8 }}>
-          <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold', backgroundColor: 'rgba(0,0,0,0.18)', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 4 }}>{arme1 || 'Épée'}</Text>
+          <Text style={{
+            color: '#fff',
+            fontSize: 16,
+            fontWeight: 'bold',
+            backgroundColor: 'rgba(0,0,0,0.18)',
+            borderRadius: 8,
+            paddingHorizontal: 12,
+            paddingVertical: 4
+          }}>
+            {weaponType}
+          </Text>
         </View>
 
         {/* Barres */}

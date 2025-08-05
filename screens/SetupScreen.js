@@ -12,52 +12,104 @@ export default function SetupScreen({ navigation }) {
   const [player2, setPlayer2] = useState('');
   const [selectedWeapon, setSelectedWeapon] = useState(null);
   const [selectedWeapon2, setSelectedWeapon2] = useState(null);
-  const [bleConnected, setBleConnected] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [devices, setDevices] = useState([]);
+
+  // États Bluetooth pour joueur 1
+  const [bleConnected1, setBleConnected1] = useState(false);
+  const [loading1, setLoading1] = useState(false);
+  const [devices1, setDevices1] = useState([]);
+  const [connectedDevice1, setConnectedDevice1] = useState(null);
+
+  // États Bluetooth pour joueur 2
+  const [bleConnected2, setBleConnected2] = useState(false);
+  const [loading2, setLoading2] = useState(false);
+  const [devices2, setDevices2] = useState([]);
+  const [connectedDevice2, setConnectedDevice2] = useState(null);
+
   const [manager] = useState(new BleManager());
 
-  const scanForDevices = () => {
-    setDevices([]);
-    setLoading(true);
+  const scanForDevices1 = () => {
+    setDevices1([]);
+    setLoading1(true);
     manager.startDeviceScan(null, null, (error, device) => {
       if (error) {
-        setLoading(false);
+        setLoading1(false);
         return;
       }
-      if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE') && !devices.find(d => d.id === device.id)) {
-        setDevices([device]);
-        manager.stopDeviceScan(); // Stop scan when found
-        setLoading(false);
+      if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE') &&
+        !devices1.find(d => d.id === device.id) &&
+        (!connectedDevice2 || device.id !== connectedDevice2.id)) {
+        setDevices1(prev => [...prev, device]);
       }
     });
     setTimeout(() => {
       manager.stopDeviceScan();
-      setLoading(false);
+      setLoading1(false);
     }, 8000);
   };
 
-  const connectToDevice = async (device) => {
-    setLoading(true);
+  const scanForDevices2 = () => {
+    setDevices2([]);
+    setLoading2(true);
+    manager.startDeviceScan(null, null, (error, device) => {
+      if (error) {
+        setLoading2(false);
+        return;
+      }
+      if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE') &&
+        !devices2.find(d => d.id === device.id) &&
+        (!connectedDevice1 || device.id !== connectedDevice1.id)) {
+        setDevices2(prev => [...prev, device]);
+      }
+    });
+    setTimeout(() => {
+      manager.stopDeviceScan();
+      setLoading2(false);
+    }, 8000);
+  };
+
+  const connectToDevice1 = async (device) => {
+    setLoading1(true);
     try {
       const connected = await manager.connectToDevice(device.id);
       await connected.discoverAllServicesAndCharacteristics();
-      setBleConnected(true);
-      setLoading(false);
-      Alert.alert('Connecté', `Périphérique: ${connected.name || '(aucun nom)'}`);
+      setBleConnected1(true);
+      setConnectedDevice1(connected);
+      setDevices1([]);
+      setLoading1(false);
+      Alert.alert('Connecté', `Joueur 1 - Périphérique: ${connected.name || '(aucun nom)'}`);
     } catch (err) {
-      setLoading(false);
-      Alert.alert('Erreur', 'Impossible de se connecter au périphérique BLE');
+      setLoading1(false);
+      Alert.alert('Erreur', 'Impossible de se connecter au périphérique BLE du joueur 1');
+    }
+  };
+
+  const connectToDevice2 = async (device) => {
+    setLoading2(true);
+    try {
+      const connected = await manager.connectToDevice(device.id);
+      await connected.discoverAllServicesAndCharacteristics();
+      setBleConnected2(true);
+      setConnectedDevice2(connected);
+      setDevices2([]);
+      setLoading2(false);
+      Alert.alert('Connecté', `Joueur 2 - Périphérique: ${connected.name || '(aucun nom)'}`);
+    } catch (err) {
+      setLoading2(false);
+      Alert.alert('Erreur', 'Impossible de se connecter au périphérique BLE du joueur 2');
     }
   };
 
   const canStart = mode === 'solo'
-    ? player1.trim() && selectedWeapon && bleConnected
-    : player1.trim() && player2.trim() && selectedWeapon && selectedWeapon2 && bleConnected;
+    ? player1.trim() && selectedWeapon && bleConnected1
+    : player1.trim() && player2.trim() && selectedWeapon && selectedWeapon2 && bleConnected1 && bleConnected2;
 
   const handleStart = () => {
-    if (!bleConnected) {
+    if (mode === 'solo' && !bleConnected1) {
       Alert.alert('Erreur', "Veuillez connecter l'appareil BLE");
+      return;
+    }
+    if (mode === 'multi' && (!bleConnected1 || !bleConnected2)) {
+      Alert.alert('Erreur', "Veuillez connecter les appareils BLE des deux joueurs");
       return;
     }
     if (!player1.trim() || (mode === 'multi' && !player2.trim())) {
@@ -68,12 +120,28 @@ export default function SetupScreen({ navigation }) {
       Alert.alert('Erreur', 'Veuillez sélectionner une arme pour chaque joueur');
       return;
     }
-    navigation.replace('Main', {
+
+    console.log('Navigation vers Main avec:', {
       joueur1: player1,
       joueur2: player2,
       arme1: selectedWeapon,
       arme2: selectedWeapon2,
+      device1: connectedDevice1,
+      device2: connectedDevice2,
       mode,
+    });
+
+    navigation.navigate('Main', {
+      screen: 'Accueil',
+      params: {
+        joueur1: player1,
+        joueur2: player2,
+        arme1: selectedWeapon,
+        arme2: selectedWeapon2,
+        device1: connectedDevice1,
+        device2: connectedDevice2,
+        mode,
+      }
     });
   };
 
@@ -96,7 +164,12 @@ export default function SetupScreen({ navigation }) {
           <Ionicons name="arrow-back" size={20} color="#fff" />
         </TouchableOpacity>
 
-        <ScrollView contentContainerStyle={styles.contentWrapper} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
+        <ScrollView
+          contentContainerStyle={styles.contentWrapper}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }}
+        >
           <Text style={styles.title}>Préparation</Text>
 
           {/* Mode */}
@@ -172,29 +245,73 @@ export default function SetupScreen({ navigation }) {
             </View>
           )}
 
-          {/* Bluetooth */}
+          {/* Bluetooth Joueur 1 */}
           <View style={styles.block}>
             <Text style={styles.label}>
               {mode === 'solo' ? 'Appareil Bluetooth' : 'Appareil Bluetooth - Joueur 1'}
             </Text>
-            <TouchableOpacity style={styles.scanButton} onPress={scanForDevices} disabled={loading || bleConnected}>
-              <Text style={styles.scanText}>{bleConnected ? 'Connecté' : loading ? 'Scan...' : 'Scanner'}</Text>
+            <TouchableOpacity
+              style={styles.scanButton}
+              onPress={scanForDevices1}
+              disabled={loading1 || bleConnected1}
+            >
+              <Text style={styles.scanText}>
+                {bleConnected1 ? 'Connecté' : loading1 ? 'Scan...' : 'Scanner'}
+              </Text>
             </TouchableOpacity>
-            {!bleConnected && !loading && devices.length === 0 && (
+            {!bleConnected1 && !loading1 && devices1.length === 0 && (
               <Text style={styles.noDeviceText}>Aucun appareil trouvé</Text>
             )}
-            {!bleConnected && devices.length > 0 && (
+            {!bleConnected1 && devices1.length > 0 && (
               <View style={styles.deviceList}>
-                {devices.map((device) => (
-                  <TouchableOpacity key={device.id} style={styles.deviceItem} onPress={() => connectToDevice(device)}>
+                {devices1.map((device) => (
+                  <TouchableOpacity
+                    key={device.id}
+                    style={styles.deviceItem}
+                    onPress={() => connectToDevice1(device)}
+                  >
                     <Text style={styles.deviceName}>{device.name || 'Module BLE'}</Text>
                     <Text style={styles.deviceId}>{device.id}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
             )}
-            {loading && <ActivityIndicator size="small" color="#007acc" style={{ marginTop: 10 }} />}
+            {loading1 && <ActivityIndicator size="small" color="#007acc" style={{ marginTop: 10 }} />}
           </View>
+
+          {/* Bluetooth Joueur 2 (si mode multi) */}
+          {mode === 'multi' && (
+            <View style={styles.block}>
+              <Text style={styles.label}>Appareil Bluetooth - Joueur 2</Text>
+              <TouchableOpacity
+                style={styles.scanButton}
+                onPress={scanForDevices2}
+                disabled={loading2 || bleConnected2}
+              >
+                <Text style={styles.scanText}>
+                  {bleConnected2 ? 'Connecté' : loading2 ? 'Scan...' : 'Scanner'}
+                </Text>
+              </TouchableOpacity>
+              {!bleConnected2 && !loading2 && devices2.length === 0 && (
+                <Text style={styles.noDeviceText}>Aucun appareil trouvé</Text>
+              )}
+              {!bleConnected2 && devices2.length > 0 && (
+                <View style={styles.deviceList}>
+                  {devices2.map((device) => (
+                    <TouchableOpacity
+                      key={device.id}
+                      style={styles.deviceItem}
+                      onPress={() => connectToDevice2(device)}
+                    >
+                      <Text style={styles.deviceName}>{device.name || 'Module BLE'}</Text>
+                      <Text style={styles.deviceId}>{device.id}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+              {loading2 && <ActivityIndicator size="small" color="#007acc" style={{ marginTop: 10 }} />}
+            </View>
+          )}
 
           {/* Bouton Commencer */}
           <TouchableOpacity
@@ -217,12 +334,28 @@ export default function SetupScreen({ navigation }) {
                 Alert.alert('Erreur', 'Veuillez sélectionner une arme pour chaque joueur');
                 return;
               }
-              navigation.replace('Main', {
+
+              console.log('Navigation DEV vers Main avec:', {
                 joueur1: player1,
                 joueur2: player2,
                 arme1: selectedWeapon,
                 arme2: selectedWeapon2,
+                device1: null,
+                device2: null,
                 mode,
+              });
+
+              navigation.navigate('Main', {
+                screen: 'Accueil',
+                params: {
+                  joueur1: player1,
+                  joueur2: player2,
+                  arme1: selectedWeapon,
+                  arme2: selectedWeapon2,
+                  device1: null,
+                  device2: null,
+                  mode,
+                }
               });
             }}
             disabled={mode === 'solo'

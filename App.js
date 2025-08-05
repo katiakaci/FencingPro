@@ -8,10 +8,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import BienvenueScreen from './screens/BienvenueScreen';
 import SettingsScreen from './screens/SettingsScreen';
-import NameScreen from './screens/NameScreen';
 import GameScreen from './screens/GameScreen';
 import HistoriqueScreen from './screens/HistoriqueScreen';
-import BluetoothScreen from './screens/BluetoothScreen';
 import SetupScreen from './screens/SetupScreen';
 import StatistiquesScreen from './screens/StatistiquesScreen';
 
@@ -36,8 +34,6 @@ function MainDrawer() {
       }}
     >
       <Drawer.Screen name="Game" component={GameScreen} />
-      <Drawer.Screen name="Joueur 1" component={NameScreen} />
-      <Drawer.Screen name="Bluetooth" component={BluetoothScreen} />
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
       <Drawer.Screen name="Statistiques" component={StatistiquesScreen} />
       <Drawer.Screen name="Réglages" component={SettingsScreen} />

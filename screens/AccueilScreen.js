@@ -259,10 +259,12 @@ export default function AccueilScreen({ route, navigation }) {
                           setRunning(true);
                         },
                       },
+
                       {
-                        text: 'Non',
-                        style: 'destructive',
+                        text: 'Oui',
+                        style: 'default',
                         onPress: () => {
+                          saveMatch();
                           setStopped(false);
                           setBobScore(0);
                           setJulieScore(0);
@@ -271,10 +273,9 @@ export default function AccueilScreen({ route, navigation }) {
                         },
                       },
                       {
-                        text: 'Oui',
-                        style: 'default',
+                        text: 'Non',
+                        style: 'destructive',
                         onPress: () => {
-                          saveMatch();
                           setStopped(false);
                           setBobScore(0);
                           setJulieScore(0);

@@ -11,7 +11,7 @@ export default function NameScreen({ navigation }) {
 
   const handleOk = () => {
     if (playerName && selectedWeapon) {
-      navigation.navigate('Accueil', { joueur1: playerName, arme1: selectedWeapon });
+      navigation.navigate('Game', { joueur1: playerName, arme1: selectedWeapon });
     } else {
       alert('Veuillez entrer un nom et sélectionner une arme.');
     }

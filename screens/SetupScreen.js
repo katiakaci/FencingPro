@@ -132,7 +132,7 @@ export default function SetupScreen({ navigation }) {
     });
 
     navigation.navigate('Main', {
-      screen: 'Accueil',
+      screen: 'Game',
       params: {
         joueur1: player1,
         joueur2: player2,
@@ -346,7 +346,7 @@ export default function SetupScreen({ navigation }) {
               });
 
               navigation.navigate('Main', {
-                screen: 'Accueil',
+                screen: 'Game',
                 params: {
                   joueur1: player1,
                   joueur2: player2,

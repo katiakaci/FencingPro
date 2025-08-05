@@ -26,7 +26,7 @@ const SOUND_FILES = {
   'alert_touch9.mp3': require('../assets/sound/alert_touch9.mp3'),
 };
 
-export default function AccueilScreen({ route, navigation }) {
+export default function GameScreen({ route, navigation }) {
   const { mode } = useMode();
   const { soundEnabled, selectedSound } = useSettings();
   const { addMatch } = useHistory();
@@ -59,7 +59,7 @@ export default function AccueilScreen({ route, navigation }) {
     mode: routeMode
   } = route?.params || {};
 
-  console.log('AccueilScreen - Paramètres reçus:', route?.params);
+  console.log('GameScreen - Paramètres reçus:', route?.params);
 
   const gameMode = routeMode || mode;
   const isSolo = gameMode === 'solo';

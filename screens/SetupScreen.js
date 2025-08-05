@@ -114,10 +114,12 @@ export default function SetupScreen({ navigation }) {
 
           {/* Noms joueurs */}
           <View style={styles.block}>
-            <Text style={styles.label}>Nom du joueur 1</Text>
+            <Text style={styles.label}>
+              {mode === 'solo' ? 'Nom du joueur' : 'Nom du joueur 1'}
+            </Text>
             <TextInput
               style={styles.input}
-              placeholder="Nom du joueur 1"
+              placeholder={mode === 'solo' ? 'Nom du joueur' : 'Nom du joueur 1'}
               value={player1}
               onChangeText={setPlayer1}
             />
@@ -136,7 +138,9 @@ export default function SetupScreen({ navigation }) {
 
           {/* Arme joueur 1 */}
           <View style={styles.block}>
-            <Text style={styles.label}>Type d'arme - Joueur 1</Text>
+            <Text style={styles.label}>
+              {mode === 'solo' ? 'Type d\'arme' : 'Type d\'arme - Joueur 1'}
+            </Text>
             <View style={styles.row}>
               {weapons.map((weapon) => (
                 <TouchableOpacity
@@ -170,7 +174,9 @@ export default function SetupScreen({ navigation }) {
 
           {/* Bluetooth */}
           <View style={styles.block}>
-            <Text style={styles.label}>Appareil Bluetooth</Text>
+            <Text style={styles.label}>
+              {mode === 'solo' ? 'Appareil Bluetooth' : 'Appareil Bluetooth - Joueur 1'}
+            </Text>
             <TouchableOpacity style={styles.scanButton} onPress={scanForDevices} disabled={loading || bleConnected}>
               <Text style={styles.scanText}>{bleConnected ? 'Connecté' : loading ? 'Scan...' : 'Scanner'}</Text>
             </TouchableOpacity>

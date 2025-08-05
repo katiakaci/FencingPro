@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityInd
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { BleManager } from 'react-native-ble-plx';
+import { useBluetooth } from '../context/BluetoothContext';
 
 const weapons = ['Sabre', 'Fleuret'];
 
@@ -26,6 +27,7 @@ export default function SetupScreen({ navigation }) {
   const [connectedDevice2, setConnectedDevice2] = useState(null);
 
   const [manager] = useState(new BleManager());
+  const { sendWeaponSetting } = useBluetooth();
 
   const scanForDevices1 = () => {
     setDevices1([]);
@@ -103,7 +105,7 @@ export default function SetupScreen({ navigation }) {
     ? player1.trim() && selectedWeapon && bleConnected1
     : player1.trim() && player2.trim() && selectedWeapon && selectedWeapon2 && bleConnected1 && bleConnected2;
 
-  const handleStart = () => {
+  const handleStart = async () => {
     if (mode === 'solo' && !bleConnected1) {
       Alert.alert('Erreur', "Veuillez connecter l'appareil BLE");
       return;
@@ -119,6 +121,15 @@ export default function SetupScreen({ navigation }) {
     if (!selectedWeapon || (mode === 'multi' && !selectedWeapon2)) {
       Alert.alert('Erreur', 'Veuillez sélectionner une arme pour chaque joueur');
       return;
+    }
+
+    // Envoyer le type d'arme aux appareils connectés
+    if (connectedDevice1) {
+      await sendWeaponSetting(selectedWeapon, connectedDevice1);
+    }
+
+    if (mode === 'multi' && connectedDevice2) {
+      await sendWeaponSetting(selectedWeapon2, connectedDevice2);
     }
 
     console.log('Navigation vers Main avec:', {
@@ -325,7 +336,7 @@ export default function SetupScreen({ navigation }) {
           {/* Bouton DEV : Commencer sans BLE */}
           <TouchableOpacity
             style={[styles.startButton, { backgroundColor: '#ffb347', marginTop: 8 }]}
-            onPress={() => {
+            onPress={async () => {
               if (!player1.trim() || (mode === 'multi' && !player2.trim())) {
                 Alert.alert('Erreur', 'Veuillez entrer le(s) nom(s) du ou des joueur(s)');
                 return;
@@ -333,6 +344,14 @@ export default function SetupScreen({ navigation }) {
               if (!selectedWeapon || (mode === 'multi' && !selectedWeapon2)) {
                 Alert.alert('Erreur', 'Veuillez sélectionner une arme pour chaque joueur');
                 return;
+              }
+
+              if (connectedDevice1) {
+                await sendWeaponSetting(selectedWeapon, connectedDevice1);
+              }
+
+              if (mode === 'multi' && connectedDevice2) {
+                await sendWeaponSetting(selectedWeapon2, connectedDevice2);
               }
 
               console.log('Navigation DEV vers Main avec:', {

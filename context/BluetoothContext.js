@@ -6,6 +6,7 @@ const SERVICE_UUID = '12345678-1234-5678-1234-56789abcdef0';
 const TOUCH_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef1'; // Pour recevoir les touches
 const COLOR_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef2'; // Pour envoyer les couleurs
 const VIBRATION_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef3'; // Pour le moteur vibrant
+const WEAPON_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef4'; // Pour le type d'arme
 
 const BluetoothContext = createContext();
 
@@ -75,7 +76,7 @@ export const BluetoothProvider = ({ children }) => {
     // Envoie la couleur au microcontrôleur avec debounce
     const sendColorSetting = useCallback(async (color) => {
         const hexColor = getColorHex(color);
-        
+
         // Éviter l'envoi de la même couleur
         if (lastColorRef.current === hexColor) {
             return;
@@ -95,7 +96,7 @@ export const BluetoothProvider = ({ children }) => {
 
         colorTimeoutRef.current = setTimeout(async () => {
             lastColorRef.current = hexColor;
-            
+
             try {
                 await connectedDevice.writeCharacteristicWithResponseForService(
                     SERVICE_UUID,
@@ -129,6 +130,30 @@ export const BluetoothProvider = ({ children }) => {
         }
     }, [connectedDevice]);
 
+    // Envoie le type d'arme au microcontrôleur
+    const sendWeaponSetting = useCallback(async (weaponType, device = null) => {
+        const targetDevice = device || connectedDevice;
+        if (!targetDevice) {
+            console.log('!!!!Pas de device connecté pour arme, Aurait envoyé:', weaponType);
+            return;
+        }
+
+        const weaponCode = weaponType === 'Fleuret' ? '2' : '3'; // 2 = Fleuret, 3 = Sabre
+
+        console.log('Envoi arme BLE:', weaponType, '->', weaponCode);
+
+        try {
+            await targetDevice.writeCharacteristicWithResponseForService(
+                SERVICE_UUID,
+                WEAPON_CHARACTERISTIC_UUID,
+                Buffer.from(weaponCode).toString('base64')
+            );
+            console.log('ARME ENVOYEEEEE ✅✅✅');
+        } catch (e) {
+            console.log('❌ Erreur envoi arme:', e);
+        }
+    }, [connectedDevice]);
+
     return (
         <BluetoothContext.Provider value={{
             manager,
@@ -136,6 +161,7 @@ export const BluetoothProvider = ({ children }) => {
             setDevice,
             sendVibrationSetting,
             sendColorSetting,
+            sendWeaponSetting,
         }}>
             {children}
         </BluetoothContext.Provider>

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SystemUI from 'expo-system-ui';
-import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from './languages/i18n';
 
 import BienvenueScreen from './screens/BienvenueScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -44,6 +45,19 @@ function MainDrawer() {
 export default function App() {
   useEffect(() => {
     SystemUI.setBackgroundColorAsync('#00C2CB');
+
+    const loadSavedLanguage = async () => {
+      try {
+        const savedLanguage = await AsyncStorage.getItem('userLanguage');
+        if (savedLanguage) {
+          await i18next.changeLanguage(savedLanguage);
+        }
+      } catch (error) {
+        console.log('Erreur chargement langue:', error);
+      }
+    };
+
+    loadSavedLanguage();
   }, []);
 
   return (

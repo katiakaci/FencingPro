@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { BarChart, LineChart, PieChart } from 'react-native-chart-kit';
+import i18n from '../languages/i18n';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -77,7 +78,7 @@ export default function StatistiquesScreen() {
                 color: (opacity = 1) => `rgba(46, 204, 113, ${opacity})`,
                 strokeWidth: 3
             });
-            legend.push("Meilleur score");
+            legend.push(i18n.t('stats.bestScore'));
         }
 
         if (showDuration) {
@@ -86,7 +87,7 @@ export default function StatistiquesScreen() {
                 color: (opacity = 1) => `rgba(231, 76, 60, ${opacity})`,
                 strokeWidth: 3
             });
-            legend.push("Plus longue durée (min)");
+            legend.push(i18n.t('stats.longestDuration'));
         }
 
         return {
@@ -100,7 +101,7 @@ export default function StatistiquesScreen() {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
             {/* Graphique des victoires par joueur */}
             <View style={styles.statsBox}>
-                <Text style={styles.statsLabel}>🏆 Victoires par joueur</Text>
+                <Text style={styles.statsLabel}>{i18n.t('stats.winsPerPlayer')}</Text>
                 <BarChart
                     data={winsData}
                     width={screenWidth * 0.85}
@@ -114,7 +115,7 @@ export default function StatistiquesScreen() {
 
             {/* Meilleur score et plus longue durée par jour */}
             <View style={styles.statsBox}>
-                <Text style={styles.statsLabel}>📊 Meilleur score & plus longue durée par jour</Text>
+                <Text style={styles.statsLabel}>{i18n.t('stats.bestScoreAndDuration')}</Text>
 
                 {/* Légendes interactives */}
                 <View style={styles.legendContainer}>
@@ -127,7 +128,7 @@ export default function StatistiquesScreen() {
                         }]} />
                         <Text style={[styles.legendText, {
                             opacity: showScore ? 1 : 0.5
-                        }]}>Meilleur score</Text>
+                        }]}>{i18n.t('stats.bestScore')}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -139,7 +140,7 @@ export default function StatistiquesScreen() {
                         }]} />
                         <Text style={[styles.legendText, {
                             opacity: showDuration ? 1 : 0.5
-                        }]}>Plus longue durée (min)</Text>
+                        }]}>{i18n.t('stats.longestDuration')}</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -160,7 +161,7 @@ export default function StatistiquesScreen() {
 
             {/* Répartition des armes */}
             <View style={styles.statsBox}>
-                <Text style={styles.statsLabel}>🗡️ Armes utilisées</Text>
+                <Text style={styles.statsLabel}>{i18n.t('stats.weaponsUsed')}</Text>
                 <PieChart
                     data={weaponData}
                     width={screenWidth * 0.85}
@@ -178,27 +179,27 @@ export default function StatistiquesScreen() {
             <View style={styles.statsGrid}>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>35</Text>
-                    <Text style={styles.statText}>Matchs joués</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.matchesPlayed')}</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>7:32</Text>
-                    <Text style={styles.statText}>Durée moyenne</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.averageDuration')}</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>18.5</Text>
-                    <Text style={styles.statText}>Score moyen</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.averageScore')}</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>68%</Text>
-                    <Text style={styles.statText}>Taux de victoire</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.winRate')}</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>142</Text>
-                    <Text style={styles.statText}>Touches réussies</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.successfulTouches')}</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>2.4</Text>
-                    <Text style={styles.statText}>Touches/minute</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.touchesPerMinute')}</Text>
                 </View>
             </View>
         </ScrollView>

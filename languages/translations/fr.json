@@ -1,4 +1,106 @@
 {
     "language": "Langue",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "common": {
+        "error": "Erreur"
+    },
+    "welcome": {
+        "title": "FencingPro"
+    },
+    "setup": {
+        "title": "Préparation",
+        "mode": "Mode",
+        "solo": "Solo",
+        "multiplayer": "Multijoueur",
+        "playerName": "Nom du joueur",
+        "player1Name": "Nom du joueur 1",
+        "player2Name": "Nom du joueur 2",
+        "weaponType": "Type d'arme",
+        "weaponTypePlayer1": "Type d'arme - Joueur 1",
+        "weaponTypePlayer2": "Type d'arme - Joueur 2",
+        "bluetoothDevice": "Appareil Bluetooth",
+        "bluetoothDevicePlayer1": "Appareil Bluetooth - Joueur 1",
+        "bluetoothDevicePlayer2": "Appareil Bluetooth - Joueur 2",
+        "scan": "Scanner",
+        "scanning": "Scan...",
+        "connected": "Connecté",
+        "noDeviceFound": "Aucun appareil trouvé",
+        "startGame": "Commencer la partie",
+        "devStartGame": "DEV : Commencer sans BLE",
+        "errorBleConnection": "Veuillez connecter l'appareil BLE",
+        "errorBleConnectionMulti": "Veuillez connecter les appareils BLE des deux joueurs",
+        "errorPlayerNames": "Veuillez entrer le(s) nom(s) du ou des joueur(s)",
+        "errorWeaponSelection": "Veuillez sélectionner une arme pour chaque joueur",
+        "connectedDevice": "Périphérique:",
+        "connectionError": "Impossible de se connecter au périphérique BLE",
+        "connectionErrorPlayer1": "Impossible de se connecter au périphérique BLE du joueur 1",
+        "connectionErrorPlayer2": "Impossible de se connecter au périphérique BLE du joueur 2"
+    },
+    "game": {
+        "player": "Joueur",
+        "player1": "Joueur 1",
+        "player2": "Joueur 2",
+        "gameFinished": "Partie terminée",
+        "leavingGame": "Vous allez quitter la partie",
+        "saveGameQuestion": "Voulez-vous enregistrer cette partie dans l'historique ?",
+        "cancel": "Annuler",
+        "yes": "Oui",
+        "no": "Non",
+        "prepareYourself": "Préparez-vous...",
+        "gameStarts": "La partie commence !",
+        "go": "GO!"
+    },
+    "settings": {
+        "mode": "Mode",
+        "lightColors": "Couleurs des lumières",
+        "otherColors": "Autres couleurs",
+        "sound": "Son",
+        "vibration": "Vibration",
+        "language": "Langue",
+        "reset": "Réinitialiser",
+        "resetAll": "Tout effacer",
+        "resetWarning": "Supprime définitivement toutes les données (historique, statistiques, réglages)",
+        "chooseSound": "Choisir une sonnerie",
+        "chooseColor": "Choisir une couleur",
+        "close": "Fermer",
+        "resetConfirmTitle": "Réinitialiser toutes les données ?",
+        "resetConfirmText": "Cette action supprimera définitivement :\n• Tout l'historique des parties\n• Toutes les statistiques\n• Tous les réglages personnalisés\n\nCette action est irréversible.",
+        "resetSuccess": "Toutes les données ont été réinitialisées avec succès.",
+        "resetError": "Erreur lors de la réinitialisation des données.",
+        "sounds": {
+            "classic": "Notification classique",
+            "shortBeep": "Bip court",
+            "signal": "Signal",
+            "bell": "Cloche",
+            "sparkles": "Étincelles",
+            "cling": "Cling",
+            "threePoints": "Trois points",
+            "bubbles": "Bulles",
+            "doorbell": "Sonnette"
+        }
+    },
+    "history": {
+        "title": "Historique",
+        "noMatches": "Aucun match sauvegardé",
+        "noMatchesSubtext": "Vos parties terminées apparaîtront ici",
+        "sort": "Trier",
+        "date": "Date",
+        "duration": "Durée",
+        "score": "Score",
+        "descending": "Décroissant",
+        "ascending": "Croissant"
+    },
+    "stats": {
+        "winsPerPlayer": "🏆 Victoires par joueur",
+        "bestScoreAndDuration": "📊 Meilleur score & plus longue durée par jour",
+        "bestScore": "Meilleur score",
+        "longestDuration": "Plus longue durée (min)",
+        "weaponsUsed": "🗡️ Armes utilisées",
+        "matchesPlayed": "Matchs joués",
+        "averageDuration": "Durée moyenne",
+        "averageScore": "Score moyen",
+        "winRate": "Taux de victoire",
+        "successfulTouches": "Touches réussies",
+        "touchesPerMinute": "Touches/minute"
+    }
 }

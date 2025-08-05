@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useHistory } from '../context/HistoryContext';
 import { useFocusEffect } from '@react-navigation/native';
+import i18n from '../languages/i18n';
 
 export default function HistoriqueScreen() {
   const { matchHistory, deleteMatch, loadHistory } = useHistory();
@@ -33,8 +34,8 @@ export default function HistoriqueScreen() {
     return (
       <View style={styles.emptyContainer}>
         <Ionicons name="calendar-outline" size={64} color="#ccc" />
-        <Text style={styles.emptyText}>Aucun match sauvegardé</Text>
-        <Text style={styles.emptySubtext}>Vos parties terminées apparaîtront ici</Text>
+        <Text style={styles.emptyText}>{i18n.t('history.noMatches')}</Text>
+        <Text style={styles.emptySubtext}>{i18n.t('history.noMatchesSubtext')}</Text>
       </View>
     );
   }
@@ -83,9 +84,9 @@ export default function HistoriqueScreen() {
   };
 
   const sortOptions = [
-    { key: 'date', label: 'Date' },
-    { key: 'duration', label: 'Durée' },
-    { key: 'score', label: 'Score' },
+    { key: 'date', label: i18n.t('history.date') },
+    { key: 'duration', label: i18n.t('history.duration') },
+    { key: 'score', label: i18n.t('history.score') },
   ];
 
   const renderRightActions = (progress, dragX, index) => {
@@ -138,7 +139,7 @@ export default function HistoriqueScreen() {
         <View style={styles.sortBar}>
           <TouchableOpacity style={styles.sortMenuBtn} onPress={() => setSortMenuVisible(true)}>
             <Ionicons name={sortOrder === 'desc' ? 'arrow-down' : 'arrow-up'} size={18} color="#357ab7" />
-            <Text style={styles.sortMenuText}>Trier</Text>
+            <Text style={styles.sortMenuText}>{i18n.t('history.sort')}</Text>
             <Ionicons name="chevron-down" size={16} color="#357ab7" />
           </TouchableOpacity>
 
@@ -153,7 +154,7 @@ export default function HistoriqueScreen() {
                 <View style={styles.sortOrderRow}>
                   <TouchableOpacity onPress={() => setSortOrder(o => o === 'desc' ? 'asc' : 'desc')} style={styles.sortOrderBtn}>
                     <Ionicons name={sortOrder === 'desc' ? 'arrow-down' : 'arrow-up'} size={16} color="#357ab7" />
-                    <Text style={styles.sortOrderText}>{sortOrder === 'desc' ? 'Décroissant' : 'Croissant'}</Text>
+                    <Text style={styles.sortOrderText}>{sortOrder === 'desc' ? i18n.t('history.descending') : i18n.t('history.ascending')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -167,8 +168,8 @@ export default function HistoriqueScreen() {
         {sortedMatches.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Ionicons name="calendar-outline" size={64} color="#ccc" />
-            <Text style={styles.emptyText}>Aucun match sauvegardé</Text>
-            <Text style={styles.emptySubtext}>Vos parties terminées apparaîtront ici</Text>
+            <Text style={styles.emptyText}>{i18n.t('history.noMatches')}</Text>
+            <Text style={styles.emptySubtext}>{i18n.t('history.noMatchesSubtext')}</Text>
           </View>
         ) : (
           sortedMatches.map((match, idx) => (

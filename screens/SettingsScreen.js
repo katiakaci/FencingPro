@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, Pressable, Modal, ScrollView } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, Text, StyleSheet, Switch, TouchableOpacity, Pressable, Modal, ScrollView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
@@ -12,19 +12,20 @@ import { useBluetooth } from '../context/BluetoothContext';
 import { useSettings } from '../context/SettingsContext';
 import { useHistory } from '../context/HistoryContext';
 import { LinearGradient } from 'expo-linear-gradient';
+import i18n from '../languages/i18n';
 
 const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
 
 const SOUNDS = [
-  { name: 'Notification classique', file: 'alert_touch.mp3' },
-  { name: 'Bip court', file: 'alert_touch2.mp3' },
-  { name: 'Signal', file: 'alert_touch3.mp3' },
-  { name: 'Cloche', file: 'alert_touch4.mp3' },
-  { name: 'Étincelles', file: 'alert_touch5.mp3' },
-  { name: 'Cling', file: 'alert_touch6.mp3' },
-  { name: 'Trois points', file: 'alert_touch7.mp3' },
-  { name: 'Bulles', file: 'alert_touch8.mp3' },
-  { name: 'Sonnette', file: 'alert_touch9.mp3' },
+  { name: 'sounds.classic', file: 'alert_touch.mp3' },
+  { name: 'sounds.shortBeep', file: 'alert_touch2.mp3' },
+  { name: 'sounds.signal', file: 'alert_touch3.mp3' },
+  { name: 'sounds.bell', file: 'alert_touch4.mp3' },
+  { name: 'sounds.sparkles', file: 'alert_touch5.mp3' },
+  { name: 'sounds.cling', file: 'alert_touch6.mp3' },
+  { name: 'sounds.threePoints', file: 'alert_touch7.mp3' },
+  { name: 'sounds.bubbles', file: 'alert_touch8.mp3' },
+  { name: 'sounds.doorbell', file: 'alert_touch9.mp3' },
 ];
 
 const SOUND_FILES = {
@@ -42,7 +43,7 @@ const SOUND_FILES = {
 export default function SettingsScreen() {
   const { mode, setMode } = useMode();
   const { lightColor, setLightColor } = useLightColor();
-  const { sendVibrationSetting, sendColorSetting } = useBluetooth(); // Ajouter sendColorSetting
+  const { sendVibrationSetting, sendColorSetting } = useBluetooth();
   const {
     soundEnabled,
     setSoundEnabled,
@@ -53,18 +54,42 @@ export default function SettingsScreen() {
   } = useSettings();
   const { clearHistory } = useHistory();
 
-  const [language, setLanguage] = useState('fr');
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   const [showSoundPicker, setShowSoundPicker] = useState(false);
   const [showResetDialog, setShowResetDialog] = useState(false);
   const [showColorGradient, setShowColorGradient] = useState(false);
+
+  useEffect(() => {
+    const loadSavedLanguage = async () => {
+      try {
+        const savedLanguage = await AsyncStorage.getItem('userLanguage');
+        if (savedLanguage) {
+          i18n.changeLanguage(savedLanguage);
+          setCurrentLanguage(savedLanguage);
+        }
+      } catch (error) {
+        console.log('Erreur chargement langue:', error);
+      }
+    };
+
+    loadSavedLanguage();
+  }, []);
 
   const toggleMode = useCallback(() => {
     setMode(mode === 'solo' ? 'multi' : 'solo');
   }, [mode, setMode]);
 
-  const toggleLanguage = useCallback(() => {
-    setLanguage(prev => prev === 'fr' ? 'en' : 'fr');
-  }, []);
+  const toggleLanguage = useCallback(async () => {
+    const newLang = currentLanguage === 'fr' ? 'en' : 'fr';
+
+    try {
+      await i18n.changeLanguage(newLang);
+      setCurrentLanguage(newLang);
+      await AsyncStorage.setItem('userLanguage', newLang);
+    } catch (error) {
+      console.log('Erreur changement langue:', error);
+    }
+  }, [currentLanguage]);
 
   const onVibrationChange = useCallback((value) => {
     setVibrationEnabled(value);
@@ -93,7 +118,7 @@ export default function SettingsScreen() {
 
   const getSelectedSoundName = () => {
     const sound = SOUNDS.find(s => s.file === selectedSound);
-    return sound?.name || 'Son par défaut';
+    return sound ? i18n.t(`settings.${sound.name}`) : i18n.t('settings.sounds.classic');
   };
 
   const resetAllData = useCallback(async () => {
@@ -102,7 +127,8 @@ export default function SettingsScreen() {
         'matchHistory',
         'userStats',
         'gameSettings',
-        'playerProfiles'
+        'playerProfiles',
+        'userLanguage'
       ]);
 
       await clearHistory();
@@ -113,17 +139,20 @@ export default function SettingsScreen() {
       setSoundEnabled(true);
       setVibrationEnabled(true);
       setSelectedSound('alert_touch.mp3');
-      setLanguage('fr');
+
+      // Réinitialiser la langue
+      await i18n.changeLanguage('fr');
+      setCurrentLanguage('fr');
+
       setShowResetDialog(false);
 
-      alert('Toutes les données ont été réinitialisées avec succès.');
+      Alert.alert('', i18n.t('settings.resetSuccess'));
     } catch (error) {
       console.log('Erreur lors de la réinitialisation:', error);
-      alert('Erreur lors de la réinitialisation des données.');
+      Alert.alert('', i18n.t('settings.resetError'));
     }
   }, [setMode, setLightColor, setSoundEnabled, setVibrationEnabled, setSelectedSound, clearHistory]);
 
-  // Fonction pour changer la couleur et l'envoyer via BLE
   const handleColorChange = useCallback((color) => {
     // console.log('Changement de couleur:', color);
     setLightColor(color);
@@ -152,10 +181,10 @@ export default function SettingsScreen() {
         {/* Mode solo/multijoueurs*/}
         <View style={styles.settingBlock}>
           <View style={styles.row}>
-            <Text style={styles.label}>Mode</Text>
+            <Text style={styles.label}>{i18n.t('settings.mode')}</Text>
             <Pressable style={styles.actionButton} onPress={toggleMode}>
               <Text style={styles.actionButtonText}>
-                {mode === 'solo' ? 'Multijoueur' : 'Solo'}
+                {mode === 'solo' ? i18n.t('setup.multiplayer') : i18n.t('setup.solo')}
               </Text>
             </Pressable>
           </View>
@@ -163,7 +192,7 @@ export default function SettingsScreen() {
 
         {/* Couleurs des lumières */}
         <View style={styles.settingBlock}>
-          <Text style={styles.label}>Couleurs des lumières</Text>
+          <Text style={styles.label}>{i18n.t('settings.lightColors')}</Text>
           <View style={styles.colorRow}>
             {COLORS.map((color) => (
               <TouchableOpacity
@@ -198,7 +227,7 @@ export default function SettingsScreen() {
               style={styles.gradientButton}
             >
               <Text style={styles.gradientButtonText}>
-                Autres couleurs
+                {i18n.t('settings.otherColors')}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -207,7 +236,7 @@ export default function SettingsScreen() {
         {/* Son/Vibration */}
         <View style={styles.settingBlock}>
           <View style={styles.row}>
-            <Text style={styles.label}>Son</Text>
+            <Text style={styles.label}>{i18n.t('settings.sound')}</Text>
             <Switch
               value={soundEnabled}
               onValueChange={setSoundEnabled}
@@ -230,7 +259,7 @@ export default function SettingsScreen() {
           )}
 
           <View style={styles.row}>
-            <Text style={styles.label}>Vibration</Text>
+            <Text style={styles.label}>{i18n.t('settings.vibration')}</Text>
             <Switch
               value={vibrationEnabled}
               onValueChange={onVibrationChange}
@@ -243,10 +272,10 @@ export default function SettingsScreen() {
         {/* Langue */}
         <View style={styles.settingBlock}>
           <View style={styles.row}>
-            <Text style={styles.label}>Langue</Text>
+            <Text style={styles.label}>{i18n.t('settings.language')}</Text>
             <Pressable style={styles.actionButton} onPress={toggleLanguage}>
               <Text style={styles.actionButtonText}>
-                {language === 'fr' ? 'English' : 'Français'}
+                {currentLanguage === 'fr' ? 'English' : 'Français'}
               </Text>
             </Pressable>
           </View>
@@ -255,13 +284,13 @@ export default function SettingsScreen() {
         {/* Réinitialisation */}
         <View style={styles.settingBlock}>
           <View style={styles.row}>
-            <Text style={styles.label}>Réinitialiser</Text>
+            <Text style={styles.label}>{i18n.t('settings.reset')}</Text>
             <Pressable style={styles.resetButton} onPress={() => setShowResetDialog(true)}>
-              <Text style={styles.resetButtonText}>Tout effacer</Text>
+              <Text style={styles.resetButtonText}>{i18n.t('settings.resetAll')}</Text>
             </Pressable>
           </View>
           <Text style={styles.resetWarning}>
-            Supprime définitivement toutes les données (historique, statistiques, réglages)
+            {i18n.t('settings.resetWarning')}
           </Text>
         </View>
       </ScrollView>
@@ -275,7 +304,7 @@ export default function SettingsScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.soundModal}>
-            <Text style={styles.modalTitle}>Choisir une sonnerie</Text>
+            <Text style={styles.modalTitle}>{i18n.t('settings.chooseSound')}</Text>
 
             <ScrollView style={styles.soundList}>
               {SOUNDS.map((sound) => (
@@ -291,7 +320,7 @@ export default function SettingsScreen() {
                       styles.soundOptionText,
                       selectedSound === sound.file && styles.selectedSoundText
                     ]}>
-                      {sound.name}
+                      {i18n.t(`settings.${sound.name}`)}
                     </Text>
                     {selectedSound === sound.file && (
                       <Ionicons name="checkmark" size={20} color="#007bff" />
@@ -312,7 +341,7 @@ export default function SettingsScreen() {
               style={styles.closeModalButton}
               onPress={() => setShowSoundPicker(false)}
             >
-              <Text style={styles.closeModalText}>Fermer</Text>
+              <Text style={styles.closeModalText}>{i18n.t('settings.close')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -328,13 +357,9 @@ export default function SettingsScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.resetModal}>
             <Ionicons name="warning" size={48} color="#e74c3c" style={styles.warningIcon} />
-            <Text style={styles.resetModalTitle}>Réinitialiser toutes les données ?</Text>
+            <Text style={styles.resetModalTitle}>{i18n.t('settings.resetConfirmTitle')}</Text>
             <Text style={styles.resetModalText}>
-              Cette action supprimera définitivement :
-              {'\n'}• Tout l'historique des parties
-              {'\n'}• Toutes les statistiques
-              {'\n'}• Tous les réglages personnalisés
-              {'\n\n'}Cette action est irréversible.
+              {i18n.t('settings.resetConfirmText')}
             </Text>
 
             <View style={styles.resetButtonRow}>
@@ -342,14 +367,14 @@ export default function SettingsScreen() {
                 style={styles.cancelButton}
                 onPress={() => setShowResetDialog(false)}
               >
-                <Text style={styles.cancelButtonText}>Annuler</Text>
+                <Text style={styles.cancelButtonText}>{i18n.t('game.cancel')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.confirmResetButton}
                 onPress={resetAllData}
               >
-                <Text style={styles.confirmResetButtonText}>Tout effacer</Text>
+                <Text style={styles.confirmResetButtonText}>{i18n.t('settings.resetAll')}</Text>
               </TouchableOpacity>
             </View>
           </View>

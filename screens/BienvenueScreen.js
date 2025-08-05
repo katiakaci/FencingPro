@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { Ionicons } from '@expo/vector-icons';
+import i18n from '../languages/i18n';
 
 export default function BienvenueScreen({ navigation }) {
   return (
@@ -29,21 +30,21 @@ export default function BienvenueScreen({ navigation }) {
         <TouchableOpacity
           style={styles.bottomIconBtn}
           onPress={() => navigation.navigate('HistoriqueFromWelcome')}
-          accessibilityLabel="Historique"
+          accessibilityLabel={i18n.t('history.title')}
         >
           <Ionicons name="time" size={15} color="#0a3871" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.bottomIconBtn}
           onPress={() => navigation.navigate('StatsFromWelcome')}
-          accessibilityLabel="Statistiques"
+          accessibilityLabel={i18n.t('stats.title')}
         >
           <Ionicons name="stats-chart" size={15} color="#0a3871" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.bottomIconBtn}
           onPress={() => navigation.navigate('SettingsFromWelcome')}
-          accessibilityLabel="Réglages"
+          accessibilityLabel={i18n.t('settings')}
         >
           <Ionicons name="settings" size={15} color="#0a3871" />
         </TouchableOpacity>

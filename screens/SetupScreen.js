@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { BleManager } from 'react-native-ble-plx';
 import { useBluetooth } from '../context/BluetoothContext';
+import i18n from '../languages/i18n';
 
 const weapons = ['Sabre', 'Fleuret'];
 
@@ -78,10 +79,10 @@ export default function SetupScreen({ navigation }) {
       setConnectedDevice1(connected);
       setDevices1([]);
       setLoading1(false);
-      Alert.alert('Connecté', `Joueur 1 - Périphérique: ${connected.name || '(aucun nom)'}`);
+      Alert.alert(i18n.t('setup.connected'), `${i18n.t('setup.player1Name')} - ${i18n.t('setup.connectedDevice')} ${connected.name || '(aucun nom)'}`);
     } catch (err) {
       setLoading1(false);
-      Alert.alert('Erreur', 'Impossible de se connecter au périphérique BLE du joueur 1');
+      Alert.alert(i18n.t('common.error'), i18n.t('setup.connectionErrorPlayer1'));
     }
   };
 
@@ -94,10 +95,10 @@ export default function SetupScreen({ navigation }) {
       setConnectedDevice2(connected);
       setDevices2([]);
       setLoading2(false);
-      Alert.alert('Connecté', `Joueur 2 - Périphérique: ${connected.name || '(aucun nom)'}`);
+      Alert.alert(i18n.t('setup.connected'), `${i18n.t('setup.player2Name')} - ${i18n.t('setup.connectedDevice')} ${connected.name || '(aucun nom)'}`);
     } catch (err) {
       setLoading2(false);
-      Alert.alert('Erreur', 'Impossible de se connecter au périphérique BLE du joueur 2');
+      Alert.alert(i18n.t('common.error'), i18n.t('setup.connectionErrorPlayer2'));
     }
   };
 
@@ -107,19 +108,19 @@ export default function SetupScreen({ navigation }) {
 
   const handleStart = async () => {
     if (mode === 'solo' && !bleConnected1) {
-      Alert.alert('Erreur', "Veuillez connecter l'appareil BLE");
+      Alert.alert(i18n.t('common.error'), i18n.t('setup.errorBleConnection'));
       return;
     }
     if (mode === 'multi' && (!bleConnected1 || !bleConnected2)) {
-      Alert.alert('Erreur', "Veuillez connecter les appareils BLE des deux joueurs");
+      Alert.alert(i18n.t('common.error'), i18n.t('setup.errorBleConnectionMulti'));
       return;
     }
     if (!player1.trim() || (mode === 'multi' && !player2.trim())) {
-      Alert.alert('Erreur', 'Veuillez entrer le(s) nom(s) du ou des joueur(s)');
+      Alert.alert(i18n.t('common.error'), i18n.t('setup.errorPlayerNames'));
       return;
     }
     if (!selectedWeapon || (mode === 'multi' && !selectedWeapon2)) {
-      Alert.alert('Erreur', 'Veuillez sélectionner une arme pour chaque joueur');
+      Alert.alert(i18n.t('common.error'), i18n.t('setup.errorWeaponSelection'));
       return;
     }
 
@@ -181,17 +182,17 @@ export default function SetupScreen({ navigation }) {
           showsVerticalScrollIndicator={false}
           style={{ flex: 1 }}
         >
-          <Text style={styles.title}>Préparation</Text>
+          <Text style={styles.title}>{i18n.t('setup.title')}</Text>
 
           {/* Mode */}
           <View style={styles.block}>
-            <Text style={styles.label}>Mode</Text>
+            <Text style={styles.label}>{i18n.t('setup.mode')}</Text>
             <View style={styles.row}>
               <TouchableOpacity style={[styles.modeButton, mode === 'solo' && styles.selected]} onPress={() => setMode('solo')}>
-                <Text style={styles.modeText}>Solo</Text>
+                <Text style={styles.modeText}>{i18n.t('setup.solo')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.modeButton, mode === 'multi' && styles.selected]} onPress={() => setMode('multi')}>
-                <Text style={styles.modeText}>Multijoueur</Text>
+                <Text style={styles.modeText}>{i18n.t('setup.multiplayer')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -199,20 +200,20 @@ export default function SetupScreen({ navigation }) {
           {/* Noms joueurs */}
           <View style={styles.block}>
             <Text style={styles.label}>
-              {mode === 'solo' ? 'Nom du joueur' : 'Nom du joueur 1'}
+              {mode === 'solo' ? i18n.t('setup.playerName') : i18n.t('setup.player1Name')}
             </Text>
             <TextInput
               style={styles.input}
-              placeholder={mode === 'solo' ? 'Nom du joueur' : 'Nom du joueur 1'}
+              placeholder={mode === 'solo' ? i18n.t('setup.playerName') : i18n.t('setup.player1Name')}
               value={player1}
               onChangeText={setPlayer1}
             />
             {mode === 'multi' && (
               <>
-                <Text style={styles.label}>Nom du joueur 2</Text>
+                <Text style={styles.label}>{i18n.t('setup.player2Name')}</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Nom du joueur 2"
+                  placeholder={i18n.t('setup.player2Name')}
                   value={player2}
                   onChangeText={setPlayer2}
                 />
@@ -223,7 +224,7 @@ export default function SetupScreen({ navigation }) {
           {/* Arme joueur 1 */}
           <View style={styles.block}>
             <Text style={styles.label}>
-              {mode === 'solo' ? 'Type d\'arme' : 'Type d\'arme - Joueur 1'}
+              {mode === 'solo' ? i18n.t('setup.weaponType') : i18n.t('setup.weaponTypePlayer1')}
             </Text>
             <View style={styles.row}>
               {weapons.map((weapon) => (
@@ -241,7 +242,7 @@ export default function SetupScreen({ navigation }) {
           {/* Arme joueur 2 (si mode multi) */}
           {mode === 'multi' && (
             <View style={styles.block}>
-              <Text style={styles.label}>Type d'arme - Joueur 2</Text>
+              <Text style={styles.label}>{i18n.t('setup.weaponTypePlayer2')}</Text>
               <View style={styles.row}>
                 {weapons.map((weapon) => (
                   <TouchableOpacity
@@ -259,7 +260,7 @@ export default function SetupScreen({ navigation }) {
           {/* Bluetooth Joueur 1 */}
           <View style={styles.block}>
             <Text style={styles.label}>
-              {mode === 'solo' ? 'Appareil Bluetooth' : 'Appareil Bluetooth - Joueur 1'}
+              {mode === 'solo' ? i18n.t('setup.bluetoothDevice') : i18n.t('setup.bluetoothDevicePlayer1')}
             </Text>
             <TouchableOpacity
               style={styles.scanButton}
@@ -267,11 +268,11 @@ export default function SetupScreen({ navigation }) {
               disabled={loading1 || bleConnected1}
             >
               <Text style={styles.scanText}>
-                {bleConnected1 ? 'Connecté' : loading1 ? 'Scan...' : 'Scanner'}
+                {bleConnected1 ? i18n.t('setup.connected') : loading1 ? i18n.t('setup.scanning') : i18n.t('setup.scan')}
               </Text>
             </TouchableOpacity>
             {!bleConnected1 && !loading1 && devices1.length === 0 && (
-              <Text style={styles.noDeviceText}>Aucun appareil trouvé</Text>
+              <Text style={styles.noDeviceText}>{i18n.t('setup.noDeviceFound')}</Text>
             )}
             {!bleConnected1 && devices1.length > 0 && (
               <View style={styles.deviceList}>
@@ -293,18 +294,18 @@ export default function SetupScreen({ navigation }) {
           {/* Bluetooth Joueur 2 (si mode multi) */}
           {mode === 'multi' && (
             <View style={styles.block}>
-              <Text style={styles.label}>Appareil Bluetooth - Joueur 2</Text>
+              <Text style={styles.label}>{i18n.t('setup.bluetoothDevicePlayer2')}</Text>
               <TouchableOpacity
                 style={styles.scanButton}
                 onPress={scanForDevices2}
                 disabled={loading2 || bleConnected2}
               >
                 <Text style={styles.scanText}>
-                  {bleConnected2 ? 'Connecté' : loading2 ? 'Scan...' : 'Scanner'}
+                  {bleConnected2 ? i18n.t('setup.connected') : loading2 ? i18n.t('setup.scanning') : i18n.t('setup.scan')}
                 </Text>
               </TouchableOpacity>
               {!bleConnected2 && !loading2 && devices2.length === 0 && (
-                <Text style={styles.noDeviceText}>Aucun appareil trouvé</Text>
+                <Text style={styles.noDeviceText}>{i18n.t('setup.noDeviceFound')}</Text>
               )}
               {!bleConnected2 && devices2.length > 0 && (
                 <View style={styles.deviceList}>
@@ -330,7 +331,7 @@ export default function SetupScreen({ navigation }) {
             onPress={handleStart}
             disabled={!canStart}
           >
-            <Text style={styles.startText}>Commencer la partie</Text>
+            <Text style={styles.startText}>{i18n.t('setup.startGame')}</Text>
           </TouchableOpacity>
 
           {/* Bouton DEV : Commencer sans BLE */}
@@ -338,11 +339,11 @@ export default function SetupScreen({ navigation }) {
             style={[styles.startButton, { backgroundColor: '#ffb347', marginTop: 8 }]}
             onPress={async () => {
               if (!player1.trim() || (mode === 'multi' && !player2.trim())) {
-                Alert.alert('Erreur', 'Veuillez entrer le(s) nom(s) du ou des joueur(s)');
+                Alert.alert(i18n.t('common.error'), i18n.t('setup.errorPlayerNames'));
                 return;
               }
               if (!selectedWeapon || (mode === 'multi' && !selectedWeapon2)) {
-                Alert.alert('Erreur', 'Veuillez sélectionner une arme pour chaque joueur');
+                Alert.alert(i18n.t('common.error'), i18n.t('setup.errorWeaponSelection'));
                 return;
               }
 
@@ -382,7 +383,7 @@ export default function SetupScreen({ navigation }) {
               : !player1.trim() || !player2.trim() || !selectedWeapon || !selectedWeapon2
             }
           >
-            <Text style={[styles.startText, { color: '#111' }]}>DEV : Commencer sans BLE</Text>
+            <Text style={[styles.startText, { color: '#111' }]}>{i18n.t('setup.devStartGame')}</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
+import i18n from '../languages/i18n';
 
 import { useMode } from '../context/ModeContext';
 import { useTouch } from '../context/TouchContext';
@@ -66,8 +67,8 @@ export default function GameScreen({ route, navigation }) {
 
   const gameMode = routeMode || mode;
   const isSolo = gameMode === 'solo';
-  const playerName = isSolo ? (joueur1 || 'Joueur') : (joueur1 || 'Joueur 1');
-  const player2Name = joueur2 || 'Joueur 2';
+  const playerName = isSolo ? (joueur1 || i18n.t('game.player')) : (joueur1 || i18n.t('game.player1'));
+  const player2Name = joueur2 || i18n.t('game.player2');
   const weaponType = arme1 || 'Épée';
 
   const barColorLeft = (touchDetected && gameStarted && running) ? lightColor : 'white';
@@ -185,11 +186,11 @@ export default function GameScreen({ route, navigation }) {
     setRunning(false);
     setStopped(true);
     Alert.alert(
-      'Vous allez quitter la partie',
-      'Voulez-vous enregistrer cette partie dans l\'historique ?',
+      i18n.t('game.leavingGame'),
+      i18n.t('game.saveGameQuestion'),
       [
         {
-          text: 'Annuler',
+          text: i18n.t('game.cancel'),
           style: 'cancel',
           onPress: () => {
             setStopped(false);
@@ -197,7 +198,7 @@ export default function GameScreen({ route, navigation }) {
           },
         },
         {
-          text: 'Oui',
+          text: i18n.t('game.yes'),
           style: 'default',
           onPress: () => {
             saveMatch();
@@ -205,7 +206,7 @@ export default function GameScreen({ route, navigation }) {
           },
         },
         {
-          text: 'Non',
+          text: i18n.t('game.no'),
           style: 'destructive',
           onPress: () => {
             navigation.navigate('Bienvenue');
@@ -324,11 +325,11 @@ export default function GameScreen({ route, navigation }) {
                   setRunning(false);
                   setStopped(true);
                   Alert.alert(
-                    'Partie terminée',
-                    'Voulez-vous enregistrer cette partie dans l’historique ?',
+                    i18n.t('game.gameFinished'),
+                    i18n.t('game.saveGameQuestion'),
                     [
                       {
-                        text: 'Annuler',
+                        text: i18n.t('game.cancel'),
                         style: 'cancel',
                         onPress: () => {
                           setStopped(false);
@@ -336,7 +337,7 @@ export default function GameScreen({ route, navigation }) {
                         },
                       },
                       {
-                        text: 'Oui',
+                        text: i18n.t('game.yes'),
                         style: 'default',
                         onPress: () => {
                           saveMatch();
@@ -348,7 +349,7 @@ export default function GameScreen({ route, navigation }) {
                         },
                       },
                       {
-                        text: 'Non',
+                        text: i18n.t('game.no'),
                         style: 'destructive',
                         onPress: () => {
                           setStopped(false);
@@ -379,7 +380,7 @@ export default function GameScreen({ route, navigation }) {
         {showCountdown && (
           <View style={styles.countdownOverlay}>
             <Text style={styles.countdownText}>
-              {countdown > 0 ? countdown : 'GO!'}
+              {countdown > 0 ? countdown : i18n.t('game.go')}
             </Text>
           </View>
         )}

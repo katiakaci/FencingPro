@@ -17,7 +17,8 @@ npm-check
 1. historique ✅
 2. statistiques ❗
 5. ui
-6. traduire eng ❗
+6. traduire eng ✅
+7. afficher charge de la batterie ❗
 8. connexion firebase ❗
 9. enlever menu hamburger ✅
 10. improve pause menu ❗

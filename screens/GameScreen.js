@@ -165,6 +165,15 @@ export default function GameScreen({ route, navigation }) {
         resizeMode="cover"
         style={styles.backgroundAnimation}
       />
+      
+      {/* Bouton retour */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.navigate('Bienvenue')}
+      >
+        <Ionicons name="arrow-back" size={20} color="#fff" />
+      </TouchableOpacity>
+
       <View style={styles.container}>
         <StatusBar style="light" />
 
@@ -310,6 +319,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 16,
     paddingHorizontal: 8,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 30,
+    left: 20,
+    zIndex: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 20,
+    padding: 1,
   },
   nameContainer: {
     flexDirection: 'row',

@@ -174,6 +174,48 @@ export default function GameScreen({ route, navigation }) {
     }
   }, [countdown, showCountdown]);
 
+  const handleBackPress = () => {
+    // Si aucune partie n'est en cours, revenir directement
+    if (!gameStarted || showCountdown) {
+      navigation.navigate('Bienvenue');
+      return;
+    }
+
+    // Si une partie est en cours, afficher la modale
+    setRunning(false);
+    setStopped(true);
+    Alert.alert(
+      'Vous allez quitter la partie',
+      'Voulez-vous enregistrer cette partie dans l\'historique ?',
+      [
+        {
+          text: 'Annuler',
+          style: 'cancel',
+          onPress: () => {
+            setStopped(false);
+            setRunning(true);
+          },
+        },
+        {
+          text: 'Oui',
+          style: 'default',
+          onPress: () => {
+            saveMatch();
+            navigation.navigate('Bienvenue');
+          },
+        },
+        {
+          text: 'Non',
+          style: 'destructive',
+          onPress: () => {
+            navigation.navigate('Bienvenue');
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {/* Animation background */}
@@ -188,7 +230,7 @@ export default function GameScreen({ route, navigation }) {
       {/* Bouton retour */}
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => navigation.navigate('Bienvenue')}
+        onPress={handleBackPress}
       >
         <Ionicons name="arrow-back" size={20} color="#fff" />
       </TouchableOpacity>

@@ -48,6 +48,9 @@ export default function GameScreen({ route, navigation }) {
   const [chrono, setChrono] = useState(0);
   const [stopped, setStopped] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+  const [countdown, setCountdown] = useState(3);
+  const [showCountdown, setShowCountdown] = useState(true);
+
   // Récupérer les paramètres de navigation
   const {
     joueur1,
@@ -155,6 +158,22 @@ export default function GameScreen({ route, navigation }) {
     }
   };
 
+  useEffect(() => {
+    if (showCountdown && countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (showCountdown && countdown === 0) {
+      // Countdown terminé, commencer la partie
+      setTimeout(() => {
+        setShowCountdown(false);
+        setGameStarted(true);
+        setRunning(true);
+      }, 1000); // Petite pause après "GO!"
+    }
+  }, [countdown, showCountdown]);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {/* Animation background */}
@@ -165,7 +184,7 @@ export default function GameScreen({ route, navigation }) {
         resizeMode="cover"
         style={styles.backgroundAnimation}
       />
-      
+
       {/* Bouton retour */}
       <TouchableOpacity
         style={styles.backButton}
@@ -238,11 +257,17 @@ export default function GameScreen({ route, navigation }) {
           <View style={styles.timerBox}><Text style={styles.timerText}>{formatChrono(chrono)}</Text></View>
           <View style={styles.buttonRow}>
             {!gameStarted ? (
-              <TouchableOpacity style={[styles.iconButton, { backgroundColor: '#00c9a7' }]} onPress={() => {
-                setGameStarted(true);
-                setRunning(true);
-                setStopped(false);
-              }}>
+              <TouchableOpacity
+                style={[styles.iconButton, { backgroundColor: '#00c9a7', opacity: showCountdown ? 0.5 : 1 }]}
+                onPress={() => {
+                  if (!showCountdown) {
+                    setGameStarted(true);
+                    setRunning(true);
+                    setStopped(false);
+                  }
+                }}
+                disabled={showCountdown}
+              >
                 <Ionicons name="play" size={28} color="#fff" />
               </TouchableOpacity>
             ) : (
@@ -268,7 +293,6 @@ export default function GameScreen({ route, navigation }) {
                           setRunning(true);
                         },
                       },
-
                       {
                         text: 'Oui',
                         style: 'default',
@@ -302,11 +326,20 @@ export default function GameScreen({ route, navigation }) {
             )}
           </View>
         </View>
+
         {/* Pause overlay */}
         {gameStarted && !running && (
           <TouchableOpacity style={styles.pauseOverlay} activeOpacity={0.8} onPress={() => setRunning(true)}>
             <Ionicons name="pause" size={120} color="#fff" style={{ opacity: 0.9 }} />
           </TouchableOpacity>
+        )}
+
+        {showCountdown && (
+          <View style={styles.countdownOverlay}>
+            <Text style={styles.countdownText}>
+              {countdown > 0 ? countdown : 'GO!'}
+            </Text>
+          </View>
         )}
       </View>
     </SafeAreaView>
@@ -452,5 +485,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 10,
+  },
+  countdownOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 15,
+  },
+  countdownText: {
+    fontSize: 120,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    textShadowColor: '#000',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
+  },
+  countdownSubtext: {
+    fontSize: 24,
+    color: '#fff',
+    textAlign: 'center',
+    marginTop: 20,
+    opacity: 0.8,
   },
 });

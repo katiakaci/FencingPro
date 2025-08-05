@@ -132,6 +132,8 @@ export default function SettingsScreen() {
     }
   }, [setLightColor, sendColorSetting]);
 
+  const isCustomColor = !COLORS.includes(lightColor);
+
   return (
     <View style={styles.container}>
       <LottieView
@@ -180,8 +182,9 @@ export default function SettingsScreen() {
             style={[
               {
                 marginTop: 12,
-                borderWidth: 1,
-                borderColor: '#fff',
+                borderWidth: 2,
+                // borderColor: '#fff',
+                borderColor: isCustomColor ? '#002244' : '#fff', // Noir si couleur personnalisée, blanc sinon
                 borderRadius: 18,
                 overflow: 'hidden',
               }
@@ -620,7 +623,7 @@ const styles = StyleSheet.create({
   gradientButton: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 18,
+    borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -62,7 +62,7 @@ export default function GameScreen({ route, navigation }) {
     mode: routeMode
   } = route?.params || {};
 
-  console.log('GameScreen - Paramètres reçus:', route?.params);
+  // console.log('GameScreen - Paramètres reçus:', route?.params);
 
   const gameMode = routeMode || mode;
   const isSolo = gameMode === 'solo';

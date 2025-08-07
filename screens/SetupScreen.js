@@ -38,7 +38,7 @@ export default function SetupScreen({ navigation }) {
         setLoading1(false);
         return;
       }
-      if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE') &&
+      if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE' || device?.id === 'CC:69:E0:C8:E7:FA') &&
         !devices1.find(d => d.id === device.id) &&
         (!connectedDevice2 || device.id !== connectedDevice2.id)) {
         setDevices1(prev => [...prev, device]);

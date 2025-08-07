@@ -48,7 +48,10 @@
         "no": "Non",
         "prepareYourself": "Préparez-vous...",
         "gameStarts": "La partie commence !",
-        "go": "GO!"
+        "go": "GO!",
+        "gamePaused": "Partie en pause",
+        "resume": "Reprendre",
+        "quit": "Quitter"
     },
     "settings": {
         "title": "Réglages",

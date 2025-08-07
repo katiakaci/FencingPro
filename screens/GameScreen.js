@@ -372,9 +372,71 @@ export default function GameScreen({ route, navigation }) {
 
         {/* Pause overlay */}
         {gameStarted && !running && (
-          <TouchableOpacity style={styles.pauseOverlay} activeOpacity={0.8} onPress={() => setRunning(true)}>
-            <Ionicons name="pause" size={120} color="#fff" style={{ opacity: 0.9 }} />
-          </TouchableOpacity>
+          <View style={styles.pauseMenuOverlay}>
+            <View style={styles.pauseMenuContainer}>
+              <Text style={styles.pauseTitle}>{i18n.t('game.gamePaused')}</Text>
+              
+              {/* Bouton Reprendre */}
+              <TouchableOpacity 
+                style={styles.pauseButton} 
+                onPress={() => setRunning(true)}
+              >
+                <Ionicons name="play" size={24} color="#fff" style={styles.pauseButtonIcon} />
+                <Text style={styles.pauseButtonText}>{i18n.t('game.resume')}</Text>
+              </TouchableOpacity>
+
+              {/* Bouton Réglages */}
+              <TouchableOpacity 
+                style={[styles.pauseButton, styles.pauseButtonSecondary]} 
+                onPress={() => {
+                  // Naviguer vers les réglages tout en gardant la partie en pause
+                  navigation.navigate('SettingsFromWelcome');
+                }}
+              >
+                <Ionicons name="settings" size={24} color="#0a3871" style={styles.pauseButtonIcon} />
+                <Text style={[styles.pauseButtonText, styles.pauseButtonTextSecondary]}>{i18n.t('settings.title')}</Text>
+              </TouchableOpacity>
+
+              {/* Bouton Quitter */}
+              <TouchableOpacity 
+                style={[styles.pauseButton, styles.pauseButtonDanger]} 
+                onPress={() => {
+                  Alert.alert(
+                    i18n.t('game.leavingGame'),
+                    i18n.t('game.saveGameQuestion'),
+                    [
+                      {
+                        text: i18n.t('game.cancel'),
+                        style: 'cancel',
+                        onPress: () => {
+                          // Rester en pause
+                        },
+                      },
+                      {
+                        text: i18n.t('game.yes'),
+                        style: 'default',
+                        onPress: () => {
+                          saveMatch();
+                          navigation.navigate('Bienvenue');
+                        },
+                      },
+                      {
+                        text: i18n.t('game.no'),
+                        style: 'destructive',
+                        onPress: () => {
+                          navigation.navigate('Bienvenue');
+                        },
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+                }}
+              >
+                <Ionicons name="exit" size={24} color="#fff" style={styles.pauseButtonIcon} />
+                <Text style={styles.pauseButtonText}>{i18n.t('game.quit')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         )}
 
         {showCountdown && (
@@ -517,6 +579,72 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
+  },
+  pauseMenuOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.85)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  pauseMenuContainer: {
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    borderRadius: 20,
+    padding: 30,
+    width: '80%',
+    maxWidth: 300,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  pauseTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#0a3871',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  pauseButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00c9a7',
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 12,
+    marginBottom: 15,
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  pauseButtonSecondary: {
+    backgroundColor: '#f8f9fa',
+    borderWidth: 2,
+    borderColor: '#0a3871',
+  },
+  pauseButtonDanger: {
+    backgroundColor: '#e74c3c',
+    marginBottom: 0, // Dernier bouton
+  },
+  pauseButtonIcon: {
+    marginRight: 10,
+  },
+  pauseButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  pauseButtonTextSecondary: {
+    color: '#0a3871',
   },
   pauseOverlay: {
     position: 'absolute',

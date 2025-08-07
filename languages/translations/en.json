@@ -48,7 +48,10 @@
         "no": "No",
         "prepareYourself": "Get ready...",
         "gameStarts": "Game starts!",
-        "go": "GO!"
+        "go": "GO!",
+        "gamePaused": "Game Paused",
+        "resume": "Resume",
+        "quit": "Quit"
     },
     "settings": {
         "title": "Settings",

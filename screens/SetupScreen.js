@@ -6,7 +6,7 @@ import { BleManager } from 'react-native-ble-plx';
 import { useBluetooth } from '../context/BluetoothContext';
 import i18n from '../languages/i18n';
 
-const weapons = ['Sabre', 'Fleuret'];
+const weapons = ['Épée', 'Fleuret'];
 
 export default function SetupScreen({ navigation }) {
   const [mode, setMode] = useState('solo');

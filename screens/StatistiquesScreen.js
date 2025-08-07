@@ -14,7 +14,7 @@ const winsData = {
 // Distribution des armes utilisées
 const weaponData = [
     { name: 'Fleuret', population: 30, color: '#7bb6dd', legendFontColor: '#333', legendFontSize: 12 },
-    { name: 'Sabre', population: 25, color: '#357ab7', legendFontColor: '#333', legendFontSize: 12 },
+    { name: 'Épée', population: 25, color: '#357ab7', legendFontColor: '#333', legendFontSize: 12 },
 ];
 
 // Évolution des scores moyens par session
@@ -29,9 +29,9 @@ const scoreEvolutionData = {
 
 // Durée moyenne des matchs par arme
 const matchDurationData = {
-    labels: ['Épée', 'Fleuret', 'Sabre'],
+    labels: ['Épée', 'Fleuret'],
     datasets: [{
-        data: [8.5, 6.2, 4.8],
+        data: [8.5, 6.2],
         colors: [
             (opacity = 1) => `rgba(74, 144, 226, ${opacity})`,
             (opacity = 1) => `rgba(123, 182, 221, ${opacity})`,

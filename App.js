@@ -12,7 +12,9 @@ import SettingsScreen from './screens/SettingsScreen';
 import GameScreen from './screens/GameScreen';
 import HistoriqueScreen from './screens/HistoriqueScreen';
 import SetupScreen from './screens/SetupScreen';
+import BluetoothScreen from './screens/BluetoothScreen';
 import StatistiquesScreen from './screens/StatistiquesScreen';
+import SetupScreen from './screens/SetupScreen';
 
 import { LightColorProvider } from './context/LightColorContext';
 import { ModeProvider } from './context/ModeContext';
@@ -28,14 +30,16 @@ function MainDrawer() {
   return (
     <Drawer.Navigator
       screenOptions={{
-        headerShown: false,
+        // headerShown: false,
         headerTransparent: true,
         headerTitle: '',
         headerTintColor: '#fff',
       }}
     >
       <Drawer.Screen name="Game" component={GameScreen} />
+      <Drawer.Screen name="Setup" component={SetupScreen}/>
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
+       <Drawer.Screen name="Bluetooth" component={BluetoothScreen} />
       <Drawer.Screen name="Statistiques" component={StatistiquesScreen} />
       <Drawer.Screen name="Réglages" component={SettingsScreen} />
     </Drawer.Navigator>

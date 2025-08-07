@@ -10,6 +10,30 @@ Verifier packages inutilisé:
 npm install -g npm-check
 npm-check
 
+# Pour Vincent
+## Supprimer tous les caches Gradle
+rm -rf ~/.gradle/caches
+rm -rf ~/.gradle/wrapper
+rm -rf /home/vincent-steamovap/fencing_pro/FencingPro/android/.gradle
+
+## Nettoyer le projet
+cd /home/vincent-steamovap/fencing_pro/FencingPro
+rm -rf node_modules
+rm -rf android/build
+rm -rf android/app/build
+
+## Réinstaller les dépendances Node
+npm install
+
+## Nettoyer le cache npm
+npm cache clean --force
+
+## Supprimer les dossiers Android/iOS existants
+rm -rf android ios
+
+## Régénérer les fichiers natifs
+npx expo prebuild --clean --platform android
+
 # Palette de couleurs :
 #ffe270 jaune
 

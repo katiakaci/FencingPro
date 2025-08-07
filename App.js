@@ -50,7 +50,7 @@ export default function App() {
       try {
         const savedLanguage = await AsyncStorage.getItem('userLanguage');
         if (savedLanguage) {
-          await i18next.changeLanguage(savedLanguage);
+          await i18n.changeLanguage(savedLanguage);
         }
       } catch (error) {
         console.log('Erreur chargement langue:', error);
@@ -77,7 +77,7 @@ export default function App() {
                         component={SettingsScreen}
                         options={{
                           headerShown: true,
-                          title: 'Réglages',
+                          title: i18n.t('settings.title'),
                           headerStyle: { backgroundColor: '#00C2CB' },
                           headerTintColor: '#fff',
                         }}
@@ -87,7 +87,7 @@ export default function App() {
                         component={HistoriqueScreen}
                         options={{
                           headerShown: true,
-                          title: 'Historique',
+                          title: i18n.t('history.title'),
                           headerStyle: { backgroundColor: '#00C2CB' },
                           headerTintColor: '#fff',
                         }}
@@ -97,7 +97,7 @@ export default function App() {
                         component={StatistiquesScreen}
                         options={{
                           headerShown: true,
-                          title: 'Statistiques',
+                          title: i18n.t('stats.title'),
                           headerStyle: { backgroundColor: '#00C2CB' },
                           headerTintColor: '#fff',
                         }}

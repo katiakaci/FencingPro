@@ -390,7 +390,7 @@ export default function SettingsScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.soundModal, { alignItems: 'center' }]}>
-            <Text style={styles.modalTitle}>Choisir une couleur</Text>
+            <Text style={styles.modalTitle}>{i18n.t('settings.chooseColor')}</Text>
 
             <ColorPicker
               colors={['red', 'purple', 'blue', 'cyan', 'green', 'yellow', 'orange', 'black', 'white']}
@@ -412,7 +412,7 @@ export default function SettingsScreen() {
               style={styles.closeModalButton}
               onPress={() => setShowColorGradient(false)}
             >
-              <Text style={styles.closeModalText}>Fermer</Text>
+              <Text style={styles.closeModalText}>{i18n.t('settings.close')}</Text>
             </TouchableOpacity>
           </View>
         </View>

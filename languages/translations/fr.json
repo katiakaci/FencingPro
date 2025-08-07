@@ -51,6 +51,7 @@
         "go": "GO!"
     },
     "settings": {
+        "title": "Réglages",
         "mode": "Mode",
         "lightColors": "Couleurs des lumières",
         "otherColors": "Autres couleurs",
@@ -91,6 +92,7 @@
         "ascending": "Croissant"
     },
     "stats": {
+        "title": "Statistiques",
         "winsPerPlayer": "🏆 Victoires par joueur",
         "bestScoreAndDuration": "📊 Meilleur score & plus longue durée par jour",
         "bestScore": "Meilleur score",

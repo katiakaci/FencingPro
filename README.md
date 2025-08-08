@@ -45,12 +45,8 @@ npx expo prebuild --clean --platform android
 7. afficher charge de la batterie ❗
 8. connexion firebase ❗
 9. enlever menu hamburger ✅
-10. improve pause menu ❗
 11. si microcontroleur déconnecté, afficher modale d'erreur (à tester)❗
 12. donner possibilité au user dajouter nouvel appareil ❗
-13. page setup sauvegarder donnees  ✅
-14. renommer nom appareil blutooth ❗
 15. mettre sur le store ❗
 16. logo app ❗
-17. blueooth joueur 2 ❗
 18. améliorer ui des modales ❗

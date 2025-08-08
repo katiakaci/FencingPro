@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Keyboard, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-import { BleManager } from 'react-native-ble-plx';
 import { useBluetooth } from '../context/BluetoothContext';
 import i18n from '../languages/i18n';
 
@@ -27,8 +26,7 @@ export default function SetupScreen({ navigation }) {
   const [devices2, setDevices2] = useState([]);
   const [connectedDevice2, setConnectedDevice2] = useState(null);
 
-  const [manager] = useState(new BleManager());
-  const { sendWeaponSetting } = useBluetooth();
+  const { manager, sendWeaponSetting, setDevice } = useBluetooth();
 
   const scanForDevices1 = () => {
     setDevices1([]);
@@ -77,6 +75,7 @@ export default function SetupScreen({ navigation }) {
       await connected.discoverAllServicesAndCharacteristics();
       setBleConnected1(true);
       setConnectedDevice1(connected);
+      setDevice(connected);
       setDevices1([]);
       setLoading1(false);
       Alert.alert(i18n.t('setup.connected'), `${i18n.t('setup.player1Name')} - ${i18n.t('setup.connectedDevice')} ${connected.name || '(aucun nom)'}`);

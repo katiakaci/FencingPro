@@ -39,9 +39,15 @@ export default function SetupScreen({ navigation }) {
         return;
       }
       if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE' || device?.id === 'CC:69:E0:C8:E7:FA') &&
-        !devices1.find(d => d.id === device.id) &&
         (!connectedDevice2 || device.id !== connectedDevice2.id)) {
-        setDevices1(prev => [...prev, device]);
+        // Utiliser setDevices1 avec une fonction pour éviter les doublons
+        setDevices1(prev => {
+          const exists = prev.find(d => d.id === device.id);
+          if (!exists) {
+            return [...prev, device];
+          }
+          return prev;
+        });
       }
     });
     setTimeout(() => {
@@ -59,9 +65,15 @@ export default function SetupScreen({ navigation }) {
         return;
       }
       if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE') &&
-        !devices2.find(d => d.id === device.id) &&
         (!connectedDevice1 || device.id !== connectedDevice1.id)) {
-        setDevices2(prev => [...prev, device]);
+        // Utiliser setDevices2 avec une fonction pour éviter les doublons
+        setDevices2(prev => {
+          const exists = prev.find(d => d.id === device.id);
+          if (!exists) {
+            return [...prev, device];
+          }
+          return prev;
+        });
       }
     });
     setTimeout(() => {
@@ -80,7 +92,7 @@ export default function SetupScreen({ navigation }) {
       setDevice(connected);
       setDevices1([]);
       setLoading1(false);
-      Alert.alert(i18n.t('setup.connected'), `${i18n.t('setup.player1Name')} - ${i18n.t('setup.connectedDevice')} ${connected.name || '(aucun nom)'}`);
+      Alert.alert(i18n.t('setup.connected'));
     } catch (err) {
       setLoading1(false);
       Alert.alert(i18n.t('common.error'), i18n.t('setup.connectionErrorPlayer1'));
@@ -96,7 +108,7 @@ export default function SetupScreen({ navigation }) {
       setConnectedDevice2(connected);
       setDevices2([]);
       setLoading2(false);
-      Alert.alert(i18n.t('setup.connected'), `${i18n.t('setup.player2Name')} - ${i18n.t('setup.connectedDevice')} ${connected.name || '(aucun nom)'}`);
+      Alert.alert(i18n.t('setup.connected'));
     } catch (err) {
       setLoading2(false);
       Alert.alert(i18n.t('common.error'), i18n.t('setup.connectionErrorPlayer2'));
@@ -277,13 +289,13 @@ export default function SetupScreen({ navigation }) {
             )}
             {!bleConnected1 && devices1.length > 0 && (
               <View style={styles.deviceList}>
-                {devices1.map((device) => (
+                {devices1.map((device, index) => (
                   <TouchableOpacity
-                    key={device.id}
+                    key={`player1-${device.id}-${index}`}
                     style={styles.deviceItem}
                     onPress={() => connectToDevice1(device)}
                   >
-                    <Text style={styles.deviceName}>{device.name || 'Module BLE'}</Text>
+                    <Text style={styles.deviceName}>{device.name || 'Casque'}</Text>
                     <Text style={styles.deviceId}>{device.id}</Text>
                   </TouchableOpacity>
                 ))}
@@ -310,13 +322,13 @@ export default function SetupScreen({ navigation }) {
               )}
               {!bleConnected2 && devices2.length > 0 && (
                 <View style={styles.deviceList}>
-                  {devices2.map((device) => (
+                  {devices2.map((device, index) => (
                     <TouchableOpacity
-                      key={device.id}
+                      key={`player2-${device.id}-${index}`}
                       style={styles.deviceItem}
                       onPress={() => connectToDevice2(device)}
                     >
-                      <Text style={styles.deviceName}>{device.name || 'Module BLE'}</Text>
+                      <Text style={styles.deviceName}>{device.name || 'Casque'}</Text>
                       <Text style={styles.deviceId}>{device.id}</Text>
                     </TouchableOpacity>
                   ))}

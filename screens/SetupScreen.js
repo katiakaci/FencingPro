@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityInd
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { useBluetooth } from '../context/BluetoothContext';
+import { useTouch } from '../context/TouchContext';
 import i18n from '../languages/i18n';
 
 const weapons = ['Épée', 'Fleuret'];
@@ -27,6 +28,7 @@ export default function SetupScreen({ navigation }) {
   const [connectedDevice2, setConnectedDevice2] = useState(null);
 
   const { manager, sendWeaponSetting, setDevice } = useBluetooth();
+  const { setTouchDetected } = useTouch();
 
   const scanForDevices1 = () => {
     setDevices1([]);

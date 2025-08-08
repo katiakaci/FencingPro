@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
-import { Buffer } from 'buffer';
 import { BleManager } from 'react-native-ble-plx';
+import { useTouch } from './TouchContext';
 
 const SERVICE_UUID = '12345678-1234-5678-1234-56789abcdef0';
 const TOUCH_CHARACTERISTIC_UUID = '12345678-1234-5678-1234-56789abcdef1'; // Pour recevoir les touches
@@ -71,7 +71,44 @@ export const BluetoothProvider = ({ children }) => {
     const colorTimeoutRef = useRef(null);
     const lastColorRef = useRef(null);
 
-    const setDevice = (device) => setConnectedDevice(device);
+    const touchContext = useTouch();
+    const setTouchDetected = touchContext?.setTouchDetected;
+
+    const setupTouchMonitoring = useCallback((device) => {
+        if (!device || !setTouchDetected) {
+            console.warn('Device ou setTouchDetected manquant');
+            return;
+        }
+
+
+        device.monitorCharacteristicForService(
+            SERVICE_UUID,
+            TOUCH_CHARACTERISTIC_UUID,
+            (error, characteristic) => {
+                if (error) {
+                    console.error('Erreur monitoring touch depuis contexte:', error);
+                    return;
+                }
+                if (characteristic?.value) {
+                    const data = atob(characteristic.value);
+                    setTouchDetected(true);
+                    setTimeout(() => {
+                        setTouchDetected(false);
+                    }, 1000);
+                }
+            }
+        );
+    }, [setTouchDetected]);
+
+    const setDevice = useCallback((device) => {
+        console.log('setDevice appelé avec:', device?.id);
+        setConnectedDevice(device);
+
+        // Configurer automatiquement le monitoring si un appareil est défini
+        if (device) {
+            setupTouchMonitoring(device);
+        }
+    }, [setupTouchMonitoring]);
 
     // Envoie la couleur au microcontrôleur avec debounce
     const sendColorSetting = useCallback(async (color) => {
@@ -101,12 +138,11 @@ export const BluetoothProvider = ({ children }) => {
                 await connectedDevice.writeCharacteristicWithResponseForService(
                     SERVICE_UUID,
                     COLOR_CHARACTERISTIC_UUID,
-                    Buffer.from(hexColor).toString('base64')
+                    btoa(hexColor)
                 );
                 console.log('COULEUR ENVOYEEEEE ✅✅✅');
             } catch (e) {
                 console.log('COULEUR PAS ENVOYEE❌', e);
-                // Reset en cas d'erreur pour permettre un nouvel essai
                 lastColorRef.current = null;
             }
         }, 300); // Attendre 300ms
@@ -122,7 +158,7 @@ export const BluetoothProvider = ({ children }) => {
             await connectedDevice.writeCharacteristicWithResponseForService(
                 SERVICE_UUID,
                 VIBRATION_CHARACTERISTIC_UUID,
-                Buffer.from(value).toString('base64')
+                btoa(value)
             );
             console.log('VIBRATION ENVOYEEEEE ✅✅✅');
         } catch (e) {
@@ -146,7 +182,7 @@ export const BluetoothProvider = ({ children }) => {
             await targetDevice.writeCharacteristicWithResponseForService(
                 SERVICE_UUID,
                 WEAPON_CHARACTERISTIC_UUID,
-                Buffer.from(weaponCode).toString('base64')
+                btoa(weaponCode)
             );
             console.log('ARME ENVOYEEEEE ✅✅✅');
         } catch (e) {

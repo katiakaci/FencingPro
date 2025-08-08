@@ -38,7 +38,7 @@ function MainDrawer() {
       <Drawer.Screen name="Game" component={GameScreen} />
       {/* <Drawer.Screen name="Setup" component={SetupScreen}/> */}
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
-       <Drawer.Screen name="Bluetooth" component={BluetoothScreen} />
+      <Drawer.Screen name="Bluetooth" component={BluetoothScreen} />
       <Drawer.Screen name="Statistiques" component={StatistiquesScreen} />
       <Drawer.Screen name="Réglages" component={SettingsScreen} />
     </Drawer.Navigator>
@@ -65,12 +65,13 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <BluetoothProvider>
-        <ModeProvider>
-          <TouchProvider>
-            <LightColorProvider>
-              <SettingsProvider>
-                <HistoryProvider>
+
+      <ModeProvider>
+        <TouchProvider>
+          <LightColorProvider>
+            <SettingsProvider>
+              <HistoryProvider>
+                <BluetoothProvider>
                   <NavigationContainer>
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
                       <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
@@ -108,12 +109,12 @@ export default function App() {
                       <Stack.Screen name="Main" component={MainDrawer} />
                     </Stack.Navigator>
                   </NavigationContainer>
-                </HistoryProvider>
-              </SettingsProvider>
-            </LightColorProvider>
-          </TouchProvider>
-        </ModeProvider>
-      </BluetoothProvider>
+                </BluetoothProvider>
+              </HistoryProvider>
+            </SettingsProvider>
+          </LightColorProvider>
+        </TouchProvider>
+      </ModeProvider>
     </GestureHandlerRootView>
   );
 }

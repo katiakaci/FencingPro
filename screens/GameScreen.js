@@ -14,6 +14,7 @@ import { useTouch } from '../context/TouchContext';
 import { useLightColor } from '../context/LightColorContext';
 import { useSettings } from '../context/SettingsContext';
 import { useHistory } from '../context/HistoryContext';
+import { useBluetooth } from '../context/BluetoothContext';
 
 const SOUND_FILES = {
   'alert_touch.mp3': require('../assets/sound/alert_touch.mp3'),
@@ -31,6 +32,7 @@ export default function GameScreen({ route, navigation }) {
   const { mode } = useMode();
   const { soundEnabled, selectedSound } = useSettings();
   const { addMatch } = useHistory();
+  const { connectedDevice } = useBluetooth();
 
   // Mettre le jeu en pause quand on quitte la page ou quand on ouvre le menu hamburger
   useFocusEffect(
@@ -235,6 +237,16 @@ export default function GameScreen({ route, navigation }) {
       >
         <Ionicons name="arrow-back" size={20} color="#fff" />
       </TouchableOpacity>
+
+      {/* Indicateur de connexion Bluetooth */}
+      <View style={styles.connectionIndicator}>
+        <Ionicons 
+          name={connectedDevice ? "bluetooth" : "bluetooth-outline"} 
+          size={20} 
+          color={connectedDevice ? "#00c9a7" : "#ff6b6b"} 
+        />
+        {connectedDevice && <View style={styles.connectedDot} />}
+      </View>
 
       <View style={styles.container}>
         <StatusBar style="light" />
@@ -683,5 +695,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     opacity: 0.8,
+  },
+  connectionIndicator: {
+    position: 'absolute',
+    top: 30,
+    right: 20,
+    zIndex: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 20,
+    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  connectedDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#00c9a7',
+    marginLeft: 4,
   },
 });

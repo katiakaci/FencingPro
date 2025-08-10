@@ -50,6 +50,7 @@ export default function GameScreen({ route, navigation }) {
   const [chrono, setChrono] = useState(0);
   const [stopped, setStopped] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+  const [showBackModal, setShowBackModal] = useState(false);
 
   const countdown = useCountdown(3, () => {
     setGameStarted(true);
@@ -170,36 +171,7 @@ export default function GameScreen({ route, navigation }) {
 
     setRunning(false);
     setStopped(true);
-    Alert.alert(
-      i18n.t('game.leavingGame'),
-      i18n.t('game.saveGameQuestion'),
-      [
-        {
-          text: i18n.t('game.cancel'),
-          style: 'cancel',
-          onPress: () => {
-            setStopped(false);
-            setRunning(true);
-          },
-        },
-        {
-          text: i18n.t('game.yes'),
-          style: 'default',
-          onPress: () => {
-            saveMatch();
-            navigation.navigate('Bienvenue');
-          },
-        },
-        {
-          text: i18n.t('game.no'),
-          style: 'destructive',
-          onPress: () => {
-            navigation.navigate('Bienvenue');
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+    setShowBackModal(true);
   };
 
   return (
@@ -358,7 +330,7 @@ export default function GameScreen({ route, navigation }) {
         </View>
 
         {/* Pause overlay */}
-        {gameStarted && !running && (
+        {gameStarted && !running && !showBackModal && (
           <View style={styles.pauseMenuOverlay}>
             <View style={styles.pauseMenuContainer}>
               <Text style={styles.pauseTitle}>{i18n.t('game.gamePaused')}</Text>
@@ -394,8 +366,6 @@ export default function GameScreen({ route, navigation }) {
                       {
                         text: i18n.t('game.cancel'),
                         style: 'cancel',
-                        onPress: () => {
-                        },
                       },
                       {
                         text: i18n.t('game.yes'),
@@ -419,6 +389,48 @@ export default function GameScreen({ route, navigation }) {
               >
                 <Ionicons name="exit" size={24} color="#fff" style={styles.pauseButtonIcon} />
                 <Text style={styles.pauseButtonText}>{i18n.t('game.quit')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {showBackModal && (
+          <View style={styles.pauseMenuOverlay}>
+            <View style={styles.pauseMenuContainer}>
+              <Text style={styles.pauseTitle}>{i18n.t('game.leavingGame')}</Text>
+              <Text style={styles.pauseSubtitle}>{i18n.t('game.saveGameQuestion')}</Text>
+              
+              <TouchableOpacity 
+                style={[styles.pauseButton, styles.pauseButtonSecondary]} 
+                onPress={() => {
+                  setShowBackModal(false);
+                  setStopped(false);
+                  setRunning(true);
+                }}
+              >
+                <Ionicons name="close" size={24} color="#0a3871" style={styles.pauseButtonIcon} />
+                <Text style={[styles.pauseButtonText, styles.pauseButtonTextSecondary]}>{i18n.t('game.cancel')}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.pauseButton} 
+                onPress={() => {
+                  saveMatch();
+                  navigation.navigate('Bienvenue');
+                }}
+              >
+                <Ionicons name="checkmark" size={24} color="#fff" style={styles.pauseButtonIcon} />
+                <Text style={styles.pauseButtonText}>{i18n.t('game.yes')}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[styles.pauseButton, styles.pauseButtonDanger]} 
+                onPress={() => {
+                  navigation.navigate('Bienvenue');
+                }}
+              >
+                <Ionicons name="trash" size={24} color="#fff" style={styles.pauseButtonIcon} />
+                <Text style={styles.pauseButtonText}>{i18n.t('game.no')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -592,8 +604,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#0a3871',
-    marginBottom: 30,
+    marginBottom: 15,
     textAlign: 'center',
+  },
+  pauseSubtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+    lineHeight: 22,
   },
   pauseButton: {
     flexDirection: 'row',
@@ -617,7 +636,7 @@ const styles = StyleSheet.create({
   },
   pauseButtonDanger: {
     backgroundColor: '#e74c3c',
-    marginBottom: 0, // Dernier bouton
+    marginBottom: 0,
   },
   pauseButtonIcon: {
     marginRight: 10,
@@ -630,17 +649,6 @@ const styles = StyleSheet.create({
   },
   pauseButtonTextSecondary: {
     color: '#0a3871',
-  },
-  pauseOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
   },
   countdownOverlay: {
     position: 'absolute',
@@ -661,13 +669,6 @@ const styles = StyleSheet.create({
     textShadowColor: '#000',
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 4,
-  },
-  countdownSubtext: {
-    fontSize: 24,
-    color: '#fff',
-    textAlign: 'center',
-    marginTop: 20,
-    opacity: 0.8,
   },
   connectionIndicator: {
     position: 'absolute',

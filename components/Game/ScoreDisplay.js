@@ -1,6 +1,3 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-
 /**
  * @fileoverview Composant d'affichage des scores et informations de match
  * 
@@ -16,6 +13,9 @@ import { View, Text, StyleSheet } from 'react-native';
  * - Affichage du type d'arme centralisé sous les scores
  * - Mise en page responsive selon le mode
  */
+
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
 export const ScoreDisplay = ({ playerName, player2Name, joueur2Score, joueur1Score, isSolo, weaponType }) => {
   return (

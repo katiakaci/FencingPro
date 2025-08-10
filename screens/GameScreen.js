@@ -15,9 +15,9 @@ import { useSettings } from '../context/SettingsContext';
 import { useHistory } from '../context/HistoryContext';
 import { useBluetooth } from '../context/BluetoothContext';
 import { useCountdown } from '../hooks/useCountdown';
-import { GameTimer } from '../components/GameTimer';
-import { GameModal } from '../components/GameModal';
-import { ScoreDisplay } from '../components/ScoreDisplay';
+import { GameTimer } from '../components/Game/Timer';
+import { GameModal } from '../components/Game/Modal';
+import { ScoreDisplay } from '../components/Game/ScoreDisplay';
 
 const SOUND_FILES = {
   'alert_touch.mp3': require('../assets/sound/alert_touch.mp3'),
@@ -44,7 +44,7 @@ export default function GameScreen({ route, navigation }) {
       };
     }, [])
   );
-  
+
   const { touchDetected } = useTouch();
   const { lightColor } = useLightColor();
   const [running, setRunning] = useState(false);
@@ -308,10 +308,10 @@ export default function GameScreen({ route, navigation }) {
 
       {/* Indicateur de connexion Bluetooth */}
       <View style={styles.connectionIndicator}>
-        <Ionicons 
-          name={connectedDevice ? "bluetooth" : "bluetooth-outline"} 
-          size={20} 
-          color={connectedDevice ? "#00c9a7" : "#ff6b6b"} 
+        <Ionicons
+          name={connectedDevice ? "bluetooth" : "bluetooth-outline"}
+          size={20}
+          color={connectedDevice ? "#00c9a7" : "#ff6b6b"}
         />
         {connectedDevice && <View style={styles.connectedDot} />}
       </View>
@@ -319,7 +319,7 @@ export default function GameScreen({ route, navigation }) {
       <View style={styles.container}>
         <StatusBar style="light" />
 
-        <ScoreDisplay 
+        <ScoreDisplay
           playerName={playerName}
           player2Name={player2Name}
           joueur2Score={joueur2Score}
@@ -356,7 +356,7 @@ export default function GameScreen({ route, navigation }) {
         </View>
 
         {/* Chrono et boutons */}
-        <GameTimer 
+        <GameTimer
           chrono={chrono}
           formatChrono={formatChrono}
           gameStarted={gameStarted}

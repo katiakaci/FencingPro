@@ -55,8 +55,13 @@ export const SortMenu = ({
                 <TouchableOpacity
                     style={styles.modalOverlay}
                     onPress={() => setSortMenuVisible(false)}
+                    activeOpacity={1}
                 >
-                    <View style={styles.sortDropdown}>
+                    <TouchableOpacity 
+                        style={styles.sortDropdown}
+                        activeOpacity={1}
+                        onPress={(e) => e.stopPropagation()}
+                    >
                         {sortOptions.map(opt => (
                             <TouchableOpacity
                                 key={opt.key}
@@ -89,7 +94,7 @@ export const SortMenu = ({
                                 </Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </TouchableOpacity>
             </Modal>
         </View>

@@ -21,9 +21,11 @@ export const NoFilterResults = ({ onClearFilter, activeFilters }) => {
         <View style={styles.container}>
             <Ionicons name="search-outline" size={64} color="#ccc" />
             <Text style={styles.title}>{i18n.t('history.noFilterResults')}</Text>
-            <Text style={styles.subtitle}>
-                {i18n.t('history.noFilterResultsSubtext')}
-            </Text>
+            <View style={styles.subtitleContainer}>
+                <Text style={styles.subtitle}>
+                    {i18n.t('history.noFilterResultsSubtext')}
+                </Text>
+            </View>
             <Text style={styles.filtersText}>
                 {getActiveFiltersText()}
             </Text>
@@ -41,6 +43,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingVertical: 40,
         paddingHorizontal: 20,
+        width: '100%',
     },
     title: {
         fontSize: 16,
@@ -48,13 +51,21 @@ const styles = StyleSheet.create({
         color: '#666',
         marginTop: 16,
         textAlign: 'center',
+        width: '100%',
+    },
+    subtitleContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 8,
+        paddingHorizontal: 20,
     },
     subtitle: {
         fontSize: 14,
         color: '#999',
-        marginTop: 8,
         textAlign: 'center',
         lineHeight: 20,
+        width: '95%',
+        flexWrap: 'wrap',
     },
     filtersText: {
         fontSize: 12,
@@ -62,6 +73,8 @@ const styles = StyleSheet.create({
         marginTop: 8,
         textAlign: 'center',
         fontStyle: 'italic',
+        width: '90%',
+        flexWrap: 'wrap',
     },
     clearButton: {
         flexDirection: 'row',

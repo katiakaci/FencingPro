@@ -116,6 +116,17 @@
         "totalTouches": "Total touches",
         "winRate": "Win rate",
         "successfulTouches": "Successful touches",
-        "touchesPerMinute": "Touches/minute"
+        "touchesPerMinute": "Touches/minute",
+        "monthlyProgression": "Monthly progression",
+        "weaponEfficiency": "Weapon efficiency",
+        "peakHour": "Peak hour",
+        "favoriteDay": "Favorite day",
+        "sessionsPerWeek": "Sessions/week",
+        "averageTimeBetweenMatches": "Average time between matches",
+        "consecutiveDays": "Consecutive days",
+        "monthComparison": "Vs last month",
+        "activeDays": "Active days",
+        "personalRecord": "Personal record",
+        "mostProductiveDay": "Most productive day"
     }
 }

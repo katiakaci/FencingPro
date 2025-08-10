@@ -11,7 +11,6 @@ import BienvenueScreen from './screens/BienvenueScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import GameScreen from './screens/GameScreen';
 import HistoriqueScreen from './screens/HistoriqueScreen';
-import BluetoothScreen from './screens/BluetoothScreen';
 import StatistiquesScreen from './screens/StatistiquesScreen';
 import SetupScreen from './screens/SetupScreen';
 
@@ -29,16 +28,14 @@ function MainDrawer() {
   return (
     <Drawer.Navigator
       screenOptions={{
-        // headerShown: false,
+        headerShown: false,
         headerTransparent: true,
         headerTitle: '',
         headerTintColor: '#fff',
       }}
     >
       <Drawer.Screen name="Game" component={GameScreen} />
-      {/* <Drawer.Screen name="Setup" component={SetupScreen}/> */}
       <Drawer.Screen name="Historique" component={HistoriqueScreen} />
-      <Drawer.Screen name="Bluetooth" component={BluetoothScreen} />
       <Drawer.Screen name="Statistiques" component={StatistiquesScreen} />
       <Drawer.Screen name="Réglages" component={SettingsScreen} />
     </Drawer.Navigator>
@@ -75,7 +72,6 @@ export default function App() {
                   <NavigationContainer>
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
                       <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
-                      <Stack.Screen name="Setup" component={SetupScreen} />
                       <Stack.Screen
                         name="SettingsFromWelcome"
                         component={SettingsScreen}

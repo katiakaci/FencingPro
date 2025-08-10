@@ -52,7 +52,11 @@
         "gamePaused": "Partie en pause",
         "resume": "Reprendre",
         "quit": "Quitter",
-        "getReady": "Préparez-vous..."
+        "getReady": "Préparez-vous...",
+        "chooseNextAction": "Que voulez-vous faire ?",
+        "playAgainSameConfig": "Rejouer",
+        "newGameNewConfig": "Nouvelle partie",
+        "quit": "Quitter"
     },
     "settings": {
         "title": "Réglages",

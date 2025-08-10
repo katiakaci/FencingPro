@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 export const GameModal = ({
   visible,
   title,
+  titleStyle,
   subtitle,
   buttons,
   onClose
@@ -30,7 +31,7 @@ export const GameModal = ({
   return (
     <View style={styles.pauseMenuOverlay}>
       <View style={styles.pauseMenuContainer}>
-        <Text style={styles.pauseTitle}>{title}</Text>
+        <Text style={[styles.pauseTitle, titleStyle]}>{title}</Text>
         {subtitle && <Text style={styles.pauseSubtitle}>{subtitle}</Text>}
 
         {buttons.map((button, index) => (

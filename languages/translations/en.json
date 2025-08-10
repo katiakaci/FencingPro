@@ -52,7 +52,11 @@
         "gamePaused": "Game Paused",
         "resume": "Resume",
         "quit": "Quit",
-        "getReady": "Get ready..."
+        "getReady": "Get ready...",
+        "chooseNextAction": "What do you want to do?",
+        "playAgainSameConfig": "Play again",
+        "newGameNewConfig": "New game",
+        "quit": "Quit"
     },
     "settings": {
         "title": "Settings",

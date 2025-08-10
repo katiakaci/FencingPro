@@ -55,6 +55,7 @@ export default function GameScreen({ route, navigation }) {
   const [gameStarted, setGameStarted] = useState(false);
   const [showBackModal, setShowBackModal] = useState(false);
   const [showStopModal, setShowStopModal] = useState(false);
+  const [gameFinished, setGameFinished] = useState(false);
 
   const countdown = useCountdown(3, () => {
     setGameStarted(true);
@@ -190,7 +191,21 @@ export default function GameScreen({ route, navigation }) {
     setJoueur1Score(0);
     setChrono(0);
     setGameStarted(false);
+    setGameFinished(false);
     countdown.stop();
+  };
+
+  const startNewGameSameConfig = () => {
+    resetGame();
+    countdown.start();
+  };
+
+  const startNewGameNewConfig = () => {
+    navigation.navigate('Setup');
+  };
+
+  const quitToWelcome = () => {
+    navigation.navigate('Bienvenue');
   };
 
   // Configuration des boutons pour la modale de pause
@@ -259,7 +274,7 @@ export default function GameScreen({ route, navigation }) {
       onPress: () => {
         saveMatch();
         setShowStopModal(false);
-        resetGame();
+        setGameFinished(true);
       },
       textColor: '#fff'
     },
@@ -268,7 +283,7 @@ export default function GameScreen({ route, navigation }) {
       text: i18n.t('game.no'),
       onPress: () => {
         setShowStopModal(false);
-        resetGame();
+        setGameFinished(true);
       },
       style: { backgroundColor: '#e74c3c' },
       textColor: '#fff'
@@ -281,6 +296,29 @@ export default function GameScreen({ route, navigation }) {
         setStopped(false);
         setRunning(true);
       },
+      style: { backgroundColor: '#f8f9fa', borderWidth: 2, borderColor: '#0a3871', marginBottom: 0 },
+      textColor: '#0a3871'
+    }
+  ];
+
+  const gameFinishedButtons = [
+    {
+      icon: 'refresh',
+      text: i18n.t('game.playAgainSameConfig'),
+      onPress: startNewGameSameConfig,
+      textColor: '#fff'
+    },
+    {
+      icon: 'settings',
+      text: i18n.t('game.newGameNewConfig'),
+      onPress: startNewGameNewConfig,
+      style: { backgroundColor: '#007acc' },
+      textColor: '#fff'
+    },
+    {
+      icon: 'home',
+      text: i18n.t('game.quit'),
+      onPress: quitToWelcome,
       style: { backgroundColor: '#f8f9fa', borderWidth: 2, borderColor: '#0a3871', marginBottom: 0 },
       textColor: '#0a3871'
     }
@@ -354,19 +392,20 @@ export default function GameScreen({ route, navigation }) {
           )}
         </View>
 
-        {/* Chrono et boutons */}
-        <GameTimer
-          chrono={chrono}
-          formatChrono={formatChrono}
-          gameStarted={gameStarted}
-          running={running}
-          setRunning={setRunning}
-          onStop={handleStopGame}
-        />
+        {!gameFinished && (
+          <GameTimer
+            chrono={chrono}
+            formatChrono={formatChrono}
+            gameStarted={gameStarted}
+            running={running}
+            setRunning={setRunning}
+            onStop={handleStopGame}
+          />
+        )}
 
         {/* Modale de pause */}
         <GameModal
-          visible={gameStarted && !running && !showBackModal && !showStopModal}
+          visible={gameStarted && !running && !showBackModal && !showStopModal && !gameFinished}
           title={i18n.t('game.gamePaused')}
           buttons={pauseModalButtons}
         />
@@ -385,6 +424,15 @@ export default function GameScreen({ route, navigation }) {
           title={i18n.t('game.gameFinished')}
           subtitle={i18n.t('game.saveGameQuestion')}
           buttons={stopModalButtons}
+        />
+
+        {/* Modale de fin de partie */}
+        <GameModal
+          visible={gameFinished}
+          title="FencingPro"
+          titleStyle={{ fontStyle: 'italic' }}
+          subtitle={i18n.t('game.chooseNextAction')}
+          buttons={gameFinishedButtons}
         />
 
         {countdown.isActive && (

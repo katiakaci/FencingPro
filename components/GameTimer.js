@@ -1,15 +1,30 @@
+/**
+ * @fileoverview Composant de gestion du minuteur de jeu
+ * 
+ * Ce composant contrôle :
+ * - L'affichage du temps de jeu en format MM:SS
+ * - Les boutons de contrôle play/pause/stop du chronomètre
+ * - L'état de fonctionnement du minuteur (démarré/arrêté/en cours)
+ * 
+ * Fonctionnalités :
+ * - Affichage du chrono formaté (minutes:secondes)
+ * - Bouton play/pause dynamique selon l'état du jeu
+ * - Bouton stop pour terminer le match
+ * - Gestion des états gameStarted et running
+ */
+
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import i18n from '../languages/i18n';
 
-export const GameTimer = ({ 
-  chrono, 
-  formatChrono, 
-  gameStarted, 
-  running, 
-  setRunning, 
-  onStop 
+export const GameTimer = ({
+  chrono,
+  formatChrono,
+  gameStarted,
+  running,
+  setRunning,
+  onStop
 }) => {
   return (
     <View style={styles.timerContainer}>
@@ -29,8 +44,8 @@ export const GameTimer = ({
             >
               <Ionicons name="pause" size={28} color={running ? '#0a3871' : '#fff'} />
             </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.iconButton, { backgroundColor: 'tomato' }]} 
+            <TouchableOpacity
+              style={[styles.iconButton, { backgroundColor: 'tomato' }]}
               onPress={onStop}
             >
               <Ionicons name="stop" size={28} color="#fff" />

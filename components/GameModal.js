@@ -1,13 +1,29 @@
+/**
+ * @fileoverview Composant modale réutilisable pour les interactions de jeu
+ * 
+ * Ce composant fournit :
+ * - Une interface modale standardisée pour les actions de jeu
+ * - Un système de boutons configurable avec icônes et styles
+ * - L'affichage de titre et sous-titre personnalisables
+ * - Une présentation cohérente pour toutes les modales du jeu
+ * 
+ * Utilisation :
+ * - Modale de pause du jeu avec options de reprise/settings/quitter
+ * - Modale de confirmation pour sauvegarder/quitter
+ * - Modale de fin de partie avec options de sauvegarde
+ * - Boutons configurables avec icônes, textes et styles personnalisés
+ */
+
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export const GameModal = ({ 
-  visible, 
-  title, 
-  subtitle, 
-  buttons, 
-  onClose 
+export const GameModal = ({
+  visible,
+  title,
+  subtitle,
+  buttons,
+  onClose
 }) => {
   if (!visible) return null;
 
@@ -16,7 +32,7 @@ export const GameModal = ({
       <View style={styles.pauseMenuContainer}>
         <Text style={styles.pauseTitle}>{title}</Text>
         {subtitle && <Text style={styles.pauseSubtitle}>{subtitle}</Text>}
-        
+
         {buttons.map((button, index) => (
           <TouchableOpacity
             key={index}

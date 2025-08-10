@@ -1,6 +1,22 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
+/**
+ * @fileoverview Composant d'affichage des scores et informations de match
+ * 
+ * Ce composant affiche :
+ * - Les noms des joueurs dans des conteneurs stylisés
+ * - Les scores individuels dans des cercles visuels
+ * - Le type d'arme utilisé pour le match
+ * - L'adaptation automatique pour les modes solo et multijoueur
+ * 
+ * Modes supportés :
+ * - Mode solo : Affichage d'un seul joueur sans bordure de séparation
+ * - Mode multijoueur : Affichage de deux joueurs côte à côte
+ * - Affichage du type d'arme centralisé sous les scores
+ * - Mise en page responsive selon le mode
+ */
+
 export const ScoreDisplay = ({ playerName, player2Name, joueur2Score, joueur1Score, isSolo, weaponType }) => {
   return (
     <>
@@ -20,7 +36,7 @@ export const ScoreDisplay = ({ playerName, player2Name, joueur2Score, joueur1Sco
           </View>
         )}
       </View>
-      
+
       <View style={styles.weaponContainer}>
         <Text style={styles.weaponText}>{weaponType}</Text>
       </View>

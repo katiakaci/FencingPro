@@ -1,3 +1,19 @@
+/**
+ * @fileoverview Composant de configuration des couleurs de signalisation
+ * 
+ * Ce composant gère :
+ * - L'affichage des couleurs prédéfinies (lime, red, blue, yellow, purple)
+ * - La sélection de couleurs personnalisées via ColorPicker
+ * - L'affichage de la couleur actuellement sélectionnée
+ * - La modal de sélection de couleurs avancées
+ * 
+ * Interface :
+ * - Boutons de couleurs prédéfinies avec indication visuelle de sélection
+ * - Bouton gradient pour accéder aux couleurs personnalisées
+ * - Modal intégrée avec ColorPicker pour les couleurs avancées
+ * - Gestion de l'état d'affichage de la modal
+ */
+
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -7,11 +23,11 @@ import i18n from '../languages/i18n';
 
 const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
 
-export const ColorSettings = ({ 
-  lightColor, 
-  onColorChange, 
-  showColorGradient, 
-  setShowColorGradient 
+export const ColorSettings = ({
+  lightColor,
+  onColorChange,
+  showColorGradient,
+  setShowColorGradient
 }) => {
   const isCustomColor = !COLORS.includes(lightColor);
 
@@ -19,7 +35,7 @@ export const ColorSettings = ({
     <>
       <View style={styles.settingBlock}>
         <Text style={styles.label}>{i18n.t('settings.lightColors')}</Text>
-        
+
         <View style={styles.colorRow}>
           {COLORS.map((color) => (
             <TouchableOpacity

@@ -1,3 +1,18 @@
+/**
+ * @fileoverview Composant de sélection de couleurs avec un gradient interactif
+ * 
+ * Ce composant permet :
+ * - La sélection de couleurs personnalisées via un gradient coloré
+ * - La conversion automatique des couleurs en format utilisable
+ * - L'affichage d'un curseur de sélection visuel
+ * 
+ * Fonctionnalités :
+ * - Gradient personnalisable avec array de couleurs
+ * - Gestion des événements touch pour la sélection
+ * - Callback onColorChanged pour retourner la couleur sélectionnée
+ * - Curseur circulaire indiquant la position sélectionnée
+ */
+
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useCallback } from 'react';
 import { StyleSheet, PanResponder } from 'react-native';

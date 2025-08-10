@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Keyboard, TouchableWithoutFeedback, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Keyboard, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import { useBluetooth } from '../context/BluetoothContext';
 import { useTouch } from '../context/TouchContext';
+import { ModeSelector } from '../components/Setup/ModeSelector';
+import { PlayerInputs } from '../components/Setup/PlayerInputs';
+import { WeaponSelector } from '../components/Setup/WeaponSelector';
 import i18n from '../languages/i18n';
-
-const weapons = ['Épée', 'Fleuret'];
 
 export default function SetupScreen({ navigation }) {
   const [mode, setMode] = useState('solo');
@@ -40,7 +41,6 @@ export default function SetupScreen({ navigation }) {
       }
       if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE' || device?.id === 'CC:69:E0:C8:E7:FA') &&
         (!connectedDevice2 || device.id !== connectedDevice2.id)) {
-        // Utiliser setDevices1 avec une fonction pour éviter les doublons
         setDevices1(prev => {
           const exists = prev.find(d => d.id === device.id);
           if (!exists) {
@@ -66,7 +66,6 @@ export default function SetupScreen({ navigation }) {
       }
       if ((device?.id === 'C8:D5:62:67:18:D9' || device?.id === 'C9:72:3C:84:6C:BE') &&
         (!connectedDevice1 || device.id !== connectedDevice1.id)) {
-        // Utiliser setDevices2 avec une fonction pour éviter les doublons
         setDevices2(prev => {
           const exists = prev.find(d => d.id === device.id);
           if (!exists) {
@@ -181,7 +180,6 @@ export default function SetupScreen({ navigation }) {
           style={styles.backgroundAnimation}
         />
 
-        {/* Bouton retour */}
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.navigate('Bienvenue')}
@@ -198,77 +196,25 @@ export default function SetupScreen({ navigation }) {
           <Text style={styles.title}>{i18n.t('setup.title')}</Text>
 
           {/* Mode */}
-          <View style={styles.block}>
-            <Text style={styles.label}>{i18n.t('setup.mode')}</Text>
-            <View style={styles.row}>
-              <TouchableOpacity style={[styles.modeButton, mode === 'solo' && styles.selected]} onPress={() => setMode('solo')}>
-                <Text style={styles.modeText}>{i18n.t('setup.solo')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.modeButton, mode === 'multi' && styles.selected]} onPress={() => setMode('multi')}>
-                <Text style={styles.modeText}>{i18n.t('setup.multiplayer')}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <ModeSelector mode={mode} onModeChange={setMode} />
 
           {/* Noms joueurs */}
-          <View style={styles.block}>
-            <Text style={styles.label}>
-              {mode === 'solo' ? i18n.t('setup.playerName') : i18n.t('setup.player1Name')}
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholder={mode === 'solo' ? i18n.t('setup.playerName') : i18n.t('setup.player1Name')}
-              value={player1}
-              onChangeText={setPlayer1}
-            />
-            {mode === 'multi' && (
-              <>
-                <Text style={styles.label}>{i18n.t('setup.player2Name')}</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder={i18n.t('setup.player2Name')}
-                  value={player2}
-                  onChangeText={setPlayer2}
-                />
-              </>
-            )}
-          </View>
+          <PlayerInputs
+            mode={mode}
+            player1={player1}
+            setPlayer1={setPlayer1}
+            player2={player2}
+            setPlayer2={setPlayer2}
+          />
 
-          {/* Arme joueur 1 */}
-          <View style={styles.block}>
-            <Text style={styles.label}>
-              {mode === 'solo' ? i18n.t('setup.weaponType') : i18n.t('setup.weaponTypePlayer1')}
-            </Text>
-            <View style={styles.row}>
-              {weapons.map((weapon) => (
-                <TouchableOpacity
-                  key={weapon}
-                  style={[styles.weaponButton, selectedWeapon === weapon && styles.selected]}
-                  onPress={() => setSelectedWeapon(weapon)}
-                >
-                  <Text style={styles.modeText}>{weapon}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          {/* Arme joueur 2 (si mode multi) */}
-          {mode === 'multi' && (
-            <View style={styles.block}>
-              <Text style={styles.label}>{i18n.t('setup.weaponTypePlayer2')}</Text>
-              <View style={styles.row}>
-                {weapons.map((weapon) => (
-                  <TouchableOpacity
-                    key={weapon}
-                    style={[styles.weaponButton, selectedWeapon2 === weapon && styles.selected]}
-                    onPress={() => setSelectedWeapon2(weapon)}
-                  >
-                    <Text style={styles.modeText}>{weapon}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-          )}
+          {/* Armes */}
+          <WeaponSelector
+            mode={mode}
+            selectedWeapon={selectedWeapon}
+            setSelectedWeapon={setSelectedWeapon}
+            selectedWeapon2={selectedWeapon2}
+            setSelectedWeapon2={setSelectedWeapon2}
+          />
 
           {/* Bluetooth Joueur 1 */}
           <View style={styles.block}>
@@ -452,48 +398,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
     marginBottom: 6,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#aaa',
-    borderRadius: 7,
-    padding: 8,
-    fontSize: 14,
-    backgroundColor: '#fff',
-    marginBottom: 6,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginTop: 6,
-  },
-  modeButton: {
-    paddingVertical: 7,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    marginHorizontal: 6,
-    borderWidth: 2,
-    borderColor: '#007acc',
-  },
-  selected: {
-    backgroundColor: '#007acc',
-    borderColor: '#005a99',
-  },
-  modeText: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#111',
-  },
-  weaponButton: {
-    paddingVertical: 7,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    marginHorizontal: 6,
-    borderWidth: 2,
-    borderColor: '#007acc',
   },
   scanButton: {
     backgroundColor: '#007acc',

@@ -3,7 +3,9 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { useHistory } from '../context/HistoryContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { useHistorySort } from '../hooks/useHistorySort';
+import { useHistoryFilter, useAvailableFilters } from '../hooks/useHistoryFilter';
 import { SortMenu } from '../components/History/SortMenu';
+import { FilterMenu } from '../components/History/FilterMenu';
 import { MatchCard } from '../components/History/MatchCard';
 import { EmptyState } from '../components/History/EmptyState';
 
@@ -12,6 +14,10 @@ export default function HistoriqueScreen() {
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
   const [sortMenuVisible, setSortMenuVisible] = useState(false);
+  const [filterBy, setFilterBy] = useState('all');
+  const [filterValue, setFilterValue] = useState('');
+  const [filterMenuVisible, setFilterMenuVisible] = useState(false);
+  
   const swipeRefs = useRef([]);
 
   // Recharger quand l'écran devient actif
@@ -21,15 +27,18 @@ export default function HistoriqueScreen() {
     }, [])
   );
 
-  // Tri des matchs avec le hook personnalisé
-  const sortedMatches = useHistorySort(matchHistory, sortBy, sortOrder);
+  // Filtres disponibles
+  const availableFilters = useAvailableFilters(matchHistory);
+  
+  const filteredMatches = useHistoryFilter(matchHistory, filterBy, filterValue);
+  const sortedMatches = useHistorySort(filteredMatches, sortBy, sortOrder);
 
   const handleDelete = useCallback((sortedIndex, originalIndex) => {
     if (swipeRefs.current[sortedIndex]) {
       swipeRefs.current[sortedIndex].close();
     }
     setTimeout(() => {
-      deleteMatch(originalIndex); // Utiliser l'index original
+      deleteMatch(originalIndex);
     }, 100);
   }, [deleteMatch]);
 
@@ -40,16 +49,28 @@ export default function HistoriqueScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
-      {/* Menu de tri - seulement si il y a des matchs */}
+      {/* Barre de contrôles - seulement si il y a des matchs */}
       {sortedMatches.length > 0 && (
-        <SortMenu
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-          sortOrder={sortOrder}
-          setSortOrder={setSortOrder}
-          sortMenuVisible={sortMenuVisible}
-          setSortMenuVisible={setSortMenuVisible}
-        />
+        <View style={styles.controlsBar}>
+          <FilterMenu
+            filterBy={filterBy}
+            setFilterBy={setFilterBy}
+            filterValue={filterValue}
+            setFilterValue={setFilterValue}
+            filterMenuVisible={filterMenuVisible}
+            setFilterMenuVisible={setFilterMenuVisible}
+            availableFilters={availableFilters}
+          />
+          
+          <SortMenu
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
+            sortMenuVisible={sortMenuVisible}
+            setSortMenuVisible={setSortMenuVisible}
+          />
+        </View>
       )}
 
       {/* Liste des matchs */}
@@ -91,6 +112,13 @@ const styles = StyleSheet.create({
   contentWrapper: {
     padding: 18,
     paddingBottom: 32,
+  },
+  controlsBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 6,
+    marginTop: 2,
   },
   matchList: {
     marginBottom: 10,

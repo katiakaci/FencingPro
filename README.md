@@ -38,9 +38,6 @@ npx expo prebuild --clean --platform android
 #ffe270 jaune
 
 # TODO
-1. historique ✅
-2. statistiques ❗
-5. ui
 6. traduire eng ✅
 7. afficher charge de la batterie ❗
 8. connexion firebase ❗
@@ -49,4 +46,3 @@ npx expo prebuild --clean --platform android
 12. donner possibilité au user dajouter nouvel appareil ❗
 15. mettre sur le store ❗
 16. logo app ❗
-18. améliorer ui des modales ❗

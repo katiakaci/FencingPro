@@ -2,7 +2,9 @@
     "language": "Language",
     "settings": "Settings",
     "common": {
-        "error": "Error"
+        "error": "Error",
+        "cancel": "Cancel",
+        "delete": "Delete"
     },
     "welcome": {
         "title": "FencingPro"
@@ -97,7 +99,14 @@
         "duration": "Duration",
         "score": "Score",
         "descending": "Descending",
-        "ascending": "Ascending"
+        "ascending": "Ascending",
+        "filter": "Filter",
+        "all": "All",
+        "weapon": "Weapon",
+        "player": "Player",
+        "mode": "Mode",
+        "deleteMatch": "Delete match",
+        "deleteConfirmation": "Are you sure you want to delete this match?"
     },
     "stats": {
         "title": "Statistics",

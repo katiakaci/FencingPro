@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, Pressable, Modal, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Pressable, Modal, ScrollView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
@@ -9,6 +9,7 @@ import { useBluetooth } from '../context/BluetoothContext';
 import { useSettings } from '../context/SettingsContext';
 import { useHistory } from '../context/HistoryContext';
 import { ColorSettings } from '../components/ColorSettings';
+import { AudioSettings } from '../components/AudioSettings';
 import i18n from '../languages/i18n';
 
 const SOUNDS = [
@@ -164,7 +165,7 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Couleurs des lumières */}
-        <ColorSettings 
+        <ColorSettings
           lightColor={lightColor}
           onColorChange={handleColorChange}
           showColorGradient={showColorGradient}
@@ -172,39 +173,19 @@ export default function SettingsScreen() {
         />
 
         {/* Son/Vibration */}
-        <View style={styles.settingBlock}>
-          <View style={styles.row}>
-            <Text style={styles.label}>{i18n.t('settings.sound')}</Text>
-            <Switch
-              value={soundEnabled}
-              onValueChange={setSoundEnabled}
-              trackColor={{ false: '#ccc', true: '#0a3871' }}
-              thumbColor="#fff"
-            />
-          </View>
-
-          {soundEnabled && (
-            <View style={styles.soundRow}>
-              <TouchableOpacity
-                style={styles.soundButton}
-                onPress={() => setShowSoundPicker(true)}
-              >
-                <Text style={styles.soundButtonText}>{getSelectedSoundName()}</Text>
-                <Ionicons name="chevron-down" size={16} color="#fff" />
-              </TouchableOpacity>
-            </View>
-          )}
-
-          <View style={styles.row}>
-            <Text style={styles.label}>{i18n.t('settings.vibration')}</Text>
-            <Switch
-              value={vibrationEnabled}
-              onValueChange={onVibrationChange}
-              trackColor={{ false: '#ccc', true: '#0a3871' }}
-              thumbColor="#fff"
-            />
-          </View>
-        </View>
+        <AudioSettings
+          soundEnabled={soundEnabled}
+          setSoundEnabled={setSoundEnabled}
+          vibrationEnabled={vibrationEnabled}
+          onVibrationChange={onVibrationChange}
+          selectedSound={selectedSound}
+          getSelectedSoundName={getSelectedSoundName}
+          showSoundPicker={showSoundPicker}
+          setShowSoundPicker={setShowSoundPicker}
+          sounds={SOUNDS}
+          onSoundSelect={selectSound}
+          onPlayPreview={playPreviewSound}
+        />
 
         {/* Langue */}
         <View style={styles.settingBlock}>
@@ -231,58 +212,6 @@ export default function SettingsScreen() {
           </Text>
         </View>
       </ScrollView>
-
-      {/* Modal sélection du son */}
-      <Modal
-        visible={showSoundPicker}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowSoundPicker(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.soundModal}>
-            <Text style={styles.modalTitle}>{i18n.t('settings.chooseSound')}</Text>
-
-            <ScrollView style={styles.soundList}>
-              {SOUNDS.map((sound) => (
-                <View key={sound.file} style={styles.soundItem}>
-                  <TouchableOpacity
-                    style={[
-                      styles.soundOption,
-                      selectedSound === sound.file && styles.selectedSoundOption
-                    ]}
-                    onPress={() => selectSound(sound.file)}
-                  >
-                    <Text style={[
-                      styles.soundOptionText,
-                      selectedSound === sound.file && styles.selectedSoundText
-                    ]}>
-                      {i18n.t(`settings.${sound.name}`)}
-                    </Text>
-                    {selectedSound === sound.file && (
-                      <Ionicons name="checkmark" size={20} color="#007bff" />
-                    )}
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={styles.playButton}
-                    onPress={() => playPreviewSound(sound.file)}
-                  >
-                    <Ionicons name="play" size={16} color="#007bff" />
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </ScrollView>
-
-            <TouchableOpacity
-              style={styles.closeModalButton}
-              onPress={() => setShowSoundPicker(false)}
-            >
-              <Text style={styles.closeModalText}>{i18n.t('settings.close')}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
 
       {/* Modal confirmation réinitialisation */}
       <Modal
@@ -368,93 +297,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  soundRow: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  soundButton: {
-    backgroundColor: '#007bff',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  soundButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '500',
-    marginRight: 5,
-  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  soundModal: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 20,
-    width: '90%',
-    maxHeight: '70%',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-    color: '#002244',
-  },
-  soundList: {
-    maxHeight: 300,
-  },
-  soundItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  soundOption: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    borderRadius: 10,
-    backgroundColor: '#f5f5f5',
-  },
-  selectedSoundOption: {
-    backgroundColor: '#e3f2fd',
-    borderWidth: 1,
-    borderColor: '#007bff',
-  },
-  soundOptionText: {
-    fontSize: 14,
-    color: '#333',
-    flex: 1,
-    marginRight: 10,
-  },
-  selectedSoundText: {
-    color: '#007bff',
-    fontWeight: '600',
-  },
-  playButton: {
-    marginLeft: 10,
-    padding: 8,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-  },
-  closeModalButton: {
-    backgroundColor: '#007bff',
-    padding: 12,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 15,
-  },
-  closeModalText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
   },
   resetButton: {
     backgroundColor: '#e74c3c',

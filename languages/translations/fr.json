@@ -51,7 +51,8 @@
         "go": "GO!",
         "gamePaused": "Partie en pause",
         "resume": "Reprendre",
-        "quit": "Quitter"
+        "quit": "Quitter",
+        "getReady": "Préparez-vous..."
     },
     "settings": {
         "title": "Réglages",

@@ -51,7 +51,8 @@
         "go": "GO!",
         "gamePaused": "Game Paused",
         "resume": "Resume",
-        "quit": "Quit"
+        "quit": "Quit",
+        "getReady": "Get ready..."
     },
     "settings": {
         "title": "Settings",

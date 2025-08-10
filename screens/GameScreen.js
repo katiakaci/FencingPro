@@ -15,6 +15,7 @@ import { useLightColor } from '../context/LightColorContext';
 import { useSettings } from '../context/SettingsContext';
 import { useHistory } from '../context/HistoryContext';
 import { useBluetooth } from '../context/BluetoothContext';
+import { useCountdown } from '../hooks/useCountdown';
 
 const SOUND_FILES = {
   'alert_touch.mp3': require('../assets/sound/alert_touch.mp3'),
@@ -45,14 +46,22 @@ export default function GameScreen({ route, navigation }) {
   const { touchDetected } = useTouch();
   const { lightColor } = useLightColor();
   const [time, setTime] = useState(30 * 60);
-  const [running, setRunning] = useState(true);
+  const [running, setRunning] = useState(false);
   const [bobScore, setBobScore] = useState(0);
   const [julieScore, setJulieScore] = useState(0);
   const [chrono, setChrono] = useState(0);
   const [stopped, setStopped] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-  const [countdown, setCountdown] = useState(3);
-  const [showCountdown, setShowCountdown] = useState(true);
+
+  const countdown = useCountdown(3, () => {
+    setGameStarted(true);
+    setRunning(true);
+  });
+
+  // Démarrer automatiquement le countdown quand on arrive sur cette page
+  useEffect(() => {
+    countdown.start();
+  }, []);
 
   // Récupérer les paramètres de navigation
   const {
@@ -161,25 +170,9 @@ export default function GameScreen({ route, navigation }) {
     }
   };
 
-  useEffect(() => {
-    if (showCountdown && countdown > 0) {
-      const timer = setTimeout(() => {
-        setCountdown(prev => prev - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (showCountdown && countdown === 0) {
-      // Countdown terminé, commencer la partie
-      setTimeout(() => {
-        setShowCountdown(false);
-        setGameStarted(true);
-        setRunning(true);
-      }, 1000); // Petite pause après "GO!"
-    }
-  }, [countdown, showCountdown]);
-
   const handleBackPress = () => {
     // Si aucune partie n'est en cours, revenir directement
-    if (!gameStarted || showCountdown) {
+    if (!gameStarted || countdown.isActive) {
       navigation.navigate('Bienvenue');
       return;
     }
@@ -312,19 +305,9 @@ export default function GameScreen({ route, navigation }) {
           <View style={styles.timerBox}><Text style={styles.timerText}>{formatChrono(chrono)}</Text></View>
           <View style={styles.buttonRow}>
             {!gameStarted ? (
-              <TouchableOpacity
-                style={[styles.iconButton, { backgroundColor: '#00c9a7', opacity: showCountdown ? 0.5 : 1 }]}
-                onPress={() => {
-                  if (!showCountdown) {
-                    setGameStarted(true);
-                    setRunning(true);
-                    setStopped(false);
-                  }
-                }}
-                disabled={showCountdown}
-              >
-                <Ionicons name="play" size={28} color="#fff" />
-              </TouchableOpacity>
+              <View style={styles.waitingContainer}>
+                <Text style={styles.waitingText}>{i18n.t('game.getReady')}</Text>
+              </View>
             ) : (
               <>
                 <TouchableOpacity
@@ -358,6 +341,7 @@ export default function GameScreen({ route, navigation }) {
                           setJulieScore(0);
                           setChrono(0);
                           setGameStarted(false);
+                          countdown.stop();
                         },
                       },
                       {
@@ -369,6 +353,7 @@ export default function GameScreen({ route, navigation }) {
                           setJulieScore(0);
                           setChrono(0);
                           setGameStarted(false);
+                          countdown.stop();
                         },
                       },
                     ],
@@ -401,7 +386,6 @@ export default function GameScreen({ route, navigation }) {
               <TouchableOpacity 
                 style={[styles.pauseButton, styles.pauseButtonSecondary]} 
                 onPress={() => {
-                  // Naviguer vers les réglages tout en gardant la partie en pause
                   navigation.navigate('SettingsFromWelcome');
                 }}
               >
@@ -421,7 +405,6 @@ export default function GameScreen({ route, navigation }) {
                         text: i18n.t('game.cancel'),
                         style: 'cancel',
                         onPress: () => {
-                          // Rester en pause
                         },
                       },
                       {
@@ -451,10 +434,10 @@ export default function GameScreen({ route, navigation }) {
           </View>
         )}
 
-        {showCountdown && (
+        {countdown.isActive && (
           <View style={styles.countdownOverlay}>
             <Text style={styles.countdownText}>
-              {countdown > 0 ? countdown : i18n.t('game.go')}
+              {countdown.count > 0 ? countdown.count : i18n.t('game.go')}
             </Text>
           </View>
         )}
@@ -713,5 +696,25 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#00c9a7',
     marginLeft: 4,
+  },
+  waitingContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  waitingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
   },
 });

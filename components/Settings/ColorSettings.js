@@ -19,7 +19,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Dimensions } from 'react-native';
 import { ColorPicker } from './ColorPicker';
-import i18n from '../languages/i18n';
+import i18n from '../../languages/i18n';
 
 const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
 

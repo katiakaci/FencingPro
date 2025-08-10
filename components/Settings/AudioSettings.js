@@ -16,7 +16,7 @@
 import React from 'react';
 import { View, Text, Switch, TouchableOpacity, Modal, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import i18n from '../languages/i18n';
+import i18n from '../../languages/i18n';
 
 export const AudioSettings = ({
   soundEnabled,

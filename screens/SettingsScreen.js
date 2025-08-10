@@ -7,10 +7,10 @@ import { useLightColor } from '../context/LightColorContext';
 import { useBluetooth } from '../context/BluetoothContext';
 import { useSettings } from '../context/SettingsContext';
 import { useHistory } from '../context/HistoryContext';
-import { ColorSettings } from '../components/ColorSettings';
-import { AudioSettings } from '../components/AudioSettings';
-import { LanguageSettings } from '../components/LanguageSettings';
-import { ResetSettings } from '../components/ResetSettings';
+import { ColorSettings } from '../components/Settings/ColorSettings';
+import { AudioSettings } from '../components/Settings/AudioSettings';
+import { LanguageSettings } from '../components/Settings/LanguageSettings';
+import { ResetSettings } from '../components/Settings/ResetSettings';
 import i18n from '../languages/i18n';
 
 const SOUNDS = [

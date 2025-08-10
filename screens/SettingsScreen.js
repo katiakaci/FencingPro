@@ -6,7 +6,6 @@ import { Audio } from 'expo-av';
 import LottieView from 'lottie-react-native';
 import { ColorPicker } from '../components/ColorPicker';
 import { Dimensions } from 'react-native';
-import { useMode } from '../context/ModeContext';
 import { useLightColor } from '../context/LightColorContext';
 import { useBluetooth } from '../context/BluetoothContext';
 import { useSettings } from '../context/SettingsContext';
@@ -41,7 +40,6 @@ const SOUND_FILES = {
 };
 
 export default function SettingsScreen() {
-  const { mode, setMode } = useMode();
   const { lightColor, setLightColor } = useLightColor();
   const { sendVibrationSetting, sendColorSetting } = useBluetooth();
   const {
@@ -74,10 +72,6 @@ export default function SettingsScreen() {
 
     loadSavedLanguage();
   }, []);
-
-  const toggleMode = useCallback(() => {
-    setMode(mode === 'solo' ? 'multi' : 'solo');
-  }, [mode, setMode]);
 
   const toggleLanguage = useCallback(async () => {
     const newLang = currentLanguage === 'fr' ? 'en' : 'fr';
@@ -133,8 +127,6 @@ export default function SettingsScreen() {
 
       await clearHistory();
 
-      // Réinitialiser les états
-      setMode('solo');
       setLightColor('lime');
       setSoundEnabled(true);
       setVibrationEnabled(true);
@@ -151,10 +143,9 @@ export default function SettingsScreen() {
       console.log('Erreur lors de la réinitialisation:', error);
       Alert.alert('', i18n.t('settings.resetError'));
     }
-  }, [setMode, setLightColor, setSoundEnabled, setVibrationEnabled, setSelectedSound, clearHistory]);
+  }, [setLightColor, setSoundEnabled, setVibrationEnabled, setSelectedSound, clearHistory]);
 
   const handleColorChange = useCallback((color) => {
-    // console.log('Changement de couleur:', color);
     setLightColor(color);
     if (sendColorSetting) {
       sendColorSetting(color);
@@ -178,18 +169,6 @@ export default function SettingsScreen() {
         contentContainerStyle={styles.contentWrapper}
         showsVerticalScrollIndicator={false}
       >
-        {/* Mode solo/multijoueurs*/}
-        <View style={styles.settingBlock}>
-          <View style={styles.row}>
-            <Text style={styles.label}>{i18n.t('settings.mode')}</Text>
-            <Pressable style={styles.actionButton} onPress={toggleMode}>
-              <Text style={styles.actionButtonText}>
-                {mode === 'solo' ? i18n.t('setup.multiplayer') : i18n.t('setup.solo')}
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-
         {/* Couleurs des lumières */}
         <View style={styles.settingBlock}>
           <Text style={styles.label}>{i18n.t('settings.lightColors')}</Text>
@@ -212,8 +191,7 @@ export default function SettingsScreen() {
               {
                 marginTop: 12,
                 borderWidth: 2,
-                // borderColor: '#fff',
-                borderColor: isCustomColor ? '#002244' : '#fff', // Noir si couleur personnalisée, blanc sinon
+                borderColor: isCustomColor ? '#002244' : '#fff',
                 borderRadius: 18,
                 overflow: 'hidden',
               }
@@ -404,7 +382,7 @@ export default function SettingsScreen() {
               }}
               maxWidth={Dimensions.get('window').width * 0.9}
               onColorChanged={useCallback((color) => {
-                handleColorChange(color); // Utiliser handleColorChange
+                handleColorChange(color);
               }, [handleColorChange])}
             />
 

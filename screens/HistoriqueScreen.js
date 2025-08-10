@@ -19,8 +19,7 @@ export default function HistoriqueScreen() {
   const [sortMenuVisible, setSortMenuVisible] = useState(false);
 
   // États pour le filtrage
-  const [filterBy, setFilterBy] = useState('all');
-  const [filterValue, setFilterValue] = useState('');
+  const [activeFilters, setActiveFilters] = useState({});
   const [filterMenuVisible, setFilterMenuVisible] = useState(false);
 
   const swipeRefs = useRef([]);
@@ -35,7 +34,7 @@ export default function HistoriqueScreen() {
   // Filtres disponibles
   const availableFilters = useAvailableFilters(matchHistory);
 
-  const filteredMatches = useHistoryFilter(matchHistory, filterBy, filterValue);
+  const filteredMatches = useHistoryFilter(matchHistory, activeFilters);
   const sortedMatches = useHistorySort(filteredMatches, sortBy, sortOrder);
 
   const handleDelete = useCallback((sortedIndex, originalIndex) => {
@@ -47,9 +46,8 @@ export default function HistoriqueScreen() {
     }, 100);
   }, [deleteMatch]);
 
-  const clearFilter = () => {
-    setFilterBy('all');
-    setFilterValue('');
+  const clearAllFilters = () => {
+    setActiveFilters({});
   };
 
   // Si l'historique est complètement vide
@@ -58,18 +56,16 @@ export default function HistoriqueScreen() {
   }
 
   // Si on a des matchs mais aucun ne correspond aux filtres
-  const hasActiveFilter = filterBy !== 'all' && filterValue;
-  const noResultsFromFilter = hasActiveFilter && sortedMatches.length === 0;
+  const hasActiveFilters = Object.values(activeFilters).some(filters => filters && filters.length > 0);
+  const noResultsFromFilter = hasActiveFilters && sortedMatches.length === 0;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
       {/* Barre de contrôles - toujours visible s'il y a des matchs dans l'historique */}
       <View style={styles.controlsBar}>
         <FilterMenu
-          filterBy={filterBy}
-          setFilterBy={setFilterBy}
-          filterValue={filterValue}
-          setFilterValue={setFilterValue}
+          activeFilters={activeFilters}
+          setActiveFilters={setActiveFilters}
           filterMenuVisible={filterMenuVisible}
           setFilterMenuVisible={setFilterMenuVisible}
           availableFilters={availableFilters}
@@ -89,9 +85,8 @@ export default function HistoriqueScreen() {
       <View style={styles.matchList}>
         {noResultsFromFilter ? (
           <NoFilterResults
-            onClearFilter={clearFilter}
-            filterBy={filterBy}
-            filterValue={filterValue}
+            onClearFilter={clearAllFilters}
+            activeFilters={activeFilters}
           />
         ) : (
           sortedMatches.map((match, sortedIndex) => {

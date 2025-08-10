@@ -3,12 +3,18 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import i18n from '../../languages/i18n';
 
-export const NoFilterResults = ({ onClearFilter, filterBy, filterValue }) => {
-    const getFilterText = () => {
-        if (filterBy === 'weapon') return `${i18n.t('history.weapon')}: ${filterValue}`;
-        if (filterBy === 'player') return `${i18n.t('history.player')}: ${filterValue}`;
-        if (filterBy === 'mode') return `${i18n.t('history.mode')}: ${filterValue}`;
-        return filterValue;
+export const NoFilterResults = ({ onClearFilter, activeFilters }) => {
+    const getActiveFiltersText = () => {
+        const filterTexts = [];
+
+        Object.entries(activeFilters).forEach(([type, values]) => {
+            if (values && values.length > 0) {
+                const typeLabel = i18n.t(`history.${type}`);
+                filterTexts.push(`${typeLabel}: ${values.join(', ')}`);
+            }
+        });
+
+        return filterTexts.join(' • ');
     };
 
     return (
@@ -16,11 +22,14 @@ export const NoFilterResults = ({ onClearFilter, filterBy, filterValue }) => {
             <Ionicons name="search-outline" size={64} color="#ccc" />
             <Text style={styles.title}>{i18n.t('history.noFilterResults')}</Text>
             <Text style={styles.subtitle}>
-                {i18n.t('history.noFilterResultsSubtext')} "{getFilterText()}"
+                {i18n.t('history.noFilterResultsSubtext')}
+            </Text>
+            <Text style={styles.filtersText}>
+                {getActiveFiltersText()}
             </Text>
             <TouchableOpacity style={styles.clearButton} onPress={onClearFilter}>
                 <Ionicons name="close-circle" size={20} color="#357ab7" />
-                <Text style={styles.clearButtonText}>{i18n.t('history.clearFilter')}</Text>
+                <Text style={styles.clearButtonText}>{i18n.t('history.clearAll')}</Text>
             </TouchableOpacity>
         </View>
     );
@@ -46,6 +55,13 @@ const styles = StyleSheet.create({
         marginTop: 8,
         textAlign: 'center',
         lineHeight: 20,
+    },
+    filtersText: {
+        fontSize: 12,
+        color: '#357ab7',
+        marginTop: 8,
+        textAlign: 'center',
+        fontStyle: 'italic',
     },
     clearButton: {
         flexDirection: 'row',

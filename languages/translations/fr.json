@@ -109,7 +109,8 @@
         "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer ce match ?",
         "noFilterResults": "Aucun résultat trouvé",
         "noFilterResultsSubtext": "Aucun match ne correspond au filtre",
-        "clearFilter": "Effacer le filtre"
+        "clearFilter": "Effacer le filtre",
+        "clearAll": "Tout effacer"
     },
     "stats": {
         "title": "Statistiques",

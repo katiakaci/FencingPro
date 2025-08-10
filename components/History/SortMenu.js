@@ -57,7 +57,7 @@ export const SortMenu = ({
                     onPress={() => setSortMenuVisible(false)}
                     activeOpacity={1}
                 >
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         style={styles.sortDropdown}
                         activeOpacity={1}
                         onPress={(e) => e.stopPropagation()}

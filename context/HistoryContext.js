@@ -1,3 +1,21 @@
+/**
+ * @fileoverview Contexte de gestion de l'historique des matchs d'escrime
+ * 
+ * Ce contexte gère :
+ * - Le stockage persistant de l'historique des matchs (AsyncStorage)
+ * - L'ajout de nouveaux matchs
+ * - La suppression de matchs individuels ou de tout l'historique
+ * - Le chargement automatique de l'historique au démarrage
+ * - La synchronisation entre les différents écrans
+ * 
+ * Structure des données de match :
+ * - date : Date et heure du match
+ * - players : Nom(s) du/des joueur(s)
+ * - weapon : Type d'arme utilisée
+ * - score : Score final du match
+ * - duration : Durée du match formatée
+ */
+
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -19,7 +37,7 @@ export const HistoryProvider = ({ children }) => {
             const data = await AsyncStorage.getItem('matchHistory');
             const history = data ? JSON.parse(data) : [];
             setMatchHistory(history);
-            console.log('📊 Historique chargé:', history.length, 'matchs');
+            console.log('Historique chargé:', history.length, 'matchs');
         } catch (e) {
             console.log('Erreur chargement historique:', e);
         }

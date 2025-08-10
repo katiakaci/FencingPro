@@ -1,3 +1,19 @@
+/**
+ * @fileoverview Contexte de gestion Bluetooth pour la communication avec le casque
+ * 
+ * Ce contexte gère :
+ * - La connexion BLE avec les masques connectés
+ * - La réception des signaux de touche via BLE
+ * - L'envoi des paramètres (couleur, vibration, type d'arme) vers l'équipement
+ * - La conversion des couleurs et la gestion du debouncing
+ * 
+ * Services BLE utilisés :
+ * - SERVICE_UUID : Service principal de communication
+ * - TOUCH_CHARACTERISTIC_UUID : Réception des touches détectées
+ * - COLOR_CHARACTERISTIC_UUID : Envoi des couleurs de LED
+ * - VIBRATION_CHARACTERISTIC_UUID : Contrôle du moteur vibrant
+ * - WEAPON_CHARACTERISTIC_UUID : Configuration du type d'arme
+ */
 import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
 import { BleManager } from 'react-native-ble-plx';
 import { useTouch } from './TouchContext';

@@ -5,7 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LottieView from 'lottie-react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
 import i18n from '../languages/i18n';
 
@@ -35,7 +34,6 @@ export default function GameScreen({ route, navigation }) {
   const { addMatch } = useHistory();
   const { connectedDevice } = useBluetooth();
 
-  // Mettre le jeu en pause quand on quitte la page ou quand on ouvre le menu hamburger
   useFocusEffect(
     React.useCallback(() => {
       return () => {
@@ -43,9 +41,9 @@ export default function GameScreen({ route, navigation }) {
       };
     }, [])
   );
+  
   const { touchDetected } = useTouch();
   const { lightColor } = useLightColor();
-  const [time, setTime] = useState(30 * 60);
   const [running, setRunning] = useState(false);
   const [bobScore, setBobScore] = useState(0);
   const [julieScore, setJulieScore] = useState(0);
@@ -58,23 +56,17 @@ export default function GameScreen({ route, navigation }) {
     setRunning(true);
   });
 
-  // Démarrer automatiquement le countdown quand on arrive sur cette page
   useEffect(() => {
     countdown.start();
   }, []);
 
-  // Récupérer les paramètres de navigation
   const {
     joueur1,
     joueur2,
     arme1,
     arme2,
-    device1,
-    device2,
     mode: routeMode
   } = route?.params || {};
-
-  // console.log('GameScreen - Paramètres reçus:', route?.params);
 
   const gameMode = routeMode || mode;
   const isSolo = gameMode === 'solo';
@@ -171,13 +163,11 @@ export default function GameScreen({ route, navigation }) {
   };
 
   const handleBackPress = () => {
-    // Si aucune partie n'est en cours, revenir directement
     if (!gameStarted || countdown.isActive) {
       navigation.navigate('Bienvenue');
       return;
     }
 
-    // Si une partie est en cours, afficher la modale
     setRunning(false);
     setStopped(true);
     Alert.alert(

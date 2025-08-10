@@ -4,16 +4,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import LottieView from 'lottie-react-native';
-import { ColorPicker } from '../components/ColorPicker';
-import { Dimensions } from 'react-native';
 import { useLightColor } from '../context/LightColorContext';
 import { useBluetooth } from '../context/BluetoothContext';
 import { useSettings } from '../context/SettingsContext';
 import { useHistory } from '../context/HistoryContext';
-import { LinearGradient } from 'expo-linear-gradient';
+import { ColorSettings } from '../components/ColorSettings';
 import i18n from '../languages/i18n';
-
-const COLORS = ['lime', 'red', 'blue', 'yellow', 'purple'];
 
 const SOUNDS = [
   { name: 'sounds.classic', file: 'alert_touch.mp3' },
@@ -152,8 +148,6 @@ export default function SettingsScreen() {
     }
   }, [setLightColor, sendColorSetting]);
 
-  const isCustomColor = !COLORS.includes(lightColor);
-
   return (
     <View style={styles.container}>
       <LottieView
@@ -170,46 +164,12 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Couleurs des lumières */}
-        <View style={styles.settingBlock}>
-          <Text style={styles.label}>{i18n.t('settings.lightColors')}</Text>
-          <View style={styles.colorRow}>
-            {COLORS.map((color) => (
-              <TouchableOpacity
-                key={color}
-                onPress={() => handleColorChange(color)}
-                style={[
-                  styles.colorDot,
-                  { backgroundColor: color },
-                  lightColor === color && styles.colorSelected,
-                ]}
-              />
-            ))}
-          </View>
-
-          <TouchableOpacity
-            style={[
-              {
-                marginTop: 12,
-                borderWidth: 2,
-                borderColor: isCustomColor ? '#002244' : '#fff',
-                borderRadius: 18,
-                overflow: 'hidden',
-              }
-            ]}
-            onPress={() => setShowColorGradient(true)}
-          >
-            <LinearGradient
-              colors={['#FF0000', '#FF8000', '#FFFF00', '#00FF00', '#0080FF', '#8000FF']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradientButton}
-            >
-              <Text style={styles.gradientButtonText}>
-                {i18n.t('settings.otherColors')}
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+        <ColorSettings 
+          lightColor={lightColor}
+          onColorChange={handleColorChange}
+          showColorGradient={showColorGradient}
+          setShowColorGradient={setShowColorGradient}
+        />
 
         {/* Son/Vibration */}
         <View style={styles.settingBlock}>
@@ -223,7 +183,6 @@ export default function SettingsScreen() {
             />
           </View>
 
-          {/* Sélection du son */}
           {soundEnabled && (
             <View style={styles.soundRow}>
               <TouchableOpacity
@@ -358,44 +317,6 @@ export default function SettingsScreen() {
           </View>
         </View>
       </Modal>
-
-      {/* modal des couleurs */}
-      <Modal
-        visible={showColorGradient}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowColorGradient(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={[styles.soundModal, { alignItems: 'center' }]}>
-            <Text style={styles.modalTitle}>{i18n.t('settings.chooseColor')}</Text>
-
-            <ColorPicker
-              colors={['red', 'purple', 'blue', 'cyan', 'green', 'yellow', 'orange', 'black', 'white']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{
-                height: 40,
-                width: Dimensions.get('window').width * 0.9,
-                borderRadius: 20,
-                marginVertical: 30,
-              }}
-              maxWidth={Dimensions.get('window').width * 0.9}
-              onColorChanged={useCallback((color) => {
-                handleColorChange(color);
-              }, [handleColorChange])}
-            />
-
-            <TouchableOpacity
-              style={styles.closeModalButton}
-              onPress={() => setShowColorGradient(false)}
-            >
-              <Text style={styles.closeModalText}>{i18n.t('settings.close')}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
     </View>
   );
 }
@@ -435,22 +356,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 8,
-  },
-  colorRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
-  },
-  colorDot: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#fff',
-  },
-  colorSelected: {
-    borderColor: '#002244',
-    borderWidth: 3,
   },
   actionButton: {
     backgroundColor: '#007bff',
@@ -622,20 +527,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-  },
-  gradientButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  gradientButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
   },
 });

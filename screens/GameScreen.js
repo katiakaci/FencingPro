@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -53,6 +53,7 @@ export default function GameScreen({ route, navigation }) {
   const [stopped, setStopped] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [showBackModal, setShowBackModal] = useState(false);
+  const [showStopModal, setShowStopModal] = useState(false);
 
   const countdown = useCountdown(3, () => {
     setGameStarted(true);
@@ -179,46 +180,16 @@ export default function GameScreen({ route, navigation }) {
   const handleStopGame = () => {
     setRunning(false);
     setStopped(true);
-    Alert.alert(
-      i18n.t('game.gameFinished'),
-      i18n.t('game.saveGameQuestion'),
-      [
-        {
-          text: i18n.t('game.cancel'),
-          style: 'cancel',
-          onPress: () => {
-            setStopped(false);
-            setRunning(true);
-          },
-        },
-        {
-          text: i18n.t('game.yes'),
-          style: 'default',
-          onPress: () => {
-            saveMatch();
-            setStopped(false);
-            setBobScore(0);
-            setJulieScore(0);
-            setChrono(0);
-            setGameStarted(false);
-            countdown.stop();
-          },
-        },
-        {
-          text: i18n.t('game.no'),
-          style: 'destructive',
-          onPress: () => {
-            setStopped(false);
-            setBobScore(0);
-            setJulieScore(0);
-            setChrono(0);
-            setGameStarted(false);
-            countdown.stop();
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+    setShowStopModal(true);
+  };
+
+  const resetGame = () => {
+    setStopped(false);
+    setBobScore(0);
+    setJulieScore(0);
+    setChrono(0);
+    setGameStarted(false);
+    countdown.stop();
   };
 
   // Configuration des boutons pour la modale de pause
@@ -240,32 +211,7 @@ export default function GameScreen({ route, navigation }) {
       icon: 'exit',
       text: i18n.t('game.quit'),
       onPress: () => {
-        Alert.alert(
-          i18n.t('game.leavingGame'),
-          i18n.t('game.saveGameQuestion'),
-          [
-            {
-              text: i18n.t('game.cancel'),
-              style: 'cancel',
-            },
-            {
-              text: i18n.t('game.yes'),
-              style: 'default',
-              onPress: () => {
-                saveMatch();
-                navigation.navigate('Bienvenue');
-              },
-            },
-            {
-              text: i18n.t('game.no'),
-              style: 'destructive',
-              onPress: () => {
-                navigation.navigate('Bienvenue');
-              },
-            },
-          ],
-          { cancelable: false }
-        );
+        setShowBackModal(true);
       },
       style: { backgroundColor: '#e74c3c', marginBottom: 0 },
       textColor: '#fff'
@@ -299,6 +245,41 @@ export default function GameScreen({ route, navigation }) {
       text: i18n.t('game.no'),
       onPress: () => {
         navigation.navigate('Bienvenue');
+      },
+      style: { backgroundColor: '#e74c3c', marginBottom: 0 },
+      textColor: '#fff'
+    }
+  ];
+
+  // Configuration des boutons pour la modale de stop
+  const stopModalButtons = [
+    {
+      icon: 'close',
+      text: i18n.t('game.cancel'),
+      onPress: () => {
+        setShowStopModal(false);
+        setStopped(false);
+        setRunning(true);
+      },
+      style: { backgroundColor: '#f8f9fa', borderWidth: 2, borderColor: '#0a3871' },
+      textColor: '#0a3871'
+    },
+    {
+      icon: 'checkmark',
+      text: i18n.t('game.yes'),
+      onPress: () => {
+        saveMatch();
+        setShowStopModal(false);
+        resetGame();
+      },
+      textColor: '#fff'
+    },
+    {
+      icon: 'trash',
+      text: i18n.t('game.no'),
+      onPress: () => {
+        setShowStopModal(false);
+        resetGame();
       },
       style: { backgroundColor: '#e74c3c', marginBottom: 0 },
       textColor: '#fff'
@@ -405,7 +386,7 @@ export default function GameScreen({ route, navigation }) {
 
         {/* Modale de pause */}
         <GameModal
-          visible={gameStarted && !running && !showBackModal}
+          visible={gameStarted && !running && !showBackModal && !showStopModal}
           title={i18n.t('game.gamePaused')}
           buttons={pauseModalButtons}
         />
@@ -416,6 +397,14 @@ export default function GameScreen({ route, navigation }) {
           title={i18n.t('game.leavingGame')}
           subtitle={i18n.t('game.saveGameQuestion')}
           buttons={backModalButtons}
+        />
+
+        {/* Modale de stop */}
+        <GameModal
+          visible={showStopModal}
+          title={i18n.t('game.gameFinished')}
+          subtitle={i18n.t('game.saveGameQuestion')}
+          buttons={stopModalButtons}
         />
 
         {countdown.isActive && (

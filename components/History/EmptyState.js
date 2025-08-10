@@ -31,6 +31,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 60,
+        paddingHorizontal: 20,
+        flex: 1,
     },
     emptyText: {
         fontSize: 18,
@@ -38,11 +40,15 @@ const styles = StyleSheet.create({
         color: '#666',
         marginTop: 16,
         textAlign: 'center',
+        maxWidth: '90%',
     },
     emptySubtext: {
         fontSize: 14,
         color: '#999',
         marginTop: 8,
         textAlign: 'center',
+        lineHeight: 20,
+        maxWidth: '85%',
+        flexWrap: 'wrap',
     },
 });

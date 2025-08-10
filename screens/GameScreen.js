@@ -222,6 +222,24 @@ export default function GameScreen({ route, navigation }) {
   // Configuration des boutons pour la modale de retour
   const backModalButtons = [
     {
+      icon: 'checkmark',
+      text: i18n.t('game.yes'),
+      onPress: () => {
+        saveMatch();
+        navigation.navigate('Bienvenue');
+      },
+      textColor: '#fff'
+    },
+    {
+      icon: 'trash',
+      text: i18n.t('game.no'),
+      onPress: () => {
+        navigation.navigate('Bienvenue');
+      },
+      style: { backgroundColor: '#e74c3c' },
+      textColor: '#fff'
+    },
+    {
       icon: 'close',
       text: i18n.t('game.cancel'),
       onPress: () => {
@@ -229,15 +247,19 @@ export default function GameScreen({ route, navigation }) {
         setStopped(false);
         setRunning(true);
       },
-      style: { backgroundColor: '#f8f9fa', borderWidth: 2, borderColor: '#0a3871' },
+      style: { backgroundColor: '#f8f9fa', borderWidth: 2, borderColor: '#0a3871', marginBottom: 0 },
       textColor: '#0a3871'
-    },
+    }
+  ];
+
+  const stopModalButtons = [
     {
       icon: 'checkmark',
       text: i18n.t('game.yes'),
       onPress: () => {
         saveMatch();
-        navigation.navigate('Bienvenue');
+        setShowStopModal(false);
+        resetGame();
       },
       textColor: '#fff'
     },
@@ -245,15 +267,12 @@ export default function GameScreen({ route, navigation }) {
       icon: 'trash',
       text: i18n.t('game.no'),
       onPress: () => {
-        navigation.navigate('Bienvenue');
+        setShowStopModal(false);
+        resetGame();
       },
-      style: { backgroundColor: '#e74c3c', marginBottom: 0 },
+      style: { backgroundColor: '#e74c3c' },
       textColor: '#fff'
-    }
-  ];
-
-  // Configuration des boutons pour la modale de stop
-  const stopModalButtons = [
+    },
     {
       icon: 'close',
       text: i18n.t('game.cancel'),
@@ -262,28 +281,8 @@ export default function GameScreen({ route, navigation }) {
         setStopped(false);
         setRunning(true);
       },
-      style: { backgroundColor: '#f8f9fa', borderWidth: 2, borderColor: '#0a3871' },
+      style: { backgroundColor: '#f8f9fa', borderWidth: 2, borderColor: '#0a3871', marginBottom: 0 },
       textColor: '#0a3871'
-    },
-    {
-      icon: 'checkmark',
-      text: i18n.t('game.yes'),
-      onPress: () => {
-        saveMatch();
-        setShowStopModal(false);
-        resetGame();
-      },
-      textColor: '#fff'
-    },
-    {
-      icon: 'trash',
-      text: i18n.t('game.no'),
-      onPress: () => {
-        setShowStopModal(false);
-        resetGame();
-      },
-      style: { backgroundColor: '#e74c3c', marginBottom: 0 },
-      textColor: '#fff'
     }
   ];
 

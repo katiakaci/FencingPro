@@ -180,10 +180,7 @@ export default function SetupScreen({ navigation }) {
           style={styles.backgroundAnimation}
         />
 
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.navigate('Bienvenue')}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Bienvenue')}>
           <Ionicons name="arrow-back" size={20} color="#fff" />
         </TouchableOpacity>
 
@@ -199,13 +196,7 @@ export default function SetupScreen({ navigation }) {
           <ModeSelector mode={mode} onModeChange={setMode} />
 
           {/* Noms joueurs */}
-          <PlayerInputs
-            mode={mode}
-            player1={player1}
-            setPlayer1={setPlayer1}
-            player2={player2}
-            setPlayer2={setPlayer2}
-          />
+          <PlayerInputs mode={mode} player1={player1} setPlayer1={setPlayer1} player2={player2} setPlayer2={setPlayer2} />
 
           {/* Armes */}
           <WeaponSelector
@@ -293,7 +284,7 @@ export default function SetupScreen({ navigation }) {
             <Text style={styles.startText}>{i18n.t('setup.startGame')}</Text>
           </TouchableOpacity>
 
-          {/* Bouton DEV : Commencer sans BLE */}
+          {/* Bouton DEV : Commencer sans BLE À SUPPRIMER!!!!!!!!!!!!!!!!!!!!!!!!*/}
           <TouchableOpacity
             style={[styles.startButton, { backgroundColor: '#ffb347', marginTop: 8 }]}
             onPress={async () => {
@@ -343,7 +334,8 @@ export default function SetupScreen({ navigation }) {
             }
           >
             <Text style={[styles.startText, { color: '#111' }]}>{i18n.t('setup.devStartGame')}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> 
+          {/* À SUPPRIMER!!!!!!!!!!!!!!!!!!!!!!!! */}
         </ScrollView>
       </View>
     </TouchableWithoutFeedback>

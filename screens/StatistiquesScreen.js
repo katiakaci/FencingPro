@@ -234,13 +234,18 @@ export default function StatistiquesScreen() {
                 totalDuration: '0:00',
                 longestMatch: '0:00',
                 shortestMatch: '0:00',
-                mostUsedWeapon: 'Aucune'
+                mostUsedWeapon: 'Aucune',
+                averageScore: 0,
+                totalTouches: 0,
+                touchesPerMinute: 0
             };
         }
 
         const totalMatches = matchHistory.length;
         let totalDurationSeconds = 0;
         let durations = [];
+        let totalScore = 0;
+        let validScoreMatches = 0;
 
         matchHistory.forEach(match => {
             try {
@@ -253,6 +258,15 @@ export default function StatistiquesScreen() {
                         const durationInSeconds = (min * 60) + sec;
                         totalDurationSeconds += durationInSeconds;
                         durations.push(durationInSeconds);
+                    }
+                }
+
+                // Calcul du score
+                if (match.score) {
+                    const score = parseInt(match.score) || 0;
+                    if (score > 0) {
+                        totalScore += score;
+                        validScoreMatches++;
                     }
                 }
             } catch (error) {
@@ -294,13 +308,21 @@ export default function StatistiquesScreen() {
             ? Object.entries(weaponCount).sort(([, a], [, b]) => b - a)[0][0]
             : 'Aucune';
 
+        // Nouvelles statistiques
+        const averageScore = validScoreMatches > 0 ? Math.round((totalScore / validScoreMatches) * 10) / 10 : 0;
+        const totalDurationMinutes = totalDurationSeconds / 60;
+        const touchesPerMinute = totalDurationMinutes > 0 ? Math.round((totalScore / totalDurationMinutes) * 10) / 10 : 0;
+
         return {
             matchesPlayed: totalMatches,
             averageDuration,
             totalDuration,
             longestMatch,
             shortestMatch,
-            mostUsedWeapon
+            mostUsedWeapon,
+            averageScore,
+            totalTouches: totalScore,
+            touchesPerMinute
         };
     }, [matchHistory]);
 
@@ -320,7 +342,7 @@ export default function StatistiquesScreen() {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
             {/* Graphique des matchs par joueur */}
             <View style={styles.statsBox}>
-                <Text style={styles.statsLabel}>🏆 Matchs par joueur</Text>
+                <Text style={styles.statsLabel}>{i18n.t('stats.matchesPerPlayer')}</Text>
                 <BarChart
                     data={playerData}
                     width={screenWidth * 0.85}
@@ -334,7 +356,7 @@ export default function StatistiquesScreen() {
 
             {/* Nombre de matchs et temps total par jour */}
             <View style={styles.statsBox}>
-                <Text style={styles.statsLabel}>📊 Activité quotidienne</Text>
+                <Text style={styles.statsLabel}>{i18n.t('stats.dailyActivity')}</Text>
 
                 {/* Légendes interactives */}
                 <View style={styles.legendContainer}>
@@ -347,7 +369,7 @@ export default function StatistiquesScreen() {
                         }]} />
                         <Text style={[styles.legendText, {
                             opacity: showScore ? 1 : 0.5
-                        }]}>Nb matchs</Text>
+                        }]}>{i18n.t('stats.numberOfMatches')}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -359,7 +381,7 @@ export default function StatistiquesScreen() {
                         }]} />
                         <Text style={[styles.legendText, {
                             opacity: showDuration ? 1 : 0.5
-                        }]}>Temps total (min)</Text>
+                        }]}>{i18n.t('stats.totalTimeMin')}</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -378,7 +400,7 @@ export default function StatistiquesScreen() {
 
             {/* Répartition des armes */}
             <View style={styles.statsBox}>
-                <Text style={styles.statsLabel}>🗡️ Armes utilisées</Text>
+                <Text style={styles.statsLabel}>{i18n.t('stats.weaponsUsed')}</Text>
                 <PieChart
                     data={weaponData}
                     width={screenWidth * 0.85}
@@ -396,27 +418,39 @@ export default function StatistiquesScreen() {
             <View style={styles.statsGrid}>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>{numericStats.matchesPlayed}</Text>
-                    <Text style={styles.statText}>Matchs joués</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.matchesPlayed')}</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>{numericStats.averageDuration}</Text>
-                    <Text style={styles.statText}>Durée moyenne</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.averageDuration')}</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>{numericStats.totalDuration}</Text>
-                    <Text style={styles.statText}>Temps total</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.totalDuration')}</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>{numericStats.longestMatch}</Text>
-                    <Text style={styles.statText}>Plus long match</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.longestMatch')}</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>{numericStats.shortestMatch}</Text>
-                    <Text style={styles.statText}>Plus court match</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.shortestMatch')}</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>{numericStats.mostUsedWeapon}</Text>
-                    <Text style={styles.statText}>Arme favorite</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.favoriteWeapon')}</Text>
+                </View>
+                <View style={styles.statCard}>
+                    <Text style={styles.statNumber}>{numericStats.averageScore}</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.averageScore')}</Text>
+                </View>
+                <View style={styles.statCard}>
+                    <Text style={styles.statNumber}>{numericStats.totalTouches}</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.totalTouches')}</Text>
+                </View>
+                <View style={styles.statCard}>
+                    <Text style={styles.statNumber}>{numericStats.touchesPerMinute}</Text>
+                    <Text style={styles.statText}>{i18n.t('stats.touchesPerMinute')}</Text>
                 </View>
             </View>
         </ScrollView>

@@ -97,6 +97,10 @@
     },
     "stats": {
         "title": "Statistiques",
+        "matchesPerPlayer": "🏆 Matchs par joueur",
+        "dailyActivity": "📊 Activité quotidienne",
+        "numberOfMatches": "Nb matchs",
+        "totalTimeMin": "Temps total (min)",
         "winsPerPlayer": "🏆 Victoires par joueur",
         "bestScoreAndDuration": "📊 Meilleur score & plus longue durée par jour",
         "bestScore": "Meilleur score",
@@ -104,7 +108,12 @@
         "weaponsUsed": "🗡️ Armes utilisées",
         "matchesPlayed": "Matchs joués",
         "averageDuration": "Durée moyenne",
+        "totalDuration": "Temps total",
+        "longestMatch": "Plus long match",
+        "shortestMatch": "Plus court match",
+        "favoriteWeapon": "Arme favorite",
         "averageScore": "Score moyen",
+        "totalTouches": "Total touches",
         "winRate": "Taux de victoire",
         "successfulTouches": "Touches réussies",
         "touchesPerMinute": "Touches/minute"

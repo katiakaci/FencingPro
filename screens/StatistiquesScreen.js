@@ -31,55 +31,65 @@ export default function StatistiquesScreen() {
         }, [loadHistory])
     );
 
-    // Calcul des victoires par joueur depuis l'historique
-    const winsData = useMemo(() => {
+    // Calcul des matchs par joueur (au lieu des victoires pour les matchs solo)
+    const playerData = useMemo(() => {
+        console.log('=== DEBUG PLAYER DATA ===');
+        console.log('matchHistory:', matchHistory);
+
         if (!matchHistory || matchHistory.length === 0) {
+            console.log('Pas de matchHistory');
             return { labels: ['Aucune donnée'], datasets: [{ data: [0] }] };
         }
 
-        const playerWins = {};
+        const playerStats = {};
 
-        matchHistory.forEach(match => {
+        matchHistory.forEach((match, index) => {
+            console.log(`Match ${index}:`, match);
+
             try {
-                const players = match.players.split(' vs ');
-                const scores = match.score.split('–');
-
-                if (players.length === 2 && scores.length === 2) {
-                    const score1 = parseInt(scores[0]) || 0;
-                    const score2 = parseInt(scores[1]) || 0;
-
-                    const player1 = players[0].trim();
-                    const player2 = players[1].trim();
-
-                    // Initialiser les joueurs s'ils n'existent pas
-                    if (!playerWins[player1]) playerWins[player1] = 0;
-                    if (!playerWins[player2]) playerWins[player2] = 0;
-
-                    // Déterminer le gagnant (score le plus élevé)
-                    if (score1 > score2) {
-                        playerWins[player1]++;
-                    } else if (score2 > score1) {
-                        playerWins[player2]++;
+                // Gérer les matchs solo ET multijoueur
+                if (match.players.includes(' vs ')) {
+                    // Mode multijoueur
+                    const players = match.players.split(' vs ');
+                    players.forEach(player => {
+                        const cleanPlayer = player.trim();
+                        if (cleanPlayer) {
+                            playerStats[cleanPlayer] = (playerStats[cleanPlayer] || 0) + 1;
+                        }
+                    });
+                } else {
+                    // Mode solo
+                    const player = match.players.trim();
+                    if (player) {
+                        playerStats[player] = (playerStats[player] || 0) + 1;
                     }
-                    // En cas d'égalité, pas de gagnant
                 }
             } catch (error) {
                 console.log('Erreur parsing match:', error);
             }
         });
 
-        const sortedPlayers = Object.entries(playerWins)
+        console.log('Final playerStats:', playerStats);
+
+        const sortedPlayers = Object.entries(playerStats)
             .sort(([, a], [, b]) => b - a)
             .slice(0, 6); // Top 6 joueurs
+
+        console.log('Sorted players:', sortedPlayers);
 
         if (sortedPlayers.length === 0) {
             return { labels: ['Aucune donnée'], datasets: [{ data: [0] }] };
         }
 
-        return {
+        const result = {
             labels: sortedPlayers.map(([player]) => player.length > 8 ? player.substring(0, 8) + '...' : player),
-            datasets: [{ data: sortedPlayers.map(([, wins]) => wins || 0) }]
+            datasets: [{ data: sortedPlayers.map(([, matches]) => matches || 0) }]
         };
+
+        console.log('Final result:', result);
+        console.log('=== END DEBUG ===');
+
+        return result;
     }, [matchHistory]);
 
     // Calcul de la répartition des armes depuis l'historique
@@ -138,21 +148,13 @@ export default function StatistiquesScreen() {
                 if (dateKey) {
                     if (!dailyStats[dateKey]) {
                         dailyStats[dateKey] = {
-                            bestScore: 0,
-                            longestDuration: 0
+                            matchCount: 0,
+                            totalDuration: 0
                         };
                     }
 
-                    // Calculer le score total du match
-                    if (match.score) {
-                        const scores = match.score.split('–');
-                        if (scores.length === 2) {
-                            const score1 = parseInt(scores[0]) || 0;
-                            const score2 = parseInt(scores[1]) || 0;
-                            const totalScore = score1 + score2;
-                            dailyStats[dateKey].bestScore = Math.max(dailyStats[dateKey].bestScore, totalScore);
-                        }
-                    }
+                    // Compter le nombre de matchs
+                    dailyStats[dateKey].matchCount++;
 
                     // Calculer la durée en minutes
                     if (match.duration) {
@@ -162,7 +164,7 @@ export default function StatistiquesScreen() {
                             const sec = parseInt(timeParts[1]) || 0;
                             const durationInMinutes = min + (sec / 60);
                             if (!isNaN(durationInMinutes)) {
-                                dailyStats[dateKey].longestDuration = Math.max(dailyStats[dateKey].longestDuration, durationInMinutes);
+                                dailyStats[dateKey].totalDuration += durationInMinutes;
                             }
                         }
                     }
@@ -191,17 +193,17 @@ export default function StatistiquesScreen() {
         }
 
         const labels = sortedDays.map(([date]) => date.substring(0, 5)); // Format DD/MM
-        const scoreData = sortedDays.map(([, stats]) => stats.bestScore || 0);
+        const matchData = sortedDays.map(([, stats]) => stats.matchCount || 0);
         const durationData = sortedDays.map(([, stats]) => {
-            const duration = stats.longestDuration || 0;
+            const duration = stats.totalDuration || 0;
             return Math.round(duration * 10) / 10;
         });
 
         const datasets = [];
 
-        if (showScore && scoreData.some(val => val > 0)) {
+        if (showScore && matchData.some(val => val > 0)) {
             datasets.push({
-                data: scoreData,
+                data: matchData,
                 color: (opacity = 1) => `rgba(46, 204, 113, ${opacity})`,
                 strokeWidth: 3
             });
@@ -229,17 +231,16 @@ export default function StatistiquesScreen() {
             return {
                 matchesPlayed: 0,
                 averageDuration: '0:00',
-                averageScore: 0,
-                winRate: 0,
-                successfulTouches: 0,
-                touchesPerMinute: 0
+                totalDuration: '0:00',
+                longestMatch: '0:00',
+                shortestMatch: '0:00',
+                mostUsedWeapon: 'Aucune'
             };
         }
 
         const totalMatches = matchHistory.length;
         let totalDurationSeconds = 0;
-        let totalScore = 0;
-        let validMatches = 0;
+        let durations = [];
 
         matchHistory.forEach(match => {
             try {
@@ -249,18 +250,9 @@ export default function StatistiquesScreen() {
                     if (timeParts.length === 2) {
                         const min = parseInt(timeParts[0]) || 0;
                         const sec = parseInt(timeParts[1]) || 0;
-                        totalDurationSeconds += (min * 60) + sec;
-                    }
-                }
-
-                // Calcul du score
-                if (match.score) {
-                    const scores = match.score.split('–');
-                    if (scores.length === 2) {
-                        const score1 = parseInt(scores[0]) || 0;
-                        const score2 = parseInt(scores[1]) || 0;
-                        totalScore += score1 + score2;
-                        validMatches++;
+                        const durationInSeconds = (min * 60) + sec;
+                        totalDurationSeconds += durationInSeconds;
+                        durations.push(durationInSeconds);
                     }
                 }
             } catch (error) {
@@ -274,38 +266,41 @@ export default function StatistiquesScreen() {
         const avgSeconds = Math.floor(avgDurationSeconds % 60);
         const averageDuration = `${avgMinutes}:${avgSeconds.toString().padStart(2, '0')}`;
 
-        // Calcul du score moyen
-        const averageScore = validMatches > 0 ? Math.round((totalScore / validMatches) * 10) / 10 : 0;
+        // Calcul de la durée totale
+        const totalMinutes = Math.floor(totalDurationSeconds / 60);
+        const totalSeconds = totalDurationSeconds % 60;
+        const totalDuration = `${totalMinutes}:${Math.floor(totalSeconds).toString().padStart(2, '0')}`;
 
-        // Calcul du taux de victoire (estimation basée sur le score le plus élevé)
-        let wins = 0;
+        // Plus long et plus court match
+        const longestSeconds = durations.length > 0 ? Math.max(...durations) : 0;
+        const shortestSeconds = durations.length > 0 ? Math.min(...durations) : 0;
+
+        const longestMinutes = Math.floor(longestSeconds / 60);
+        const longestSecs = longestSeconds % 60;
+        const longestMatch = `${longestMinutes}:${Math.floor(longestSecs).toString().padStart(2, '0')}`;
+
+        const shortestMinutes = Math.floor(shortestSeconds / 60);
+        const shortestSecs = shortestSeconds % 60;
+        const shortestMatch = `${shortestMinutes}:${Math.floor(shortestSecs).toString().padStart(2, '0')}`;
+
+        // Arme la plus utilisée
+        const weaponCount = {};
         matchHistory.forEach(match => {
-            try {
-                if (match.score) {
-                    const scores = match.score.split('–');
-                    if (scores.length === 2) {
-                        const score1 = parseInt(scores[0]) || 0;
-                        const score2 = parseInt(scores[1]) || 0;
-                        if (score1 !== score2) wins++; // Match avec un gagnant
-                    }
-                }
-            } catch (error) {
-                console.log('Erreur parsing winrate:', error);
+            if (match.weapon) {
+                weaponCount[match.weapon] = (weaponCount[match.weapon] || 0) + 1;
             }
         });
-        const winRate = totalMatches > 0 ? Math.round((wins / totalMatches) * 100) : 0;
-
-        // Touches par minute
-        const totalDurationMinutes = totalDurationSeconds / 60;
-        const touchesPerMinute = totalDurationMinutes > 0 ? Math.round((totalScore / totalDurationMinutes) * 10) / 10 : 0;
+        const mostUsedWeapon = Object.entries(weaponCount).length > 0
+            ? Object.entries(weaponCount).sort(([, a], [, b]) => b - a)[0][0]
+            : 'Aucune';
 
         return {
             matchesPlayed: totalMatches,
             averageDuration,
-            averageScore,
-            winRate,
-            successfulTouches: totalScore,
-            touchesPerMinute: isNaN(touchesPerMinute) ? 0 : touchesPerMinute
+            totalDuration,
+            longestMatch,
+            shortestMatch,
+            mostUsedWeapon
         };
     }, [matchHistory]);
 
@@ -323,11 +318,11 @@ export default function StatistiquesScreen() {
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
-            {/* Graphique des victoires par joueur */}
+            {/* Graphique des matchs par joueur */}
             <View style={styles.statsBox}>
-                <Text style={styles.statsLabel}>{i18n.t('stats.winsPerPlayer')}</Text>
+                <Text style={styles.statsLabel}>🏆 Matchs par joueur</Text>
                 <BarChart
-                    data={winsData}
+                    data={playerData}
                     width={screenWidth * 0.85}
                     height={180}
                     chartConfig={chartConfig}
@@ -337,9 +332,9 @@ export default function StatistiquesScreen() {
                 />
             </View>
 
-            {/* Meilleur score et plus longue durée par jour */}
+            {/* Nombre de matchs et temps total par jour */}
             <View style={styles.statsBox}>
-                <Text style={styles.statsLabel}>{i18n.t('stats.bestScoreAndDuration')}</Text>
+                <Text style={styles.statsLabel}>📊 Activité quotidienne</Text>
 
                 {/* Légendes interactives */}
                 <View style={styles.legendContainer}>
@@ -352,7 +347,7 @@ export default function StatistiquesScreen() {
                         }]} />
                         <Text style={[styles.legendText, {
                             opacity: showScore ? 1 : 0.5
-                        }]}>{i18n.t('stats.bestScore')}</Text>
+                        }]}>Nb matchs</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -364,7 +359,7 @@ export default function StatistiquesScreen() {
                         }]} />
                         <Text style={[styles.legendText, {
                             opacity: showDuration ? 1 : 0.5
-                        }]}>{i18n.t('stats.longestDuration')}</Text>
+                        }]}>Temps total (min)</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -383,7 +378,7 @@ export default function StatistiquesScreen() {
 
             {/* Répartition des armes */}
             <View style={styles.statsBox}>
-                <Text style={styles.statsLabel}>{i18n.t('stats.weaponsUsed')}</Text>
+                <Text style={styles.statsLabel}>🗡️ Armes utilisées</Text>
                 <PieChart
                     data={weaponData}
                     width={screenWidth * 0.85}
@@ -397,31 +392,31 @@ export default function StatistiquesScreen() {
                 />
             </View>
 
-            {/* Statistiques numériques enrichies */}
+            {/* Statistiques numériques */}
             <View style={styles.statsGrid}>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>{numericStats.matchesPlayed}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.matchesPlayed')}</Text>
+                    <Text style={styles.statText}>Matchs joués</Text>
                 </View>
                 <View style={styles.statCard}>
                     <Text style={styles.statNumber}>{numericStats.averageDuration}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.averageDuration')}</Text>
+                    <Text style={styles.statText}>Durée moyenne</Text>
                 </View>
                 <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.averageScore}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.averageScore')}</Text>
+                    <Text style={styles.statNumber}>{numericStats.totalDuration}</Text>
+                    <Text style={styles.statText}>Temps total</Text>
                 </View>
                 <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.winRate}%</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.winRate')}</Text>
+                    <Text style={styles.statNumber}>{numericStats.longestMatch}</Text>
+                    <Text style={styles.statText}>Plus long match</Text>
                 </View>
                 <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.successfulTouches}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.successfulTouches')}</Text>
+                    <Text style={styles.statNumber}>{numericStats.shortestMatch}</Text>
+                    <Text style={styles.statText}>Plus court match</Text>
                 </View>
                 <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.touchesPerMinute}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.touchesPerMinute')}</Text>
+                    <Text style={styles.statNumber}>{numericStats.mostUsedWeapon}</Text>
+                    <Text style={styles.statText}>Arme favorite</Text>
                 </View>
             </View>
         </ScrollView>

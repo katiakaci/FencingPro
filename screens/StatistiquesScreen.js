@@ -257,7 +257,8 @@ export default function StatistiquesScreen() {
         let durations = [];
         let totalScore = 0;
         let validScoreMatches = 0;
-        
+
+        const monthlyScores = {};
         const weaponScores = {};
         const hourCounts = {};
         const dayCounts = {};
@@ -286,7 +287,7 @@ export default function StatistiquesScreen() {
                         validScoreMatches++;
                         maxScore = Math.max(maxScore, score);
                     }
-                    
+
                     // Score par arme
                     if (match.weapon) {
                         if (!weaponScores[match.weapon]) {
@@ -302,7 +303,7 @@ export default function StatistiquesScreen() {
                     const date = new Date(match.date.split(', ')[0].split('/').reverse().join('-'));
                     if (!isNaN(date.getTime())) {
                         dates.push(date);
-                        
+
                         // Progression mensuelle
                         const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                         if (!monthlyScores[monthKey]) {
@@ -311,7 +312,7 @@ export default function StatistiquesScreen() {
                         const score = parseInt(match.score) || 0;
                         monthlyScores[monthKey].total += score;
                         monthlyScores[monthKey].count++;
-                        
+
                         // Heure de pointe
                         if (match.date.includes(', ')) {
                             const timePart = match.date.split(', ')[1];
@@ -320,20 +321,20 @@ export default function StatistiquesScreen() {
                                 hourCounts[hour] = (hourCounts[hour] || 0) + 1;
                             }
                         }
-                        
+
                         // Jour de la semaine favori
                         const dayOfWeek = date.getDay();
                         const dayNames = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
                         const dayName = dayNames[dayOfWeek];
                         dayCounts[dayName] = (dayCounts[dayName] || 0) + 1;
-                        
+
                         // Activité quotidienne
                         const dateKey = date.toDateString();
                         if (!dailyActivity[dateKey]) {
                             dailyActivity[dateKey] = { matches: 0, duration: 0 };
                         }
                         dailyActivity[dateKey].matches++;
-                        
+
                         if (match.duration) {
                             const timeParts = match.duration.split(':');
                             if (timeParts.length === 2) {
@@ -361,11 +362,11 @@ export default function StatistiquesScreen() {
 
         const longestSeconds = durations.length > 0 ? Math.max(...durations) : 0;
         const shortestSeconds = durations.length > 0 ? Math.min(...durations) : 0;
-        
+
         const longestMinutes = Math.floor(longestSeconds / 60);
         const longestSecs = longestSeconds % 60;
         const longestMatch = `${longestMinutes}:${Math.floor(longestSecs).toString().padStart(2, '0')}`;
-        
+
         const shortestMinutes = Math.floor(shortestSeconds / 60);
         const shortestSecs = shortestSeconds % 60;
         const shortestMatch = `${shortestMinutes}:${Math.floor(shortestSecs).toString().padStart(2, '0')}`;
@@ -385,7 +386,7 @@ export default function StatistiquesScreen() {
         const touchesPerMinute = totalDurationMinutes > 0 ? Math.round((totalScore / totalDurationMinutes) * 10) / 10 : 0;
 
         // Nouvelles statistiques
-        
+
         // 1. Progression mensuelle
         const monthlyEntries = Object.entries(monthlyScores);
         let monthlyProgression = 0;
@@ -421,7 +422,7 @@ export default function StatistiquesScreen() {
 
         // 5. Sessions par semaine
         const sortedDates = dates.sort((a, b) => a - b);
-        const weeksBetween = sortedDates.length > 1 
+        const weeksBetween = sortedDates.length > 1
             ? Math.max(1, Math.ceil((sortedDates[sortedDates.length - 1] - sortedDates[0]) / (1000 * 60 * 60 * 24 * 7)))
             : 1;
         const sessionsPerWeek = Math.round((totalMatches / weeksBetween) * 10) / 10;
@@ -463,7 +464,7 @@ export default function StatistiquesScreen() {
         const lastMonth = `${now.getFullYear()}-${String(now.getMonth()).padStart(2, '0')}`;
         const currentMonthMatches = monthlyScores[currentMonth]?.count || 0;
         const lastMonthMatches = monthlyScores[lastMonth]?.count || 0;
-        const monthComparison = lastMonthMatches > 0 
+        const monthComparison = lastMonthMatches > 0
             ? Math.round(((currentMonthMatches - lastMonthMatches) / lastMonthMatches) * 100)
             : 0;
 
@@ -596,93 +597,115 @@ export default function StatistiquesScreen() {
             </View>
 
             {/* Statistiques numériques */}
-            <View style={styles.statsGrid}>
-                {/* Cartes existantes */}
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.matchesPlayed}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.matchesPlayed')}</Text>
+            <View style={styles.section}>
+                {/* 📊 Statistiques de base */}
+                <Text style={styles.sectionTitle}>📊 Statistiques de base</Text>
+                <View style={styles.statsGrid}>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.matchesPlayed}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.matchesPlayed')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.averageDuration}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.averageDuration')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.totalDuration}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.totalDuration')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.longestMatch}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.longestMatch')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.shortestMatch}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.shortestMatch')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.mostUsedWeapon}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.favoriteWeapon')}</Text>
+                    </View>
                 </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.averageDuration}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.averageDuration')}</Text>
+            </View>
+
+            {/* 🏆 Statistiques de performance */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>🏆 Statistiques de performance</Text>
+                <View style={styles.statsGrid}>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.averageScore}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.averageScore')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.totalTouches}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.totalTouches')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.touchesPerMinute}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.touchesPerMinute')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={[styles.statNumber, { color: numericStats.monthlyProgression >= 0 ? '#27ae60' : '#e74c3c' }]}>
+                            {numericStats.monthlyProgression > 0 ? '+' : ''}{numericStats.monthlyProgression}%
+                        </Text>
+                        <Text style={styles.statText}>{i18n.t('stats.monthlyProgression')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.weaponEfficiency}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.weaponEfficiency')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.personalRecord}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.personalRecord')}</Text>
+                    </View>
                 </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.totalDuration}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.totalDuration')}</Text>
+            </View>
+
+            {/* ⏰ Statistiques temporelles */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>⏰ Statistiques temporelles</Text>
+                <View style={styles.statsGrid}>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.peakHour}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.peakHour')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.favoriteDay}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.favoriteDay')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.sessionsPerWeek}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.sessionsPerWeek')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.averageTimeBetweenMatches}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.averageTimeBetweenMatches')}</Text>
+                    </View>
                 </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.longestMatch}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.longestMatch')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.shortestMatch}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.shortestMatch')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.mostUsedWeapon}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.favoriteWeapon')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.averageScore}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.averageScore')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.totalTouches}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.totalTouches')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.touchesPerMinute}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.touchesPerMinute')}</Text>
-                </View>
-                
-                {/* Nouvelles cartes */}
-                <View style={styles.statCard}>
-                    <Text style={[styles.statNumber, { color: numericStats.monthlyProgression >= 0 ? '#27ae60' : '#e74c3c' }]}>
-                        {numericStats.monthlyProgression > 0 ? '+' : ''}{numericStats.monthlyProgression}%
-                    </Text>
-                    <Text style={styles.statText}>{i18n.t('stats.monthlyProgression')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.weaponEfficiency}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.weaponEfficiency')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.peakHour}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.peakHour')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.favoriteDay}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.favoriteDay')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.sessionsPerWeek}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.sessionsPerWeek')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.averageTimeBetweenMatches}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.averageTimeBetweenMatches')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.consecutiveDays}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.consecutiveDays')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={[styles.statNumber, { color: numericStats.monthComparison >= 0 ? '#27ae60' : '#e74c3c' }]}>
-                        {numericStats.monthComparison > 0 ? '+' : ''}{numericStats.monthComparison}%
-                    </Text>
-                    <Text style={styles.statText}>{i18n.t('stats.monthComparison')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.activeDays}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.activeDays')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.personalRecord}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.personalRecord')}</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={styles.statNumber}>{numericStats.mostProductiveDay}</Text>
-                    <Text style={styles.statText}>{i18n.t('stats.mostProductiveDay')}</Text>
+            </View>
+
+            {/* 🎯 Statistiques d'activité */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>🎯 Statistiques d'activité</Text>
+                <View style={styles.statsGrid}>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.consecutiveDays}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.consecutiveDays')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={[styles.statNumber, { color: numericStats.monthComparison >= 0 ? '#27ae60' : '#e74c3c' }]}>
+                            {numericStats.monthComparison > 0 ? '+' : ''}{numericStats.monthComparison}%
+                        </Text>
+                        <Text style={styles.statText}>{i18n.t('stats.monthComparison')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.activeDays}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.activeDays')}</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={styles.statNumber}>{numericStats.mostProductiveDay}</Text>
+                        <Text style={styles.statText}>{i18n.t('stats.mostProductiveDay')}</Text>
+                    </View>
                 </View>
             </View>
         </ScrollView>
@@ -767,11 +790,22 @@ const styles = StyleSheet.create({
         flex: 1,
         textAlign: 'center',
     },
+    // Nouveau style pour les sections
+    section: {
+        marginBottom: 25,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 15,
+        textAlign: 'left',
+        paddingLeft: 5,
+    },
     statsGrid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-        marginTop: 10,
     },
     statCard: {
         backgroundColor: '#fff',

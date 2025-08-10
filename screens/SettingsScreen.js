@@ -104,7 +104,6 @@ export default function SettingsScreen() {
 
   const selectSound = useCallback((soundFile) => {
     setSelectedSound(soundFile);
-    setShowSoundPicker(false);
   }, [setSelectedSound]);
 
   const getSelectedSoundName = () => {

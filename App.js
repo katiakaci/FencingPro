@@ -72,6 +72,7 @@ export default function App() {
                   <NavigationContainer>
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
                       <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
+                      <Stack.Screen name="Setup" component={SetupScreen} />
                       <Stack.Screen
                         name="SettingsFromWelcome"
                         component={SettingsScreen}

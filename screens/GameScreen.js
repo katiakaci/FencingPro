@@ -15,6 +15,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useHistory } from '../context/HistoryContext';
 import { useBluetooth } from '../context/BluetoothContext';
 import { useCountdown } from '../hooks/useCountdown';
+import { GameTimer } from '../components/GameTimer';
 
 const SOUND_FILES = {
   'alert_touch.mp3': require('../assets/sound/alert_touch.mp3'),
@@ -174,6 +175,51 @@ export default function GameScreen({ route, navigation }) {
     setShowBackModal(true);
   };
 
+  const handleStopGame = () => {
+    setRunning(false);
+    setStopped(true);
+    Alert.alert(
+      i18n.t('game.gameFinished'),
+      i18n.t('game.saveGameQuestion'),
+      [
+        {
+          text: i18n.t('game.cancel'),
+          style: 'cancel',
+          onPress: () => {
+            setStopped(false);
+            setRunning(true);
+          },
+        },
+        {
+          text: i18n.t('game.yes'),
+          style: 'default',
+          onPress: () => {
+            saveMatch();
+            setStopped(false);
+            setBobScore(0);
+            setJulieScore(0);
+            setChrono(0);
+            setGameStarted(false);
+            countdown.stop();
+          },
+        },
+        {
+          text: i18n.t('game.no'),
+          style: 'destructive',
+          onPress: () => {
+            setStopped(false);
+            setBobScore(0);
+            setJulieScore(0);
+            setChrono(0);
+            setGameStarted(false);
+            countdown.stop();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {/* Animation background */}
@@ -263,71 +309,14 @@ export default function GameScreen({ route, navigation }) {
         </View>
 
         {/* Chrono et boutons */}
-        <View style={styles.timerContainer}>
-          <View style={styles.timerBox}><Text style={styles.timerText}>{formatChrono(chrono)}</Text></View>
-          <View style={styles.buttonRow}>
-            {!gameStarted ? (
-              <View style={styles.waitingContainer}>
-                <Text style={styles.waitingText}>{i18n.t('game.getReady')}</Text>
-              </View>
-            ) : (
-              <>
-                <TouchableOpacity
-                  style={[styles.iconButton, { backgroundColor: running ? '#fff' : '#f7b731' }]}
-                  onPress={() => setRunning(r => !r)}
-                >
-                  <Ionicons name="pause" size={28} color={running ? '#0a3871' : '#fff'} />
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.iconButton, { backgroundColor: 'tomato' }]} onPress={() => {
-                  setRunning(false);
-                  setStopped(true);
-                  Alert.alert(
-                    i18n.t('game.gameFinished'),
-                    i18n.t('game.saveGameQuestion'),
-                    [
-                      {
-                        text: i18n.t('game.cancel'),
-                        style: 'cancel',
-                        onPress: () => {
-                          setStopped(false);
-                          setRunning(true);
-                        },
-                      },
-                      {
-                        text: i18n.t('game.yes'),
-                        style: 'default',
-                        onPress: () => {
-                          saveMatch();
-                          setStopped(false);
-                          setBobScore(0);
-                          setJulieScore(0);
-                          setChrono(0);
-                          setGameStarted(false);
-                          countdown.stop();
-                        },
-                      },
-                      {
-                        text: i18n.t('game.no'),
-                        style: 'destructive',
-                        onPress: () => {
-                          setStopped(false);
-                          setBobScore(0);
-                          setJulieScore(0);
-                          setChrono(0);
-                          setGameStarted(false);
-                          countdown.stop();
-                        },
-                      },
-                    ],
-                    { cancelable: false }
-                  );
-                }}>
-                  <Ionicons name="stop" size={28} color="#fff" />
-                </TouchableOpacity>
-              </>
-            )}
-          </View>
-        </View>
+        <GameTimer 
+          chrono={chrono}
+          formatChrono={formatChrono}
+          gameStarted={gameStarted}
+          running={running}
+          setRunning={setRunning}
+          onStop={handleStopGame}
+        />
 
         {/* Pause overlay */}
         {gameStarted && !running && !showBackModal && (
@@ -523,59 +512,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#0a3871',
     borderRadius: 20,
-  },
-  timerContainer: {
-    height: 170,
-    backgroundColor: 'rgba(255,255,255,0.10)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 18,
-    marginBottom: 8,
-    paddingVertical: 24,
-    paddingHorizontal: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  timerBox: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  timerText: {
-    fontSize: 36,
-    color: '#0a3871',
-    fontWeight: 'bold',
-    fontFamily: Platform.OS === 'android' ? 'monospace' : 'Courier',
-    letterSpacing: 2,
-    textAlign: 'center',
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    marginTop: 10,
-    gap: 30,
-    justifyContent: 'center',
-    marginBottom: 8,
-  },
-  iconButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
   },
   pauseMenuOverlay: {
     position: 'absolute',

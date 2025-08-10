@@ -1,10 +1,11 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Animated } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Swipeable } from 'react-native-gesture-handler';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { useHistory } from '../context/HistoryContext';
 import { useFocusEffect } from '@react-navigation/native';
-import i18n from '../languages/i18n';
+import { useHistorySort } from '../hooks/useHistorySort';
+import { SortMenu } from '../components/History/SortMenu';
+import { MatchCard } from '../components/History/MatchCard';
+import { EmptyState } from '../components/History/EmptyState';
 
 export default function HistoriqueScreen() {
   const { matchHistory, deleteMatch, loadHistory } = useHistory();
@@ -20,174 +21,50 @@ export default function HistoriqueScreen() {
     }, [])
   );
 
-  const handleDelete = (index) => {
+  // Tri des matchs avec le hook personnalisé
+  const sortedMatches = useHistorySort(matchHistory, sortBy, sortOrder);
+
+  const handleDelete = useCallback((index) => {
     if (swipeRefs.current[index]) {
       swipeRefs.current[index].close();
     }
     setTimeout(() => {
       deleteMatch(index);
     }, 100);
-  };
+  }, [deleteMatch]);
 
   // Si l'historique est vide
   if (matchHistory.length === 0) {
-    return (
-      <View style={styles.emptyContainer}>
-        <Ionicons name="calendar-outline" size={64} color="#ccc" />
-        <Text style={styles.emptyText}>{i18n.t('history.noMatches')}</Text>
-        <Text style={styles.emptySubtext}>{i18n.t('history.noMatchesSubtext')}</Text>
-      </View>
-    );
+    return <EmptyState />;
   }
-
-  // Tri
-  const getSortedMatches = () => {
-    let sorted = [...matchHistory];
-    if (sortBy === 'date') {
-      sorted.sort((a, b) => {
-        const parseDate = (dateStr) => {
-          if (dateStr.includes(', ')) {
-            const [datePart, timePart] = dateStr.split(', ');
-            const [day, month, year] = datePart.split('/');
-            const [hour, minute] = timePart.split(':');
-            return new Date(year, month - 1, day, hour, minute);
-          }
-
-          if (dateStr.includes(' PM') || dateStr.includes(' AM')) {
-            return new Date(dateStr);
-          }
-
-          return new Date(dateStr);
-        };
-
-        const dateA = parseDate(a.date);
-        const dateB = parseDate(b.date);
-
-        if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
-          console.log('Date invalide:', a.date, b.date);
-          return 0;
-        }
-
-        return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-      });
-    } else if (sortBy === 'duration') {
-      const toSeconds = d => {
-        const [min, sec] = d.split(':').map(Number);
-        return min * 60 + sec;
-      };
-      sorted.sort((a, b) => sortOrder === 'desc' ? toSeconds(b.duration) - toSeconds(a.duration) : toSeconds(a.duration) - toSeconds(b.duration));
-    } else if (sortBy === 'score') {
-      const scoreSum = s => s.split('–').map(Number).reduce((a, b) => a + b, 0);
-      sorted.sort((a, b) => sortOrder === 'desc' ? scoreSum(b.score) - scoreSum(a.score) : scoreSum(a.score) - scoreSum(b.score));
-    }
-    return sorted;
-  };
-
-  const sortOptions = [
-    { key: 'date', label: i18n.t('history.date') },
-    { key: 'duration', label: i18n.t('history.duration') },
-    { key: 'score', label: i18n.t('history.score') },
-  ];
-
-  const renderRightActions = (progress, dragX, index) => {
-    const scale = dragX.interpolate({
-      inputRange: [-100, 0],
-      outputRange: [1, 0.7],
-      extrapolate: 'clamp',
-    });
-    return (
-      <TouchableOpacity style={styles.deleteBox} onPress={() => handleDelete(index)}>
-        <Animated.View style={{ transform: [{ scale }] }}>
-          <Ionicons name="trash" size={28} color="#fff" />
-        </Animated.View>
-      </TouchableOpacity>
-    );
-  };
-
-  const sortedMatches = getSortedMatches();
-
-  const formatDateForDisplay = (dateStr) => {
-    try {
-      let date;
-
-      if (dateStr.includes(', ')) {
-        const [datePart, timePart] = dateStr.split(', ');
-        const [day, month, year] = datePart.split('/');
-        const [hour, minute] = timePart.split(':');
-        date = new Date(year, month - 1, day, hour, minute);
-      } else {
-        date = new Date(dateStr);
-      }
-
-      return date.toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      });
-    } catch (error) {
-      console.log('Erreur formatage date:', error);
-      return dateStr;
-    }
-  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
-      {/* Bouton Trier - seulement si il y a des matchs */}
+      {/* Menu de tri - seulement si il y a des matchs */}
       {sortedMatches.length > 0 && (
-        <View style={styles.sortBar}>
-          <TouchableOpacity style={styles.sortMenuBtn} onPress={() => setSortMenuVisible(true)}>
-            <Ionicons name={sortOrder === 'desc' ? 'arrow-down' : 'arrow-up'} size={18} color="#357ab7" />
-            <Text style={styles.sortMenuText}>{i18n.t('history.sort')}</Text>
-            <Ionicons name="chevron-down" size={16} color="#357ab7" />
-          </TouchableOpacity>
-
-          <Modal visible={sortMenuVisible} transparent animationType="fade" onRequestClose={() => setSortMenuVisible(false)}>
-            <TouchableOpacity style={styles.modalOverlay} onPress={() => setSortMenuVisible(false)}>
-              <View style={styles.sortDropdown}>
-                {sortOptions.map(opt => (
-                  <TouchableOpacity key={opt.key} style={styles.sortDropdownItem} onPress={() => { setSortBy(opt.key); setSortMenuVisible(false); }}>
-                    <Text style={[styles.sortDropdownText, sortBy === opt.key && { color: '#357ab7', fontWeight: 'bold' }]}>{opt.label}</Text>
-                  </TouchableOpacity>
-                ))}
-                <View style={styles.sortOrderRow}>
-                  <TouchableOpacity onPress={() => setSortOrder(o => o === 'desc' ? 'asc' : 'desc')} style={styles.sortOrderBtn}>
-                    <Ionicons name={sortOrder === 'desc' ? 'arrow-down' : 'arrow-up'} size={16} color="#357ab7" />
-                    <Text style={styles.sortOrderText}>{sortOrder === 'desc' ? i18n.t('history.descending') : i18n.t('history.ascending')}</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </Modal>
-        </View>
+        <SortMenu
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          sortMenuVisible={sortMenuVisible}
+          setSortMenuVisible={setSortMenuVisible}
+        />
       )}
 
-      {/* Liste des matchs ou message vide */}
+      {/* Liste des matchs */}
       <View style={styles.matchList}>
         {sortedMatches.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Ionicons name="calendar-outline" size={64} color="#ccc" />
-            <Text style={styles.emptyText}>{i18n.t('history.noMatches')}</Text>
-            <Text style={styles.emptySubtext}>{i18n.t('history.noMatchesSubtext')}</Text>
-          </View>
+          <EmptyState />
         ) : (
           sortedMatches.map((match, idx) => (
-            <Swipeable key={idx} ref={ref => swipeRefs.current[idx] = ref} renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, idx)}>
-              <View style={styles.matchCard}>
-                <View style={styles.matchRow}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.matchPlayers}>{match.players}</Text>
-                    <Text style={styles.matchWeapon}>{match.weapon}</Text>
-                    <Text style={styles.matchDuration}>{match.duration}</Text>
-                  </View>
-                  <View style={{ alignItems: 'flex-end', minWidth: 90 }}>
-                    <Text style={styles.matchScore}>{match.score}</Text>
-                    <Text style={styles.matchDate}>{formatDateForDisplay(match.date)}</Text>
-                  </View>
-                </View>
-              </View>
-            </Swipeable>
+            <MatchCard
+              key={idx}
+              ref={ref => swipeRefs.current[idx] = ref}
+              match={match}
+              index={idx}
+              onDelete={handleDelete}
+            />
           ))
         )}
       </View>
@@ -204,165 +81,7 @@ const styles = StyleSheet.create({
     padding: 18,
     paddingBottom: 32,
   },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#222',
-  },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  sortBar: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginBottom: 6,
-    marginTop: 2,
-  },
-  sortMenuBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ececec',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  sortMenuText: {
-    color: '#357ab7',
-    fontWeight: 'bold',
-    fontSize: 13,
-    marginLeft: 6,
-    marginRight: 2,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.12)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  sortDropdown: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 12,
-    minWidth: 120,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.13,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  sortDropdownItem: {
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-  },
-  sortDropdownText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  sortOrderRow: {
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    marginTop: 8,
-    paddingTop: 6,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  sortOrderBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  sortOrderText: {
-    color: '#357ab7',
-    fontWeight: 'bold',
-    fontSize: 13,
-    marginLeft: 4,
-  },
-  sectionTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#333',
-    marginTop: 18,
-    marginBottom: 8,
-  },
   matchList: {
     marginBottom: 10,
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 60,
-  },
-  emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#666',
-    marginTop: 16,
-    textAlign: 'center',
-  },
-  emptySubtext: {
-    fontSize: 14,
-    color: '#999',
-    marginTop: 8,
-    textAlign: 'center',
-  },
-  matchCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 10,
-    flexDirection: 'row',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.07,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  matchRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    flex: 1,
-  },
-  matchPlayers: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: '#222',
-  },
-  matchWeapon: {
-    fontSize: 13,
-    color: '#888',
-    marginTop: 2,
-  },
-  matchDuration: {
-    fontSize: 12,
-    color: '#aaa',
-    marginTop: 2,
-  },
-  matchScore: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    color: '#357ab7',
-  },
-  matchDate: {
-    fontSize: 12,
-    color: '#888',
-    marginTop: 2,
-    textAlign: 'right',
-    minWidth: 90,
-  },
-  deleteBox: {
-    backgroundColor: '#e74c3c',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 70,
-    height: '90%',
-    borderRadius: 12,
   },
 });

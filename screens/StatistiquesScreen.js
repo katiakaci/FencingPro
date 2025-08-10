@@ -72,8 +72,7 @@ export default function StatistiquesScreen() {
         console.log('Final playerStats:', playerStats);
 
         const sortedPlayers = Object.entries(playerStats)
-            .sort(([, a], [, b]) => b - a)
-            .slice(0, 6); // Top 6 joueurs
+            .sort(([, a], [, b]) => b - a); // Retirer .slice(0, 6) pour avoir tous les joueurs
 
         console.log('Sorted players:', sortedPlayers);
 
@@ -82,7 +81,7 @@ export default function StatistiquesScreen() {
         }
 
         const result = {
-            labels: sortedPlayers.map(([player]) => player.length > 8 ? player.substring(0, 8) + '...' : player),
+            labels: sortedPlayers.map(([player]) => player.length > 10 ? player.substring(0, 10) + '...' : player),
             datasets: [{ data: sortedPlayers.map(([, matches]) => matches || 0) }]
         };
 
@@ -525,15 +524,19 @@ export default function StatistiquesScreen() {
             {/* Graphique des matchs par joueur */}
             <View style={styles.statsBox}>
                 <Text style={styles.statsLabel}>{i18n.t('stats.matchesPerPlayer')}</Text>
-                <BarChart
-                    data={playerData}
-                    width={screenWidth * 0.85}
-                    height={180}
-                    chartConfig={chartConfig}
-                    fromZero
-                    showValuesOnTopOfBars
-                    style={{ borderRadius: 8 }}
-                />
+
+                {/* Graphique avec scroll horizontal */}
+                <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+                    <BarChart
+                        data={playerData}
+                        width={Math.max(screenWidth * 0.85, playerData.labels.length * 80)} // Largeur dynamique basée sur le nombre de joueurs
+                        height={180}
+                        chartConfig={chartConfig}
+                        fromZero
+                        showValuesOnTopOfBars
+                        style={{ borderRadius: 8 }}
+                    />
+                </ScrollView>
             </View>
 
             {/* Nombre de matchs et temps total par jour */}

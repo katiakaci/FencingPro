@@ -24,12 +24,12 @@ export default function HistoriqueScreen() {
   // Tri des matchs avec le hook personnalisé
   const sortedMatches = useHistorySort(matchHistory, sortBy, sortOrder);
 
-  const handleDelete = useCallback((index) => {
-    if (swipeRefs.current[index]) {
-      swipeRefs.current[index].close();
+  const handleDelete = useCallback((sortedIndex, originalIndex) => {
+    if (swipeRefs.current[sortedIndex]) {
+      swipeRefs.current[sortedIndex].close();
     }
     setTimeout(() => {
-      deleteMatch(index);
+      deleteMatch(originalIndex); // Utiliser l'index original
     }, 100);
   }, [deleteMatch]);
 
@@ -57,15 +57,26 @@ export default function HistoriqueScreen() {
         {sortedMatches.length === 0 ? (
           <EmptyState />
         ) : (
-          sortedMatches.map((match, idx) => (
-            <MatchCard
-              key={idx}
-              ref={ref => swipeRefs.current[idx] = ref}
-              match={match}
-              index={idx}
-              onDelete={handleDelete}
-            />
-          ))
+          sortedMatches.map((match, sortedIndex) => {
+            // Trouver l'index original du match dans l'historique non trié
+            const originalIndex = matchHistory.findIndex(originalMatch => 
+              originalMatch.date === match.date && 
+              originalMatch.players === match.players &&
+              originalMatch.score === match.score &&
+              originalMatch.duration === match.duration
+            );
+
+            return (
+              <MatchCard
+                key={`${match.date}-${match.players}-${sortedIndex}`}
+                ref={ref => swipeRefs.current[sortedIndex] = ref}
+                match={match}
+                index={sortedIndex}
+                originalIndex={originalIndex}
+                onDelete={handleDelete}
+              />
+            );
+          })
         )}
       </View>
     </ScrollView>

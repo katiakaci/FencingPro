@@ -18,7 +18,7 @@ import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native
 import { Swipeable } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 
-export const MatchCard = forwardRef(({ match, index, onDelete }, ref) => {
+export const MatchCard = forwardRef(({ match, index, originalIndex, onDelete }, ref) => {
     const formatDateForDisplay = (dateStr) => {
         try {
             let date;
@@ -55,7 +55,7 @@ export const MatchCard = forwardRef(({ match, index, onDelete }, ref) => {
         return (
             <TouchableOpacity
                 style={styles.deleteBox}
-                onPress={() => onDelete(index)}
+                onPress={() => onDelete(index, originalIndex)}
             >
                 <Animated.View style={{ transform: [{ scale }] }}>
                     <Ionicons name="trash" size={28} color="#fff" />

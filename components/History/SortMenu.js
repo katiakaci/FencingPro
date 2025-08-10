@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ececec',
         borderRadius: 8,
         paddingHorizontal: 12,
-        paddingVertical: 6,
+        paddingVertical: 5,
     },
     sortMenuText: {
         color: '#357ab7',

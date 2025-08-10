@@ -38,10 +38,10 @@ export const FilterMenu = ({
                 style={[styles.filterBtn, filterBy !== 'all' && styles.filterBtnActive]}
                 onPress={() => setFilterMenuVisible(true)}
             >
-                <Ionicons 
-                    name="funnel" 
-                    size={16} 
-                    color={filterBy !== 'all' ? '#fff' : '#357ab7'} 
+                <Ionicons
+                    name="funnel"
+                    size={16}
+                    color={filterBy !== 'all' ? '#fff' : '#357ab7'}
                 />
                 <Text style={[
                     styles.filterText,
@@ -49,10 +49,10 @@ export const FilterMenu = ({
                 ]}>
                     {getFilterDisplayText()}
                 </Text>
-                <Ionicons 
-                    name="chevron-down" 
-                    size={14} 
-                    color={filterBy !== 'all' ? '#fff' : '#357ab7'} 
+                <Ionicons
+                    name="chevron-down"
+                    size={14}
+                    color={filterBy !== 'all' ? '#fff' : '#357ab7'}
                 />
             </TouchableOpacity>
 
@@ -67,13 +67,13 @@ export const FilterMenu = ({
                     onPress={() => setFilterMenuVisible(false)}
                     activeOpacity={1}
                 >
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         style={styles.filterDropdown}
                         activeOpacity={1}
                         onPress={(e) => e.stopPropagation()}
                     >
                         <Text style={styles.modalTitle}>{i18n.t('history.filter')}</Text>
-                        
+
                         <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
                             {/* Option "Tout" */}
                             <TouchableOpacity
@@ -202,7 +202,7 @@ export const FilterMenu = ({
 
 const styles = StyleSheet.create({
     filterContainer: {
-        marginRight: 8,
+        marginRight: 95,
     },
     filterBtn: {
         flexDirection: 'row',
@@ -218,8 +218,8 @@ const styles = StyleSheet.create({
     filterText: {
         color: '#357ab7',
         fontWeight: 'bold',
-        fontSize: 12,
-        marginLeft: 4,
+        fontSize: 13,
+        marginLeft: 6,
         marginRight: 2,
         maxWidth: 100,
     },

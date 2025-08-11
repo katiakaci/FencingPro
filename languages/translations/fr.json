@@ -142,7 +142,13 @@
         "monthComparison": "Augmentation par rapport au mois dernier",
         "activeDays": "Jours actifs",
         "personalRecord": "Record personnel",
-        "mostProductiveDay": "Jour le plus productif"
+        "mostProductiveDay": "Jour le plus productif",
+        "sections": {
+            "basicStats": "📊 Statistiques de base",
+            "performanceStats": "🏆 Statistiques de performance",
+            "temporalStats": "⏰ Statistiques temporelles",
+            "activityStats": "🎯 Statistiques d'activité"
+        }
     },
     "weapons": {
         "epee": "Épée",

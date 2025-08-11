@@ -81,10 +81,10 @@ export default function StatistiquesScreen() {
 
             <WeaponChart matchHistory={matchHistory} />
 
-            <StatSection title="📊 Statistiques de base" stats={basicStats} />
-            <StatSection title="🏆 Statistiques de performance" stats={performanceStats} />
-            <StatSection title="⏰ Statistiques temporelles" stats={temporalStats} />
-            <StatSection title="🎯 Statistiques d'activité" stats={activityStats} />
+            <StatSection title={i18n.t('stats.sections.basicStats')} stats={basicStats} />
+            <StatSection title={i18n.t('stats.sections.performanceStats')} stats={performanceStats} />
+            <StatSection title={i18n.t('stats.sections.temporalStats')} stats={temporalStats} />
+            <StatSection title={i18n.t('stats.sections.activityStats')} stats={activityStats} />
         </ScrollView>
     );
 }

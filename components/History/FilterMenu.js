@@ -1,3 +1,32 @@
+/**
+ * @fileoverview Composant de menu de filtrage avancé pour l'historique
+ * 
+ * Ce composant gère :
+ * - La sélection multiple de filtres par catégorie (arme, mode, joueur)
+ * - L'affichage d'une interface modale avec cases à cocher
+ * - La gestion des filtres actifs avec compteur visuel
+ * - La persistance et le reset des filtres sélectionnés
+ * 
+ * Fonctionnalités :
+ * - Bouton de filtrage avec indicateur d'état actif
+ * - Modale plein écran avec sections organisées
+ * - Cases à cocher pour sélection multiple
+ * - Bouton "Tout effacer" pour reset rapide
+ * - Défilement vertical pour longues listes
+ * - Filtrage combiné (logique ET entre catégories)
+ * - Interface responsive et accessible
+ * 
+ * Types de filtres supportés :
+ * - Arme : Épée, Fleuret, Sabre
+ * - Mode : Solo, Multi
+ * - Joueur : Tous les joueurs ayant participé
+ * 
+ * @param {Object} activeFilters - Filtres actuellement actifs par catégorie
+ * @param {Function} setActiveFilters - Fonction pour mettre à jour les filtres
+ * @param {boolean} filterMenuVisible - État de visibilité de la modale
+ * @param {Function} setFilterMenuVisible - Fonction pour contrôler la modale
+ * @param {Object} availableFilters - Filtres disponibles extraits des données
+ */
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';

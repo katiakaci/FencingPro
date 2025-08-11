@@ -1,3 +1,21 @@
+/**
+ * @fileoverview Composant de graphique circulaire pour les armes utilisées
+ * 
+ * Ce composant gère :
+ * - L'affichage d'un graphique en secteurs des armes utilisées
+ * - La visualisation de la répartition des matchs par arme
+ * - L'utilisation de react-native-chart-kit pour le rendu
+ * - La configuration des couleurs et du style du graphique
+ * 
+ * Fonctionnalités :
+ * - Graphique PieChart responsive
+ * - Données automatiquement calculées depuis l'historique
+ * - Style cohérent avec le design de l'app
+ * - Support des données vides
+ * 
+ * @param {Array} matchHistory - Historique des matchs
+ * @param {Object} style - Styles personnalisés (optionnel)
+ */
 import React from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';

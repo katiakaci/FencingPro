@@ -1,3 +1,23 @@
+/**
+ * @fileoverview Hook personnalisé pour la gestion du compte à rebours
+ * 
+ * Ce hook gère :
+ * - Le décompte avant le début d'un match
+ * - La logique de démarrage/arrêt du timer
+ * - La détection de fin de compte à rebours
+ * - L'exécution d'un callback à la fin
+ * 
+ * Fonctionnalités :
+ * - Compte à rebours configurable (par défaut 3 secondes)
+ * - États isActive et isCompleted
+ * - Fonctions start() et stop() pour contrôler le timer
+ * - Callback automatique à la fin du décompte
+ * - Reset automatique des valeurs
+ * 
+ * @param {number} initialCount - Nombre initial du décompte (défaut: 3)
+ * @param {Function} onComplete - Callback exécuté à la fin du décompte
+ * @returns {Object} État et contrôles du compte à rebours
+ */
 import { useState, useEffect, useCallback } from 'react';
 
 export const useCountdown = (initialCount = 3, onComplete = null) => {

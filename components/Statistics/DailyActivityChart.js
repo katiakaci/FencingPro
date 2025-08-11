@@ -1,3 +1,27 @@
+/**
+ * @fileoverview Composant de graphique linéaire pour l'activité quotidienne
+ * 
+ * Ce composant gère :
+ * - L'affichage d'un graphique linéaire de l'activité par jour
+ * - La visualisation de deux métriques : nombre de matchs et durée totale
+ * - Les légendes interactives pour activer/désactiver les courbes
+ * - Le défilement horizontal pour les longues périodes
+ * 
+ * Fonctionnalités :
+ * - Graphique LineChart avec courbes multiples
+ * - Basculement interactif des données (matchs/durée)
+ * - Légendes cliquables avec indicateurs visuels
+ * - Défilement horizontal pour navigation temporelle
+ * - Style Bézier pour des courbes lissées
+ * - Responsive design avec calcul automatique de largeur
+ * 
+ * @param {Array} matchHistory - Historique des matchs
+ * @param {boolean} showScore - Afficher la courbe des matchs
+ * @param {Function} setShowScore - Basculer l'affichage des matchs
+ * @param {boolean} showDuration - Afficher la courbe de durée
+ * @param {Function} setShowDuration - Basculer l'affichage de la durée
+ * @param {Object} style - Styles personnalisés (optionnel)
+ */
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';

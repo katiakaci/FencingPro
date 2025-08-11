@@ -1,3 +1,22 @@
+/**
+ * @fileoverview Composant de graphique en barres pour les matchs par joueur
+ * 
+ * Ce composant gère :
+ * - L'affichage d'un graphique en barres des performances par joueur
+ * - La visualisation du nombre de matchs de chaque joueur
+ * - Le défilement horizontal pour supporter de nombreux joueurs
+ * - L'utilisation de react-native-chart-kit pour le rendu
+ * 
+ * Fonctionnalités :
+ * - Graphique BarChart scrollable horizontalement
+ * - Largeur adaptative selon le nombre de joueurs
+ * - Affichage des valeurs au-dessus des barres
+ * - Données automatiquement extraites de l'historique
+ * - Design responsive et cohérent
+ * 
+ * @param {Array} matchHistory - Historique des matchs
+ * @param {Object} style - Styles personnalisés (optionnel)
+ */
 import React from 'react';
 import { View, Text, ScrollView, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';

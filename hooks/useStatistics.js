@@ -1,3 +1,23 @@
+/**
+ * @fileoverview Hook personnalisé pour le calcul des statistiques de jeu
+ * 
+ * Ce hook gère :
+ * - L'analyse complète de l'historique des matchs
+ * - Le calcul des statistiques de performance
+ * - L'analyse temporelle et les tendances
+ * - Les métriques d'efficacité par arme
+ * - Les patterns d'activité quotidienne/hebdomadaire
+ * 
+ * Statistiques calculées :
+ * - Nombre de matchs, durées moyennes/totales
+ * - Armes préférées et efficacité
+ * - Heures de pointe et jours favoris
+ * - Progression mensuelle et jours consécutifs
+ * - Records personnels et productivité
+ * 
+ * @param {Array} matchHistory - Historique des matchs
+ * @returns {Object} Objet contenant toutes les statistiques calculées
+ */
 import { useMemo } from 'react';
 
 export const useStatistics = (matchHistory) => {

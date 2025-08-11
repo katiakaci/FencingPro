@@ -2,10 +2,17 @@
  * @fileoverview Hook personnalisé pour la gestion de la langue
  * 
  * Ce hook gère :
- * - Le chargement de la langue sauvegardée
- * - Le basculement entre les langues
- * - La persistance de la langue sélectionnée
+ * - Le chargement de la langue sauvegardée au démarrage
+ * - Le basculement entre français et anglais
+ * - La persistance de la langue sélectionnée dans AsyncStorage
+ * - La synchronisation avec i18n pour les traductions
  * - La gestion des erreurs de changement de langue
+ * 
+ * Fonctionnalités :
+ * - État de la langue actuelle
+ * - Fonction toggle pour basculer entre fr/en
+ * - Sauvegarde automatique des préférences
+ * - Chargement automatique au démarrage
  */
 import { useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';

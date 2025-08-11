@@ -1,3 +1,23 @@
+/**
+ * @fileoverview Hook personnalisé pour le filtrage de l'historique
+ * 
+ * Ce hook gère :
+ * - Le filtrage multiple de l'historique des matchs
+ * - La logique ET entre différents types de filtres
+ * - L'extraction des valeurs de filtres disponibles
+ * - Le support des filtres par arme, joueur et mode
+ * 
+ * Fonctionnalités :
+ * - Filtrage par arme (Épée, Fleuret, Sabre)
+ * - Filtrage par joueur (recherche partielle)
+ * - Filtrage par mode (Solo/Multi)
+ * - Combinaison multiple de filtres
+ * - Génération automatique des options disponibles
+ * 
+ * @param {Array} matchHistory - Historique des matchs à filtrer
+ * @param {Object} activeFilters - Filtres actifs par catégorie
+ * @returns {Array} Historique filtré selon les critères sélectionnés
+ */
 import { useMemo } from 'react';
 
 export const useHistoryFilter = (matchHistory, activeFilters) => {

@@ -1,3 +1,22 @@
+/**
+ * @fileoverview Composant d'affichage quand aucun résultat ne correspond aux filtres
+ * 
+ * Ce composant gère :
+ * - L'affichage d'un message informatif quand les filtres ne donnent aucun résultat
+ * - La présentation des filtres actifs pour clarifier la recherche
+ * - Un bouton pour effacer tous les filtres et revenir à la vue complète
+ * - Un design centré et engageant pour encourager l'action
+ * 
+ * Fonctionnalités :
+ * - Icône de recherche pour indiquer l'absence de résultats
+ * - Affichage dynamique des filtres actifs
+ * - Bouton "Tout effacer" pour reset rapide
+ * - Texte responsive qui s'adapte à la largeur d'écran
+ * - Gestion automatique du formatage des filtres multiples
+ * 
+ * @param {Function} onClearFilter - Callback pour effacer tous les filtres
+ * @param {Object} activeFilters - Objet contenant les filtres actuellement actifs
+ */
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';

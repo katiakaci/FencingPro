@@ -1,3 +1,29 @@
+/**
+ * @fileoverview Hook personnalisé pour la génération de données de graphiques
+ * 
+ * Ce hook gère :
+ * - La transformation de l'historique en données de graphiques
+ * - La génération de graphiques pour les statistiques
+ * - Le formatage des données pour Chart.js et Victory Charts
+ * - La gestion des cas d'erreur et données vides
+ * 
+ * Graphiques supportés :
+ * - Graphique en barres des matchs par joueur
+ * - Graphique circulaire des armes utilisées
+ * - Graphique linéaire des performances quotidiennes
+ * - Support des données multiples (matchs + durée)
+ * 
+ * Fonctionnalités :
+ * - Tri automatique des données
+ * - Troncature des labels trop longs
+ * - Couleurs automatiques pour les graphiques
+ * - Gestion responsive de la largeur d'écran
+ * 
+ * @param {Array} matchHistory - Historique des matchs
+ * @param {boolean} showScore - Afficher les données de score (optionnel)
+ * @param {boolean} showDuration - Afficher les données de durée (optionnel)
+ * @returns {Object} Données formatées pour les graphiques
+ */
 import { useMemo } from 'react';
 import { Dimensions } from 'react-native';
 

@@ -283,59 +283,6 @@ export default function SetupScreen({ navigation }) {
           >
             <Text style={styles.startText}>{i18n.t('setup.startGame')}</Text>
           </TouchableOpacity>
-
-          {/* Bouton DEV : Commencer sans BLE À SUPPRIMER!!!!!!!!!!!!!!!!!!!!!!!!*/}
-          <TouchableOpacity
-            style={[styles.startButton, { backgroundColor: '#ffb347', marginTop: 8 }]}
-            onPress={async () => {
-              if (!player1.trim() || (mode === 'multi' && !player2.trim())) {
-                Alert.alert(i18n.t('common.error'), i18n.t('setup.errorPlayerNames'));
-                return;
-              }
-              if (!selectedWeapon || (mode === 'multi' && !selectedWeapon2)) {
-                Alert.alert(i18n.t('common.error'), i18n.t('setup.errorWeaponSelection'));
-                return;
-              }
-
-              if (connectedDevice1) {
-                await sendWeaponSetting(selectedWeapon, connectedDevice1);
-              }
-
-              if (mode === 'multi' && connectedDevice2) {
-                await sendWeaponSetting(selectedWeapon2, connectedDevice2);
-              }
-
-              console.log('Navigation DEV vers Main avec:', {
-                joueur1: player1,
-                joueur2: player2,
-                arme1: selectedWeapon,
-                arme2: selectedWeapon2,
-                device1: null,
-                device2: null,
-                mode,
-              });
-
-              navigation.navigate('Main', {
-                screen: 'Game',
-                params: {
-                  joueur1: player1,
-                  joueur2: player2,
-                  arme1: selectedWeapon,
-                  arme2: selectedWeapon2,
-                  device1: null,
-                  device2: null,
-                  mode,
-                }
-              });
-            }}
-            disabled={mode === 'solo'
-              ? !player1.trim() || !selectedWeapon
-              : !player1.trim() || !player2.trim() || !selectedWeapon || !selectedWeapon2
-            }
-          >
-            <Text style={[styles.startText, { color: '#111' }]}>{i18n.t('setup.devStartGame')}</Text>
-          </TouchableOpacity> 
-          {/* À SUPPRIMER!!!!!!!!!!!!!!!!!!!!!!!! */}
         </ScrollView>
       </View>
     </TouchableWithoutFeedback>

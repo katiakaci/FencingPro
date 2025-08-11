@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SystemUI from 'expo-system-ui';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -21,6 +22,22 @@ import { HistoryProvider } from './context/HistoryContext';
 import { SettingsProvider } from './context/SettingsContext';
 
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+function MainDrawer() {
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        headerShown: false,
+        headerTransparent: true,
+        headerTitle: '',
+        headerTintColor: '#fff',
+      }}
+    >
+      <Drawer.Screen name="Game" component={GameScreen} />
+    </Drawer.Navigator>
+  );
+}
 
 export default function App() {
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
@@ -67,7 +84,6 @@ export default function App() {
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
                       <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
                       <Stack.Screen name="Setup" component={SetupScreen} />
-                      <Stack.Screen name="Game" component={GameScreen} />
                       <Stack.Screen
                         name="Settings"
                         component={SettingsScreen}
@@ -98,6 +114,7 @@ export default function App() {
                           headerTintColor: '#fff',
                         }}
                       />
+                      <Stack.Screen name="Main" component={MainDrawer} />
                     </Stack.Navigator>
                   </NavigationContainer>
                 </BluetoothProvider>

@@ -10,10 +10,8 @@ export const useStatistics = (matchHistory) => {
                 longestMatch: '0:00',
                 shortestMatch: '0:00',
                 mostUsedWeapon: 'Aucune',
-                averageScore: 0,
                 totalTouches: 0,
                 touchesPerMinute: 0,
-                monthlyProgression: 0,
                 weaponEfficiency: 'Aucune',
                 peakHour: 'N/A',
                 favoriteDay: 'N/A',
@@ -78,15 +76,6 @@ export const useStatistics = (matchHistory) => {
                     const date = new Date(match.date.split(', ')[0].split('/').reverse().join('-'));
                     if (!isNaN(date.getTime())) {
                         dates.push(date);
-
-                        // Progression mensuelle
-                        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-                        if (!monthlyScores[monthKey]) {
-                            monthlyScores[monthKey] = { total: 0, count: 0 };
-                        }
-                        const score = parseInt(match.score) || 0;
-                        monthlyScores[monthKey].total += score;
-                        monthlyScores[monthKey].count++;
 
                         // Heure de pointe
                         if (match.date.includes(', ')) {
@@ -156,25 +145,10 @@ export const useStatistics = (matchHistory) => {
             ? Object.entries(weaponCount).sort(([, a], [, b]) => b - a)[0][0]
             : 'Aucune';
 
-        const averageScore = validScoreMatches > 0 ? Math.round((totalScore / validScoreMatches) * 10) / 10 : 0;
         const totalDurationMinutes = totalDurationSeconds / 60;
         const touchesPerMinute = totalDurationMinutes > 0 ? Math.round((totalScore / totalDurationMinutes) * 10) / 10 : 0;
 
-        // Nouvelles statistiques
-
-        // 1. Progression mensuelle
-        const monthlyEntries = Object.entries(monthlyScores);
-        let monthlyProgression = 0;
-        if (monthlyEntries.length >= 2) {
-            monthlyEntries.sort(([a], [b]) => a.localeCompare(b));
-            const lastMonth = monthlyEntries[monthlyEntries.length - 1][1];
-            const secondLastMonth = monthlyEntries[monthlyEntries.length - 2][1];
-            const lastAvg = lastMonth.total / lastMonth.count;
-            const secondLastAvg = secondLastMonth.total / secondLastMonth.count;
-            monthlyProgression = Math.round(((lastAvg - secondLastAvg) / secondLastAvg) * 100) || 0;
-        }
-
-        // 2. Efficacité par arme
+        // 1. Efficacité par arme
         let bestWeaponEfficiency = 'Aucune';
         let bestAverage = 0;
         Object.entries(weaponScores).forEach(([weapon, data]) => {
@@ -185,24 +159,24 @@ export const useStatistics = (matchHistory) => {
             }
         });
 
-        // 3. Heure de pointe
+        // 2. Heure de pointe
         const peakHour = Object.entries(hourCounts).length > 0
             ? Object.entries(hourCounts).sort(([, a], [, b]) => b - a)[0][0] + 'h'
             : 'N/A';
 
-        // 4. Jour favori
+        // 3. Jour favori
         const favoriteDay = Object.entries(dayCounts).length > 0
             ? Object.entries(dayCounts).sort(([, a], [, b]) => b - a)[0][0]
             : 'N/A';
 
-        // 5. Sessions par semaine
+        // 4. Sessions par semaine
         const sortedDates = dates.sort((a, b) => a - b);
         const weeksBetween = sortedDates.length > 1
             ? Math.max(1, Math.ceil((sortedDates[sortedDates.length - 1] - sortedDates[0]) / (1000 * 60 * 60 * 24 * 7)))
             : 1;
         const sessionsPerWeek = Math.round((totalMatches / weeksBetween) * 10) / 10;
 
-        // 6. Temps moyen entre matchs
+        // 5. Temps moyen entre matchs
         let averageTimeBetweenMatches = '0:00';
         if (sortedDates.length > 1) {
             const totalTimeBetween = sortedDates[sortedDates.length - 1] - sortedDates[0];
@@ -216,7 +190,7 @@ export const useStatistics = (matchHistory) => {
             }
         }
 
-        // 7. Jours consécutifs
+        // 6. Jours consécutifs
         const uniqueDates = [...new Set(dates.map(d => d.toDateString()))].sort();
         let consecutiveDays = 0;
         let currentStreak = 1;
@@ -233,7 +207,7 @@ export const useStatistics = (matchHistory) => {
         }
         consecutiveDays = Math.max(consecutiveDays, currentStreak);
 
-        // 8. Comparaison mensuelle
+        // 7. Comparaison mensuelle
         const now = new Date();
         const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
         const lastMonth = `${now.getFullYear()}-${String(now.getMonth()).padStart(2, '0')}`;
@@ -243,10 +217,10 @@ export const useStatistics = (matchHistory) => {
             ? Math.round(((currentMonthMatches - lastMonthMatches) / lastMonthMatches) * 100)
             : 0;
 
-        // 9. Jours actifs
+        // 8. Jours actifs
         const activeDays = Object.keys(dailyActivity).length;
 
-        // 10. Jour le plus productif
+        // 9. Jour le plus productif
         let mostProductiveDay = 'N/A';
         let maxActivity = 0;
         Object.entries(dailyActivity).forEach(([date, activity]) => {
@@ -254,7 +228,10 @@ export const useStatistics = (matchHistory) => {
             if (score > maxActivity) {
                 maxActivity = score;
                 const dateObj = new Date(date);
-                mostProductiveDay = dateObj.toLocaleDateString('fr-FR');
+                const day = String(dateObj.getDate()).padStart(2, '0');
+                const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                const year = String(dateObj.getFullYear()).slice(-2);
+                mostProductiveDay = `${day}/${month}/${year}`;
             }
         });
 
@@ -265,10 +242,8 @@ export const useStatistics = (matchHistory) => {
             longestMatch,
             shortestMatch,
             mostUsedWeapon,
-            averageScore,
             totalTouches: totalScore,
             touchesPerMinute,
-            monthlyProgression,
             weaponEfficiency: bestWeaponEfficiency,
             peakHour,
             favoriteDay,

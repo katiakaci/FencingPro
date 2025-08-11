@@ -43,14 +43,8 @@ export default function StatistiquesScreen() {
     ];
 
     const performanceStats = [
-        { value: stats.averageScore, label: i18n.t('stats.averageScore') },
         { value: stats.totalTouches, label: i18n.t('stats.totalTouches') },
         { value: stats.touchesPerMinute, label: i18n.t('stats.touchesPerMinute') },
-        {
-            value: `${stats.monthlyProgression > 0 ? '+' : ''}${stats.monthlyProgression}%`,
-            label: i18n.t('stats.monthlyProgression'),
-            color: stats.monthlyProgression >= 0 ? '#27ae60' : '#e74c3c'
-        },
         { value: stats.weaponEfficiency, label: i18n.t('stats.weaponEfficiency') },
         { value: stats.personalRecord, label: i18n.t('stats.personalRecord') },
     ];
@@ -67,7 +61,7 @@ export default function StatistiquesScreen() {
         {
             value: `${stats.monthComparison > 0 ? '+' : ''}${stats.monthComparison}%`,
             label: i18n.t('stats.monthComparison'),
-            color: stats.monthComparison >= 0 ? '#27ae60' : '#e74c3c'
+            color: stats.monthComparison > 0 ? '#27ae60' : stats.monthComparison < 0 ? '#e74c3c' : undefined
         },
         { value: stats.activeDays, label: i18n.t('stats.activeDays') },
         { value: stats.mostProductiveDay, label: i18n.t('stats.mostProductiveDay') },

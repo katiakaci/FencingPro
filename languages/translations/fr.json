@@ -143,5 +143,9 @@
         "activeDays": "Jours actifs",
         "personalRecord": "Record personnel",
         "mostProductiveDay": "Jour le plus productif"
+    },
+    "weapons": {
+        "epee": "Épée",
+        "foil": "Fleuret"
     }
 }

@@ -16,7 +16,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import i18n from '../../languages/i18n';
 
-const weapons = ['Épée', 'Fleuret'];
+const weaponKeys = ['epee', 'foil'];
 
 export const WeaponSelector = ({
     mode,
@@ -33,13 +33,13 @@ export const WeaponSelector = ({
                     {mode === 'solo' ? i18n.t('setup.weaponType') : i18n.t('setup.weaponTypePlayer1')}
                 </Text>
                 <View style={styles.row}>
-                    {weapons.map((weapon) => (
+                    {weaponKeys.map((weaponKey) => (
                         <TouchableOpacity
-                            key={weapon}
-                            style={[styles.weaponButton, selectedWeapon === weapon && styles.selected]}
-                            onPress={() => setSelectedWeapon(weapon)}
+                            key={weaponKey}
+                            style={[styles.weaponButton, selectedWeapon === weaponKey && styles.selected]}
+                            onPress={() => setSelectedWeapon(weaponKey)}
                         >
-                            <Text style={styles.weaponText}>{weapon}</Text>
+                            <Text style={styles.weaponText}>{i18n.t(`weapons.${weaponKey}`)}</Text>
                         </TouchableOpacity>
                     ))}
                 </View>
@@ -50,13 +50,13 @@ export const WeaponSelector = ({
                 <View style={styles.block}>
                     <Text style={styles.label}>{i18n.t('setup.weaponTypePlayer2')}</Text>
                     <View style={styles.row}>
-                        {weapons.map((weapon) => (
+                        {weaponKeys.map((weaponKey) => (
                             <TouchableOpacity
-                                key={weapon}
-                                style={[styles.weaponButton, selectedWeapon2 === weapon && styles.selected]}
-                                onPress={() => setSelectedWeapon2(weapon)}
+                                key={weaponKey}
+                                style={[styles.weaponButton, selectedWeapon2 === weaponKey && styles.selected]}
+                                onPress={() => setSelectedWeapon2(weaponKey)}
                             >
-                                <Text style={styles.weaponText}>{weapon}</Text>
+                                <Text style={styles.weaponText}>{i18n.t(`weapons.${weaponKey}`)}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>

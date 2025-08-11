@@ -143,5 +143,9 @@
         "activeDays": "Active days",
         "personalRecord": "Personal record",
         "mostProductiveDay": "Most productive day"
+    },
+    "weapons": {
+        "epee": "Sword",
+        "foil": "Foil"
     }
 }

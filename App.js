@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SystemUI from 'expo-system-ui';
@@ -23,6 +23,8 @@ import { SettingsProvider } from './context/SettingsContext';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
+
   useEffect(() => {
     SystemUI.setBackgroundColorAsync('#00C2CB');
 
@@ -31,6 +33,7 @@ export default function App() {
         const savedLanguage = await AsyncStorage.getItem('userLanguage');
         if (savedLanguage) {
           await i18n.changeLanguage(savedLanguage);
+          setCurrentLanguage(savedLanguage);
         }
       } catch (error) {
         console.log('Erreur chargement langue:', error);
@@ -38,6 +41,18 @@ export default function App() {
     };
 
     loadSavedLanguage();
+
+    // Écouter les changements de langue
+    const handleLanguageChange = (lng) => {
+      setCurrentLanguage(lng);
+    };
+
+    i18n.on('languageChanged', handleLanguageChange);
+
+    // Nettoyer l'écouteur au démontage
+    return () => {
+      i18n.off('languageChanged', handleLanguageChange);
+    };
   }, []);
 
   return (

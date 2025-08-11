@@ -29,21 +29,21 @@ export default function BienvenueScreen({ navigation }) {
       <View style={styles.bottomBar}>
         <TouchableOpacity
           style={styles.bottomIconBtn}
-          onPress={() => navigation.navigate('HistoriqueFromWelcome')}
+          onPress={() => navigation.navigate('Historique')}
           accessibilityLabel={i18n.t('history.title')}
         >
           <Ionicons name="time" size={15} color="#0a3871" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.bottomIconBtn}
-          onPress={() => navigation.navigate('StatsFromWelcome')}
+          onPress={() => navigation.navigate('Statistiques')}
           accessibilityLabel={i18n.t('stats.title')}
         >
           <Ionicons name="stats-chart" size={15} color="#0a3871" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.bottomIconBtn}
-          onPress={() => navigation.navigate('SettingsFromWelcome')}
+          onPress={() => navigation.navigate('Settings')}
           accessibilityLabel={i18n.t('settings')}
         >
           <Ionicons name="settings" size={15} color="#0a3871" />

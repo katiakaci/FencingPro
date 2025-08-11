@@ -219,7 +219,7 @@ export default function GameScreen({ route, navigation }) {
     {
       icon: 'settings',
       text: i18n.t('settings.title'),
-      onPress: () => navigation.navigate('SettingsFromWelcome'),
+      onPress: () => navigation.navigate('Settings'),
       style: { backgroundColor: '#f8f9fa', borderWidth: 2, borderColor: '#0a3871' },
       textColor: '#0a3871'
     },

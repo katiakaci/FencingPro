@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SystemUI from 'expo-system-ui';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -22,25 +21,6 @@ import { HistoryProvider } from './context/HistoryContext';
 import { SettingsProvider } from './context/SettingsContext';
 
 const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
-
-function MainDrawer() {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerShown: false,
-        headerTransparent: true,
-        headerTitle: '',
-        headerTintColor: '#fff',
-      }}
-    >
-      <Drawer.Screen name="Game" component={GameScreen} />
-      <Drawer.Screen name="Historique" component={HistoriqueScreen} />
-      <Drawer.Screen name="Statistiques" component={StatistiquesScreen} />
-      <Drawer.Screen name="Réglages" component={SettingsScreen} />
-    </Drawer.Navigator>
-  );
-}
 
 export default function App() {
   useEffect(() => {
@@ -62,7 +42,6 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-
       <ModeProvider>
         <TouchProvider>
           <LightColorProvider>
@@ -73,8 +52,9 @@ export default function App() {
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
                       <Stack.Screen name="Bienvenue" component={BienvenueScreen} />
                       <Stack.Screen name="Setup" component={SetupScreen} />
+                      <Stack.Screen name="Game" component={GameScreen} />
                       <Stack.Screen
-                        name="SettingsFromWelcome"
+                        name="Settings"
                         component={SettingsScreen}
                         options={{
                           headerShown: true,
@@ -84,7 +64,7 @@ export default function App() {
                         }}
                       />
                       <Stack.Screen
-                        name="HistoriqueFromWelcome"
+                        name="Historique"
                         component={HistoriqueScreen}
                         options={{
                           headerShown: true,
@@ -94,7 +74,7 @@ export default function App() {
                         }}
                       />
                       <Stack.Screen
-                        name="StatsFromWelcome"
+                        name="Statistiques"
                         component={StatistiquesScreen}
                         options={{
                           headerShown: true,
@@ -103,7 +83,6 @@ export default function App() {
                           headerTintColor: '#fff',
                         }}
                       />
-                      <Stack.Screen name="Main" component={MainDrawer} />
                     </Stack.Navigator>
                   </NavigationContainer>
                 </BluetoothProvider>

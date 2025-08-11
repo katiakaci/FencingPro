@@ -145,7 +145,7 @@ export default function SetupScreen({ navigation }) {
       await sendWeaponSetting(selectedWeapon2, connectedDevice2);
     }
 
-    console.log('Navigation vers Main avec:', {
+    console.log('Navigation vers Game avec:', {
       joueur1: player1,
       joueur2: player2,
       arme1: selectedWeapon,
@@ -155,7 +155,7 @@ export default function SetupScreen({ navigation }) {
       mode,
     });
 
-    navigation.navigate('Main', {
+    navigation.navigate('Game', {
       screen: 'Game',
       params: {
         joueur1: player1,
@@ -305,7 +305,7 @@ export default function SetupScreen({ navigation }) {
                 await sendWeaponSetting(selectedWeapon2, connectedDevice2);
               }
 
-              console.log('Navigation DEV vers Main avec:', {
+              console.log('Navigation DEV vers Game avec:', {
                 joueur1: player1,
                 joueur2: player2,
                 arme1: selectedWeapon,
@@ -315,7 +315,7 @@ export default function SetupScreen({ navigation }) {
                 mode,
               });
 
-              navigation.navigate('Main', {
+              navigation.navigate('Game', {
                 screen: 'Game',
                 params: {
                   joueur1: player1,

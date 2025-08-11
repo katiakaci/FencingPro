@@ -431,7 +431,6 @@ export default function GameScreen({ route, navigation }) {
           visible={gameFinished}
           title="FencingPro"
           titleStyle={{ fontStyle: 'italic' }}
-          subtitle={i18n.t('game.chooseNextAction')}
           buttons={gameFinishedButtons}
         />
 

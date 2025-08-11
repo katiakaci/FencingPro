@@ -29,7 +29,13 @@ export default function SettingsScreen() {
 
   // Hooks personnalisés
   const { playPreviewSound, getSelectedSoundName, SOUNDS } = useAudio();
-  const { currentLanguage, toggleLanguage } = useLanguage();
+  const { 
+    currentLanguage, 
+    toggleLanguage, 
+    changeLanguage, 
+    availableLanguages, 
+    getCurrentLanguageInfo 
+  } = useLanguage();
   const { resetAllData } = useSettingsReset();
 
   // États locaux pour les modals
@@ -97,6 +103,9 @@ export default function SettingsScreen() {
         <LanguageSettings
           currentLanguage={currentLanguage}
           onLanguageToggle={toggleLanguage}
+          availableLanguages={availableLanguages}
+          getCurrentLanguageInfo={getCurrentLanguageInfo}
+          onLanguageChange={changeLanguage}
         />
 
         <ResetSettings

@@ -1,33 +1,45 @@
-<div align="center">
-# 🤺 FencingPro 🤺
-</div>
+<h1 align="center" style="font-size: 42px; margin-bottom: 10px;">
+🤺 FencingPro 🤺
+</h1>
 
-**FencingPro** est une application mobile développée avec React Native permettant de gérer des matchs d’escrime en temps réel.  
-Elle intègre un système de **détection de touches sans fil** grâce à la **communication Bluetooth Low Energy (BLE)** entre l’application et des modules électroniques intégrés à l’équipement.
+**FencingPro** est une application mobile développée avec React Native permettant de gérer des matchs d’escrime en temps réel. Elle intègre un système de détection de touches sans fil grâce à la communication *Bluetooth Low Energy* (BLE) entre l’application et des modules électroniques intégrés à l’équipement.
 
 <div align="center">
-   <img src="assets/ReadMe/logo_512x512.png" alt="FencingPro" width="400" style="border-radius: 10px; margin-bottom: 20px;">
+   <img src="assets/ReadMe/logo_512x512.png" alt="FencingPro" width="200" style="border-radius: 10px; margin-bottom: 20px;">
 </div>
----
 
 ## 📱 Aperçu
 
 Une application pensée pour les tireurs et entraîneurs : détection de touches sans fil, chronomètre, comptage automatique, historique et statistiques.
 
-- Accueil  
-<img src="./assets/ReadMe/Menu.png" alt="Menu" width="300" style="border-radius: 8px; margin: 8px 0;">
+<div align="center" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;">
 
-- Jeu
-<img src="./assets/ReadMe/Jeu.png" alt="Jeu" width="300" style="border-radius: 8px; margin: 8px 0;">
+  <div>
+    <h4>Accueil</h4>
+    <img src="./assets/ReadMe/Menu.png" alt="Menu" width="250" style="border-radius: 8px; margin: 8px;">
+  </div>
 
-- Historique  
-<img src="./assets/ReadMe/Jeu.png" alt="Historique" width="300" style="border-radius: 8px; margin: 8px 0;">
+  <div>
+    <h4>Jeu</h4>
+    <img src="./assets/ReadMe/Jeu.png" alt="Jeu" width="250" style="border-radius: 8px; margin: 8px;">
+  </div>
 
-- Réglages  
-<img src="./assets/ReadMe/Réglages.png" alt="Réglages" width="300" style="border-radius: 8px; margin: 8px 0;">
+  <div>
+    <h4>Historique</h4>
+    <img src="./assets/ReadMe/Historique.png" alt="Historique" width="250" style="border-radius: 8px; margin: 8px;">
+  </div>
 
-- Statistiques  
-<img src="./assets/ReadMe/Statistiques.png" alt="Statistiques" width="300" style="border-radius: 8px; margin: 8px 0;">
+  <div>
+    <h4>Réglages</h4>
+    <img src="./assets/ReadMe/Réglages.png" alt="Réglages" width="250" style="border-radius: 8px; margin: 8px;">
+  </div>
+
+  <div>
+    <h4>Statistiques</h4>
+    <img src="./assets/ReadMe/Statistiques.png" alt="Statistiques" width="250" style="border-radius: 8px; margin: 8px;">
+  </div>
+
+</div>
 
 
 ## Fonctionnalités principales

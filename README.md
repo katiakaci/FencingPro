@@ -1,11 +1,13 @@
+<div align="center">
 # 🤺 FencingPro 🤺
+</div>
 
 **FencingPro** est une application mobile développée avec React Native permettant de gérer des matchs d’escrime en temps réel.  
 Elle intègre un système de **détection de touches sans fil** grâce à la **communication Bluetooth Low Energy (BLE)** entre l’application et des modules électroniques intégrés à l’équipement.
 
 <div align="center">
-   <img src="assets/ReadMe/logo\ 512x512.png" alt="FencingPro" width="400" style="border-radius: 10px; margin-bottom: 20px;">
-
+   <img src="assets/ReadMe/logo_512x512.png" alt="FencingPro" width="400" style="border-radius: 10px; margin-bottom: 20px;">
+</div>
 ---
 
 ## 📱 Aperçu
@@ -13,19 +15,19 @@ Elle intègre un système de **détection de touches sans fil** grâce à la **c
 Une application pensée pour les tireurs et entraîneurs : détection de touches sans fil, chronomètre, comptage automatique, historique et statistiques.
 
 - Accueil  
-  ![Accueil](./assets/ReadMe/Menu.png)
+<img src="./assets/ReadMe/Menu.png" alt="Menu" width="300" style="border-radius: 8px; margin: 8px 0;">
 
-- Jeu  
-  ![Jeu](./assets/ReadMe/Jeu.png)
+- Jeu
+<img src="./assets/ReadMe/Jeu.png" alt="Jeu" width="300" style="border-radius: 8px; margin: 8px 0;">
 
 - Historique  
-  ![Historique](./assets/ReadMe/Historique.png)
+<img src="./assets/ReadMe/Jeu.png" alt="Historique" width="300" style="border-radius: 8px; margin: 8px 0;">
 
 - Réglages  
-  ![Réglages](./assets/ReadMe/Réglages.png)
+<img src="./assets/ReadMe/Réglages.png" alt="Réglages" width="300" style="border-radius: 8px; margin: 8px 0;">
 
 - Statistiques  
-  ![Statistiques](./assets/ReadMe/Statistiques.png)
+<img src="./assets/ReadMe/Statistiques.png" alt="Statistiques" width="300" style="border-radius: 8px; margin: 8px 0;">
 
 
 ## Fonctionnalités principales

@@ -39,9 +39,7 @@ L’application sera bientôt disponible sur le *Google Play Store* 🎉
 
 ### Accès Testeurs
 Tu veux essayer l’application avant sa sortie officielle ?  
-Entre ton adresse Gmail ici pour être ajouté à la liste des testeurs sur le Play Store :
-
-👉 [Remplir le formulaire d’accès](https://katiakaci.github.io/FencingPro/access.html)
+Entre ton adresse Gmail ici pour être ajouté à la liste des testeurs sur le Play Store : [Remplir le formulaire d’accès](https://katiakaci.github.io/FencingPro/access.html)
 
 ### Installation locale pour développement
 

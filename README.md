@@ -8,39 +8,17 @@
    <img src="assets/ReadMe/logo_512x512.png" alt="FencingPro" width="200" style="border-radius: 10px; margin-bottom: 20px;">
 </div>
 
-## 📱 Aperçu
+## Aperçu
 
 Une application pensée pour les tireurs et entraîneurs : détection de touches sans fil, chronomètre, comptage automatique, historique et statistiques.
 
-<div align="center" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;">
+| 🏠 Accueil | 🎮 Jeu | 📜 Historique |
+|:-----------:|:------:|:--------------:|
+| <img src="./assets/ReadMe/Menu.png" width="200" style="border-radius: 8px;"> | <img src="./assets/ReadMe/Jeu.png" width="200" style="border-radius: 8px;"> | <img src="./assets/ReadMe/Historique.png" width="200" style="border-radius: 8px;"> |
 
-  <div>
-    <h4>Accueil</h4>
-    <img src="./assets/ReadMe/Menu.png" alt="Menu" width="250" style="border-radius: 8px; margin: 8px;">
-  </div>
-
-  <div>
-    <h4>Jeu</h4>
-    <img src="./assets/ReadMe/Jeu.png" alt="Jeu" width="250" style="border-radius: 8px; margin: 8px;">
-  </div>
-
-  <div>
-    <h4>Historique</h4>
-    <img src="./assets/ReadMe/Historique.png" alt="Historique" width="250" style="border-radius: 8px; margin: 8px;">
-  </div>
-
-  <div>
-    <h4>Réglages</h4>
-    <img src="./assets/ReadMe/Réglages.png" alt="Réglages" width="250" style="border-radius: 8px; margin: 8px;">
-  </div>
-
-  <div>
-    <h4>Statistiques</h4>
-    <img src="./assets/ReadMe/Statistiques.png" alt="Statistiques" width="250" style="border-radius: 8px; margin: 8px;">
-  </div>
-
-</div>
-
+| ⚙️ Réglages | 📊 Statistiques | 🖥️ Configuration |
+|:-----------:|:------:|:--------------:|
+| <img src="./assets/ReadMe/Réglages.png" width="200" style="border-radius: 8px;"> | <img src="./assets/ReadMe/Statistiques.png" width="200" style="border-radius: 8px;"> | <img src="./assets/ReadMe/Configuration.png" width="200" style="border-radius: 8px;"> |
 
 ## Fonctionnalités principales
 
@@ -58,6 +36,14 @@ Une application pensée pour les tireurs et entraîneurs : détection de touches
 ## Installation
 L’application sera bientôt disponible sur le *Google Play Store* 🎉  
 (Actuellement en attente d’approbation sur la Play Console, donc accessible uniquement via une liste de distribution privée pour le moment.)
+
+### Accès Testeurs
+Tu veux essayer l’application avant sa sortie officielle ?  
+Entre ton adresse Gmail ici pour être ajouté à la liste des testeurs sur le Play Store :
+
+👉 [Remplir le formulaire d’accès](https://katia-kaci.github.io/FencingPro/access.html)
+
+### Installation locale pour développement
 
 1. Cloner le projet
 git clone https://github.com/katia-kaci/FencingPro.git

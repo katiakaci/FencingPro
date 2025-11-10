@@ -38,10 +38,8 @@ export const useStatistics = (matchHistory) => {
                 sessionsPerWeek: 0,
                 averageTimeBetweenMatches: '0:00',
                 consecutiveDays: 0,
-                monthComparison: 0,
                 activeDays: 0,
-                personalRecord: 0,
-                mostProductiveDay: 'N/A'
+                personalRecord: 0
             };
         }
 
@@ -254,31 +252,8 @@ export const useStatistics = (matchHistory) => {
         }
         consecutiveDays = Math.max(consecutiveDays, currentStreak);
 
-        // 7. Comparaison mensuelle
-        const now = new Date();
-        const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-        const lastMonth = `${now.getFullYear()}-${String(now.getMonth()).padStart(2, '0')}`;
-        const currentMonthMatches = monthlyScores[currentMonth]?.count || 0;
-        const lastMonthMatches = monthlyScores[lastMonth]?.count || 0;
-        const monthComparison = lastMonthMatches > 0
-            ? Math.round(((currentMonthMatches - lastMonthMatches) / lastMonthMatches) * 100)
-            : 0;
-
         // 8. Jours actifs
         const activeDays = Object.keys(dailyActivity).length;
-
-        // 9. Jour le plus productif
-        let mostProductiveDay = 'N/A';
-        let maxActivity = 0;
-        Object.entries(dailyActivity).forEach(([dateKey, activity]) => {
-            const score = activity.matches * 2 + activity.duration / 60;
-            if (score > maxActivity) {
-                maxActivity = score;
-                // dateKey est au format "YYYY-MM-DD"
-                const [year, month, day] = dateKey.split('-');
-                mostProductiveDay = `${day}/${month}/${year.substring(2)}`;
-            }
-        });
 
         return {
             matchesPlayed: totalMatches,
@@ -295,10 +270,8 @@ export const useStatistics = (matchHistory) => {
             sessionsPerWeek,
             averageTimeBetweenMatches,
             consecutiveDays,
-            monthComparison,
             activeDays,
-            personalRecord: maxScore,
-            mostProductiveDay
+            personalRecord: maxScore
         };
     }, [matchHistory]);
 };

@@ -138,15 +138,12 @@
         "sessionsPerWeek": "Sessions/semaine",
         "averageTimeBetweenMatches": "Délai moyen entre matchs",
         "consecutiveDays": "Jours consécutifs",
-        "monthComparison": "Augmentation par rapport au mois dernier",
         "activeDays": "Jours actifs",
         "personalRecord": "Record personnel",
-        "mostProductiveDay": "Jour le plus productif",
         "sections": {
             "basicStats": "📊 Statistiques de base",
             "performanceStats": "🏆 Statistiques de performance",
-            "temporalStats": "⏰ Statistiques temporelles",
-            "activityStats": "🎯 Statistiques d'activité"
+            "temporalStats": "⏰ Statistiques temporelles"
         }
     },
     "weapons": {

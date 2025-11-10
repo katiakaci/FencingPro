@@ -138,10 +138,8 @@
         "sessionsPerWeek": "Sessioni/settimana",
         "averageTimeBetweenMatches": "Tempo medio tra partite",
         "consecutiveDays": "Giorni consecutivi",
-        "monthComparison": "Aumento rispetto al mese scorso",
         "activeDays": "Giorni attivi",
         "personalRecord": "Record personale",
-        "mostProductiveDay": "Giorno più produttivo"
     },
     "weapons": {
         "epee": "Spada",

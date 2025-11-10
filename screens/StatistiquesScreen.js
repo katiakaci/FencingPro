@@ -54,17 +54,8 @@ export default function StatistiquesScreen() {
         { value: stats.favoriteDay, label: i18n.t('stats.favoriteDay') },
         { value: stats.sessionsPerWeek, label: i18n.t('stats.sessionsPerWeek') },
         { value: stats.averageTimeBetweenMatches, label: i18n.t('stats.averageTimeBetweenMatches') },
-    ];
-
-    const activityStats = [
         { value: stats.consecutiveDays, label: i18n.t('stats.consecutiveDays') },
-        {
-            value: `${stats.monthComparison > 0 ? '+' : ''}${stats.monthComparison}%`,
-            label: i18n.t('stats.monthComparison'),
-            color: stats.monthComparison > 0 ? '#27ae60' : stats.monthComparison < 0 ? '#e74c3c' : undefined
-        },
         { value: stats.activeDays, label: i18n.t('stats.activeDays') },
-        { value: stats.mostProductiveDay, label: i18n.t('stats.mostProductiveDay') },
     ];
 
     return (
@@ -84,7 +75,7 @@ export default function StatistiquesScreen() {
             <StatSection title={i18n.t('stats.sections.basicStats')} stats={basicStats} />
             <StatSection title={i18n.t('stats.sections.performanceStats')} stats={performanceStats} />
             <StatSection title={i18n.t('stats.sections.temporalStats')} stats={temporalStats} />
-            <StatSection title={i18n.t('stats.sections.activityStats')} stats={activityStats} />
+
         </ScrollView>
     );
 }

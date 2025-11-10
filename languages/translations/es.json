@@ -164,5 +164,32 @@
     "timeUnits": {
         "day": "d",
         "hour": "h"
+    },
+    "addMatch": {
+        "title": "Agregar partida",
+        "gameMode": "Modo de juego",
+        "solo": "Solo",
+        "multi": "Multi",
+        "player": "Jugador",
+        "players": "Jugadores",
+        "player1Placeholder": "Nombre del jugador 1",
+        "player2Placeholder": "Nombre del jugador 2",
+        "weapon": "Arma",
+        "weaponPlayer1": "Arma Jugador 1",
+        "weaponPlayer2": "Arma Jugador 2",
+        "score": "Puntuación",
+        "scorePlaceholder": "Puntuación",
+        "scorePlayer1Placeholder": "Puntuación J1",
+        "scorePlayer2Placeholder": "Puntuación J2",
+        "duration": "Duración",
+        "minutes": "Min",
+        "seconds": "Seg",
+        "dateAndTime": "Fecha y Hora",
+        "cancel": "Cancelar",
+        "add": "Agregar",
+        "errorPlayerName": "Por favor ingrese el nombre del jugador",
+        "errorPlayer2Name": "Por favor ingrese el nombre del jugador 2",
+        "errorScore": "Por favor ingrese las puntuaciones",
+        "errorDuration": "Por favor ingrese la duración de la partida"
     }
 }

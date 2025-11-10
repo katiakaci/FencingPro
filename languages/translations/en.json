@@ -164,5 +164,32 @@
     "timeUnits": {
         "day": "d",
         "hour": "h"
+    },
+    "addMatch": {
+        "title": "Add Match",
+        "gameMode": "Game Mode",
+        "solo": "Solo",
+        "multi": "Multi",
+        "player": "Player",
+        "players": "Players",
+        "player1Placeholder": "Player 1 name",
+        "player2Placeholder": "Player 2 name",
+        "weapon": "Weapon",
+        "weaponPlayer1": "Weapon Player 1",
+        "weaponPlayer2": "Weapon Player 2",
+        "score": "Score",
+        "scorePlaceholder": "Score",
+        "scorePlayer1Placeholder": "Score P1",
+        "scorePlayer2Placeholder": "Score P2",
+        "duration": "Duration",
+        "minutes": "Min",
+        "seconds": "Sec",
+        "dateAndTime": "Date and Time",
+        "cancel": "Cancel",
+        "add": "Add",
+        "errorPlayerName": "Please enter player name",
+        "errorPlayer2Name": "Please enter player 2 name",
+        "errorScore": "Please enter scores",
+        "errorDuration": "Please enter match duration"
     }
 }

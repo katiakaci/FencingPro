@@ -17,6 +17,7 @@ import React, { forwardRef } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import i18n from '../../languages/i18n';
 
 export const MatchCard = forwardRef(({ match, index, originalIndex, onDelete }, ref) => {
     const formatDateForDisplay = (dateStr) => {
@@ -43,6 +44,28 @@ export const MatchCard = forwardRef(({ match, index, originalIndex, onDelete }, 
             console.log('Erreur formatage date:', error);
             return dateStr;
         }
+    };
+
+    // Fonction pour traduire les armes à l'affichage
+    const translateWeapon = (weaponStr) => {
+        if (!weaponStr) return weaponStr;
+
+        // Gérer le cas "Épée vs Fleuret" ou "Épée vs Épée"
+        if (weaponStr.includes(' vs ')) {
+            const weapons = weaponStr.split(' vs ');
+            const translatedWeapons = weapons.map(w => {
+                const cleanWeapon = w.trim();
+                if (cleanWeapon === 'Épée') return i18n.t('weapons.epee');
+                if (cleanWeapon === 'Fleuret') return i18n.t('weapons.foil');
+                return cleanWeapon;
+            });
+            return translatedWeapons.join(' vs ');
+        }
+
+        // Cas d'une seule arme
+        if (weaponStr === 'Épée') return i18n.t('weapons.epee');
+        if (weaponStr === 'Fleuret') return i18n.t('weapons.foil');
+        return weaponStr;
     };
 
     const renderRightActions = (progress, dragX) => {
@@ -73,7 +96,7 @@ export const MatchCard = forwardRef(({ match, index, originalIndex, onDelete }, 
                 <View style={styles.matchRow}>
                     <View style={{ flex: 1 }}>
                         <Text style={styles.matchPlayers}>{match.players}</Text>
-                        <Text style={styles.matchWeapon}>{match.weapon}</Text>
+                        <Text style={styles.matchWeapon}>{translateWeapon(match.weapon)}</Text>
                         <Text style={styles.matchDuration}>{match.duration}</Text>
                     </View>
                     <View style={{ alignItems: 'flex-end', minWidth: 90 }}>

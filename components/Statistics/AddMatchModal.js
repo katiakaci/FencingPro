@@ -23,7 +23,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import i18n from '../../languages/i18n';
 
 export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
-  const [mode, setMode] = useState('solo'); // 'solo' ou 'multi'
+  const [mode, setMode] = useState('solo');
   const [playerName, setPlayerName] = useState('');
   const [player2Name, setPlayer2Name] = useState('');
   const [weapon, setWeapon] = useState('Épée');
@@ -36,7 +36,10 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
 
-  const weapons = ['Épée', 'Fleuret'];
+  const weaponOptions = [
+    { key: 'Épée', label: i18n.t('weapons.epee') },
+    { key: 'Fleuret', label: i18n.t('weapons.foil') }
+  ];
 
   const resetForm = () => {
     setMode('solo');
@@ -52,24 +55,23 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
   };
 
   const handleSubmit = () => {
-    // Validation
     if (!playerName.trim()) {
-      alert('Veuillez entrer le nom du joueur');
+      alert(i18n.t('addMatch.errorPlayerName'));
       return;
     }
 
     if (mode === 'multi' && !player2Name.trim()) {
-      alert('Veuillez entrer le nom du joueur 2');
+      alert(i18n.t('addMatch.errorPlayer2Name'));
       return;
     }
 
     if (!score1 || (mode === 'multi' && !score2)) {
-      alert('Veuillez entrer les scores');
+      alert(i18n.t('addMatch.errorScore'));
       return;
     }
 
     if (!durationMinutes && !durationSeconds) {
-      alert('Veuillez entrer la durée du match');
+      alert(i18n.t('addMatch.errorDuration'));
       return;
     }
 
@@ -138,7 +140,7 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Ajouter un match</Text>
+            <Text style={styles.modalTitle}>{i18n.t('addMatch.title')}</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <Ionicons name="close" size={28} color="#333" />
             </TouchableOpacity>
@@ -146,14 +148,14 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
 
           <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
             {/* Mode de jeu */}
-            <Text style={[styles.sectionTitle, { marginTop: 0 }]}>Mode de jeu</Text>
+            <Text style={[styles.sectionTitle, { marginTop: 0 }]}>{i18n.t('addMatch.gameMode')}</Text>
             <View style={styles.modeContainer}>
               <TouchableOpacity
                 style={[styles.modeButton, mode === 'solo' && styles.modeButtonActive]}
                 onPress={() => setMode('solo')}
               >
                 <Text style={[styles.modeText, mode === 'solo' && styles.modeTextActive]}>
-                  Solo
+                  {i18n.t('addMatch.solo')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -161,39 +163,39 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
                 onPress={() => setMode('multi')}
               >
                 <Text style={[styles.modeText, mode === 'multi' && styles.modeTextActive]}>
-                  Multi
+                  {i18n.t('addMatch.multi')}
                 </Text>
               </TouchableOpacity>
             </View>
 
             {/* Joueurs */}
-            <Text style={styles.sectionTitle}>{mode === 'solo' ? 'Joueur' : 'Joueurs'}</Text>
+            <Text style={styles.sectionTitle}>{mode === 'solo' ? i18n.t('addMatch.player') : i18n.t('addMatch.players')}</Text>
             <TextInput
               style={styles.input}
-              placeholder="Nom du joueur 1"
+              placeholder={i18n.t('addMatch.player1Placeholder')}
               value={playerName}
               onChangeText={setPlayerName}
             />
             {mode === 'multi' && (
               <TextInput
                 style={styles.input}
-                placeholder="Nom du joueur 2"
+                placeholder={i18n.t('addMatch.player2Placeholder')}
                 value={player2Name}
                 onChangeText={setPlayer2Name}
               />
             )}
 
             {/* Arme */}
-            <Text style={styles.sectionTitle}>{mode === 'solo' ? 'Arme' : 'Arme Joueur 1'}</Text>
+            <Text style={styles.sectionTitle}>{mode === 'solo' ? i18n.t('addMatch.weapon') : i18n.t('addMatch.weaponPlayer1')}</Text>
             <View style={styles.weaponContainer}>
-              {weapons.map((w) => (
+              {weaponOptions.map((w) => (
                 <TouchableOpacity
-                  key={w}
-                  style={[styles.weaponButton, weapon === w && styles.weaponButtonActive]}
-                  onPress={() => setWeapon(w)}
+                  key={w.key}
+                  style={[styles.weaponButton, weapon === w.key && styles.weaponButtonActive]}
+                  onPress={() => setWeapon(w.key)}
                 >
-                  <Text style={[styles.weaponText, weapon === w && styles.weaponTextActive]}>
-                    {w}
+                  <Text style={[styles.weaponText, weapon === w.key && styles.weaponTextActive]}>
+                    {w.label}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -202,16 +204,16 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
             {/* Arme Joueur 2 (seulement en mode multi) */}
             {mode === 'multi' && (
               <>
-                <Text style={styles.sectionTitle}>Arme Joueur 2</Text>
+                <Text style={styles.sectionTitle}>{i18n.t('addMatch.weaponPlayer2')}</Text>
                 <View style={styles.weaponContainer}>
-                  {weapons.map((w) => (
+                  {weaponOptions.map((w) => (
                     <TouchableOpacity
-                      key={w}
-                      style={[styles.weaponButton, weapon2 === w && styles.weaponButtonActive]}
-                      onPress={() => setWeapon2(w)}
+                      key={w.key}
+                      style={[styles.weaponButton, weapon2 === w.key && styles.weaponButtonActive]}
+                      onPress={() => setWeapon2(w.key)}
                     >
-                      <Text style={[styles.weaponText, weapon2 === w && styles.weaponTextActive]}>
-                        {w}
+                      <Text style={[styles.weaponText, weapon2 === w.key && styles.weaponTextActive]}>
+                        {w.label}
                       </Text>
                     </TouchableOpacity>
                   ))}
@@ -220,11 +222,11 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
             )}
 
             {/* Score */}
-            <Text style={styles.sectionTitle}>Score</Text>
+            <Text style={styles.sectionTitle}>{i18n.t('addMatch.score')}</Text>
             <View style={styles.scoreContainer}>
               <TextInput
                 style={styles.scoreInput}
-                placeholder={mode === 'solo' ? 'Score' : 'Score J1'}
+                placeholder={mode === 'solo' ? i18n.t('addMatch.scorePlaceholder') : i18n.t('addMatch.scorePlayer1Placeholder')}
                 value={score1}
                 onChangeText={setScore1}
                 keyboardType="numeric"
@@ -234,7 +236,7 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
                   <Text style={styles.scoreSeparator}>–</Text>
                   <TextInput
                     style={styles.scoreInput}
-                    placeholder="Score J2"
+                    placeholder={i18n.t('addMatch.scorePlayer2Placeholder')}
                     value={score2}
                     onChangeText={setScore2}
                     keyboardType="numeric"
@@ -244,11 +246,11 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
             </View>
 
             {/* Durée */}
-            <Text style={styles.sectionTitle}>Durée</Text>
+            <Text style={styles.sectionTitle}>{i18n.t('addMatch.duration')}</Text>
             <View style={styles.durationContainer}>
               <TextInput
                 style={styles.durationInput}
-                placeholder="Min"
+                placeholder={i18n.t('addMatch.minutes')}
                 value={durationMinutes}
                 onChangeText={setDurationMinutes}
                 keyboardType="numeric"
@@ -256,7 +258,7 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
               <Text style={styles.durationSeparator}>:</Text>
               <TextInput
                 style={styles.durationInput}
-                placeholder="Sec"
+                placeholder={i18n.t('addMatch.seconds')}
                 value={durationSeconds}
                 onChangeText={(text) => {
                   const seconds = parseInt(text) || 0;
@@ -270,7 +272,7 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
             </View>
 
             {/* Date et Heure */}
-            <Text style={styles.sectionTitle}>Date et Heure</Text>
+            <Text style={styles.sectionTitle}>{i18n.t('addMatch.dateAndTime')}</Text>
             <View style={styles.dateTimeContainer}>
               <TouchableOpacity
                 style={styles.dateTimeButton}
@@ -321,14 +323,14 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
                   onClose();
                 }}
               >
-                <Text style={styles.cancelButtonText}>Annuler</Text>
+                <Text style={styles.cancelButtonText}>{i18n.t('addMatch.cancel')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.submitButton}
                 onPress={handleSubmit}
               >
-                <Text style={styles.submitButtonText}>Ajouter</Text>
+                <Text style={styles.submitButtonText}>{i18n.t('addMatch.add')}</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

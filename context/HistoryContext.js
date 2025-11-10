@@ -32,10 +32,57 @@ export const useHistory = () => {
 export const HistoryProvider = ({ children }) => {
     const [matchHistory, setMatchHistory] = useState([]);
 
+    // Fonction pour normaliser les noms d'armes vers le format standard français
+    const normalizeWeaponName = (weaponStr) => {
+        if (!weaponStr) return weaponStr;
+
+        // Normaliser une seule arme
+        const normalizeOne = (w) => {
+            const weapon = w.trim().toLowerCase();
+            // Toutes les variantes de "Épée" -> "Épée"
+            if (weapon === 'sword' || weapon === 'spada' || weapon === 'espada' ||
+                weapon === 'degen' || weapon === 'épée' || weapon === 'epee') {
+                return 'Épée';
+            }
+            // Toutes les variantes de "Fleuret" -> "Fleuret"
+            if (weapon === 'foil' || weapon === 'fioretto' || weapon === 'florete' ||
+                weapon === 'florett' || weapon === 'fleuret') {
+                return 'Fleuret';
+            }
+            return w.trim();
+        };
+
+        // Gérer le cas "Arme1 vs Arme2"
+        if (weaponStr.includes(' vs ')) {
+            const weapons = weaponStr.split(' vs ');
+            return weapons.map(w => normalizeOne(w)).join(' vs ');
+        }
+
+        return normalizeOne(weaponStr);
+    };
+
     const loadHistory = useCallback(async () => {
         try {
             const data = await AsyncStorage.getItem('matchHistory');
-            const history = data ? JSON.parse(data) : [];
+            let history = data ? JSON.parse(data) : [];
+
+            // Normaliser les armes dans l'historique existant
+            let needsMigration = false;
+            history = history.map(match => {
+                const normalizedWeapon = normalizeWeaponName(match.weapon);
+                if (normalizedWeapon !== match.weapon) {
+                    needsMigration = true;
+                    return { ...match, weapon: normalizedWeapon };
+                }
+                return match;
+            });
+
+            // Si des modifications ont été faites, sauvegarder
+            if (needsMigration) {
+                await AsyncStorage.setItem('matchHistory', JSON.stringify(history));
+                console.log('Historique migré vers format standardisé');
+            }
+
             setMatchHistory(history);
             console.log('Historique chargé:', history.length, 'matchs');
         } catch (e) {

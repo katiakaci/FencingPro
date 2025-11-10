@@ -78,7 +78,17 @@ export default function GameScreen({ route, navigation }) {
   const isSolo = gameMode === 'solo';
   const playerName = isSolo ? (joueur1 || i18n.t('game.player')) : (joueur1 || i18n.t('game.player1'));
   const player2Name = joueur2 || i18n.t('game.player2');
-  const weaponType = arme1 || 'Épée';
+
+  // Convertir les clés d'armes en format français standard pour le stockage
+  const convertWeaponKey = (key) => {
+    if (key === 'epee') return 'Épée';
+    if (key === 'foil') return 'Fleuret';
+    return key || 'Épée';
+  };
+
+  const weaponType = isSolo
+    ? convertWeaponKey(arme1)
+    : `${convertWeaponKey(arme1)} vs ${convertWeaponKey(arme2)}`;
 
   const barColorLeft = (touchDetected && gameStarted && running) ? lightColor : 'white';
   const barColorRight = touchDetected ? 'white' : 'white';

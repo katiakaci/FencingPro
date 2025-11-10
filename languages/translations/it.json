@@ -140,6 +140,13 @@
         "consecutiveDays": "Giorni consecutivi",
         "activeDays": "Giorni attivi",
         "personalRecord": "Record personale",
+        "touchesEpee": "Tocchi con spada",
+        "touchesFleuret": "Tocchi con fioretto",
+        "sections": {
+            "basicStats": "📊 Statistiche di base",
+            "performanceStats": "🏆 Statistiche di prestazione",
+            "temporalStats": "⏰ Statistiche temporali"
+        }
     },
     "weapons": {
         "epee": "Spada",

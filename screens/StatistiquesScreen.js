@@ -45,8 +45,8 @@ export default function StatistiquesScreen() {
     const performanceStats = [
         { value: stats.touchesPerMinute, label: i18n.t('stats.touchesPerMinute') },
         { value: stats.personalRecord, label: i18n.t('stats.personalRecord') },
-        { value: stats.touchesEpee, label: 'Touches avec Épée' },
-        { value: stats.touchesFleuret, label: 'Touches avec Fleuret' },
+        { value: stats.touchesEpee, label: i18n.t('stats.touchesEpee') },
+        { value: stats.touchesFleuret, label: i18n.t('stats.touchesFleuret') },
     ];
 
     const temporalStats = [

@@ -140,6 +140,8 @@
         "consecutiveDays": "Aufeinanderfolgende Tage",
         "activeDays": "Aktive Tage",
         "personalRecord": "Persönlicher Rekord",
+        "touchesEpee": "Treffer mit degen",
+        "touchesFleuret": "Treffer mit florett",
         "sections": {
             "basicStats": "📊 Grundstatistiken",
             "performanceStats": "🏆 Leistungsstatistiken",

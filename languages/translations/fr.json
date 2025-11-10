@@ -140,6 +140,8 @@
         "consecutiveDays": "Jours consécutifs",
         "activeDays": "Jours actifs",
         "personalRecord": "Record personnel",
+        "touchesEpee": "Touches avec épée",
+        "touchesFleuret": "Touches avec fleuret",
         "sections": {
             "basicStats": "📊 Statistiques de base",
             "performanceStats": "🏆 Statistiques de performance",

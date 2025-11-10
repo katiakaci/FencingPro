@@ -26,6 +26,7 @@
  */
 import { useMemo } from 'react';
 import { Dimensions } from 'react-native';
+import i18n from '../languages/i18n';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -104,13 +105,23 @@ export const useWeaponData = (matchHistory) => {
             return [{ name: 'Aucune donnée', population: 1, color: '#ccc', legendFontColor: '#333', legendFontSize: 12 }];
         }
 
-        return weaponEntries.map(([weapon, count], index) => ({
-            name: weapon,
-            population: count || 1,
-            color: colors[index % colors.length],
-            legendFontColor: '#333',
-            legendFontSize: 12
-        }));
+        return weaponEntries.map(([weapon, count], index) => {
+            // Traduire le nom de l'arme
+            let translatedWeapon = weapon;
+            if (weapon === 'Épée') {
+                translatedWeapon = i18n.t('weapons.epee');
+            } else if (weapon === 'Fleuret') {
+                translatedWeapon = i18n.t('weapons.foil');
+            }
+            
+            return {
+                name: translatedWeapon,
+                population: count || 1,
+                color: colors[index % colors.length],
+                legendFontColor: '#333',
+                legendFontSize: 12
+            };
+        });
     }, [matchHistory]);
 };
 

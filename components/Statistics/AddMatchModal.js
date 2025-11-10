@@ -258,7 +258,12 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
                 style={styles.durationInput}
                 placeholder="Sec"
                 value={durationSeconds}
-                onChangeText={setDurationSeconds}
+                onChangeText={(text) => {
+                  const seconds = parseInt(text) || 0;
+                  if (seconds < 60 || text === '') {
+                    setDurationSeconds(text);
+                  }
+                }}
                 keyboardType="numeric"
                 maxLength={2}
               />

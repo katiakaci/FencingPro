@@ -93,7 +93,11 @@ export const useStatistics = (matchHistory) => {
 
                 // Nouvelles analyses
                 if (match.date) {
-                    const date = new Date(match.date.split(', ')[0].split('/').reverse().join('-'));
+                    // Format attendu: "DD/MM/YYYY, HH:MM"
+                    const datePart = match.date.split(', ')[0];
+                    const [day, month, year] = datePart.split('/');
+                    const date = new Date(year, month - 1, day); // mois commence à 0
+
                     if (!isNaN(date.getTime())) {
                         dates.push(date);
 
@@ -113,9 +117,9 @@ export const useStatistics = (matchHistory) => {
                         dayCounts[dayName] = (dayCounts[dayName] || 0) + 1;
 
                         // Activité quotidienne
-                        const dateKey = date.toDateString();
+                        const dateKey = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
                         if (!dailyActivity[dateKey]) {
-                            dailyActivity[dateKey] = { matches: 0, duration: 0 };
+                            dailyActivity[dateKey] = { matches: 0, duration: 0, date: date };
                         }
                         dailyActivity[dateKey].matches++;
 
@@ -211,13 +215,13 @@ export const useStatistics = (matchHistory) => {
         }
 
         // 6. Jours consécutifs
-        const uniqueDates = [...new Set(dates.map(d => d.toDateString()))].sort();
+        const uniqueDateKeys = [...new Set(Object.keys(dailyActivity))].sort();
         let consecutiveDays = 0;
         let currentStreak = 1;
-        for (let i = 1; i < uniqueDates.length; i++) {
-            const prev = new Date(uniqueDates[i - 1]);
-            const curr = new Date(uniqueDates[i]);
-            const diffDays = (curr - prev) / (1000 * 60 * 60 * 24);
+        for (let i = 1; i < uniqueDateKeys.length; i++) {
+            const prev = new Date(uniqueDateKeys[i - 1]);
+            const curr = new Date(uniqueDateKeys[i]);
+            const diffDays = Math.round((curr - prev) / (1000 * 60 * 60 * 24));
             if (diffDays === 1) {
                 currentStreak++;
             } else {
@@ -243,15 +247,13 @@ export const useStatistics = (matchHistory) => {
         // 9. Jour le plus productif
         let mostProductiveDay = 'N/A';
         let maxActivity = 0;
-        Object.entries(dailyActivity).forEach(([date, activity]) => {
+        Object.entries(dailyActivity).forEach(([dateKey, activity]) => {
             const score = activity.matches * 2 + activity.duration / 60;
             if (score > maxActivity) {
                 maxActivity = score;
-                const dateObj = new Date(date);
-                const day = String(dateObj.getDate()).padStart(2, '0');
-                const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                const year = String(dateObj.getFullYear()).slice(-2);
-                mostProductiveDay = `${day}/${month}/${year}`;
+                // dateKey est au format "YYYY-MM-DD"
+                const [year, month, day] = dateKey.split('-');
+                mostProductiveDay = `${day}/${month}/${year.substring(2)}`;
             }
         });
 

@@ -160,5 +160,9 @@
         "thursday": "Jueves",
         "friday": "Viernes",
         "saturday": "Sábado"
+    },
+    "timeUnits": {
+        "day": "d",
+        "hour": "h"
     }
 }

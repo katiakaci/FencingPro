@@ -216,9 +216,11 @@ export const useStatistics = (matchHistory) => {
         const touchesFleuret = weaponScores['Fleuret'] ? Math.round(weaponScores['Fleuret'].total) : 0;
 
         // 2. Heure de pointe
-        const peakHour = Object.entries(hourCounts).length > 0
-            ? Object.entries(hourCounts).sort(([, a], [, b]) => b - a)[0][0] + 'h'
-            : 'N/A';
+        let peakHour = 'N/A';
+        if (Object.entries(hourCounts).length > 0) {
+            const hour = Object.entries(hourCounts).sort(([, a], [, b]) => b - a)[0][0];
+            peakHour = hour + i18n.t('timeUnits.hour');
+        }
 
         // 3. Jour favori
         let favoriteDay = 'N/A';
@@ -242,9 +244,9 @@ export const useStatistics = (matchHistory) => {
             const avgDays = Math.floor(avgTimeBetweenMs / (1000 * 60 * 60 * 24));
             const avgHours = Math.floor((avgTimeBetweenMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             if (avgDays > 0) {
-                averageTimeBetweenMatches = `${avgDays}j ${avgHours}h`;
+                averageTimeBetweenMatches = `${avgDays}${i18n.t('timeUnits.day')} ${avgHours}${i18n.t('timeUnits.hour')}`;
             } else {
-                averageTimeBetweenMatches = `${avgHours}h`;
+                averageTimeBetweenMatches = `${avgHours}${i18n.t('timeUnits.hour')}`;
             }
         }
 

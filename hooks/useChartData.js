@@ -82,7 +82,18 @@ export const useWeaponData = (matchHistory) => {
         matchHistory.forEach(match => {
             if (match.weapon) {
                 const weapon = match.weapon.trim();
-                weaponCount[weapon] = (weaponCount[weapon] || 0) + 1;
+
+                // Si c'est un match multi (Arme1 vs Arme2)
+                if (weapon.includes(' vs ')) {
+                    const weapons = weapon.split(' vs ');
+                    weapons.forEach(w => {
+                        const cleanWeapon = w.trim();
+                        weaponCount[cleanWeapon] = (weaponCount[cleanWeapon] || 0) + 1;
+                    });
+                } else {
+                    // Match solo, une seule arme
+                    weaponCount[weapon] = (weaponCount[weapon] || 0) + 1;
+                }
             }
         });
 

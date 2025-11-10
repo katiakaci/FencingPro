@@ -30,9 +30,9 @@ export const useStatistics = (matchHistory) => {
                 longestMatch: '0:00',
                 shortestMatch: '0:00',
                 mostUsedWeapon: 'Aucune',
-                totalTouches: 0,
                 touchesPerMinute: 0,
-                weaponEfficiency: 'Aucune',
+                touchesEpee: 0,
+                touchesFleuret: 0,
                 peakHour: 'N/A',
                 favoriteDay: 'N/A',
                 sessionsPerWeek: 0,
@@ -83,11 +83,29 @@ export const useStatistics = (matchHistory) => {
 
                     // Score par arme
                     if (match.weapon) {
-                        if (!weaponScores[match.weapon]) {
-                            weaponScores[match.weapon] = { total: 0, count: 0 };
+                        const weapon = match.weapon.trim();
+
+                        // Si c'est un match multi (Arme1 vs Arme2)
+                        if (weapon.includes(' vs ')) {
+                            const weapons = weapon.split(' vs ');
+                            // En mode multi, diviser le score entre les deux armes
+                            const scorePerWeapon = score / 2;
+                            weapons.forEach(w => {
+                                const cleanWeapon = w.trim();
+                                if (!weaponScores[cleanWeapon]) {
+                                    weaponScores[cleanWeapon] = { total: 0, count: 0 };
+                                }
+                                weaponScores[cleanWeapon].total += scorePerWeapon;
+                                weaponScores[cleanWeapon].count++;
+                            });
+                        } else {
+                            // Match solo, une seule arme
+                            if (!weaponScores[weapon]) {
+                                weaponScores[weapon] = { total: 0, count: 0 };
+                            }
+                            weaponScores[weapon].total += score;
+                            weaponScores[weapon].count++;
                         }
-                        weaponScores[match.weapon].total += score;
-                        weaponScores[match.weapon].count++;
                     }
                 }
 
@@ -162,7 +180,19 @@ export const useStatistics = (matchHistory) => {
         const weaponCount = {};
         matchHistory.forEach(match => {
             if (match.weapon) {
-                weaponCount[match.weapon] = (weaponCount[match.weapon] || 0) + 1;
+                const weapon = match.weapon.trim();
+
+                // Si c'est un match multi (Arme1 vs Arme2)
+                if (weapon.includes(' vs ')) {
+                    const weapons = weapon.split(' vs ');
+                    weapons.forEach(w => {
+                        const cleanWeapon = w.trim();
+                        weaponCount[cleanWeapon] = (weaponCount[cleanWeapon] || 0) + 1;
+                    });
+                } else {
+                    // Match solo, une seule arme
+                    weaponCount[weapon] = (weaponCount[weapon] || 0) + 1;
+                }
             }
         });
         const mostUsedWeapon = Object.entries(weaponCount).length > 0
@@ -172,16 +202,9 @@ export const useStatistics = (matchHistory) => {
         const totalDurationMinutes = totalDurationSeconds / 60;
         const touchesPerMinute = totalDurationMinutes > 0 ? Math.round((totalScore / totalDurationMinutes) * 10) / 10 : 0;
 
-        // 1. Efficacité par arme
-        let bestWeaponEfficiency = 'Aucune';
-        let bestAverage = 0;
-        Object.entries(weaponScores).forEach(([weapon, data]) => {
-            const avg = data.total / data.count;
-            if (avg > bestAverage) {
-                bestAverage = avg;
-                bestWeaponEfficiency = `${weapon} (${Math.round(avg * 10) / 10})`;
-            }
-        });
+        // Touches par arme
+        const touchesEpee = weaponScores['Épée'] ? Math.round(weaponScores['Épée'].total) : 0;
+        const touchesFleuret = weaponScores['Fleuret'] ? Math.round(weaponScores['Fleuret'].total) : 0;
 
         // 2. Heure de pointe
         const peakHour = Object.entries(hourCounts).length > 0
@@ -264,9 +287,9 @@ export const useStatistics = (matchHistory) => {
             longestMatch,
             shortestMatch,
             mostUsedWeapon,
-            totalTouches: totalScore,
             touchesPerMinute,
-            weaponEfficiency: bestWeaponEfficiency,
+            touchesEpee,
+            touchesFleuret,
             peakHour,
             favoriteDay,
             sessionsPerWeek,

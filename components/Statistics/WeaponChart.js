@@ -54,13 +54,7 @@ const WeaponChart = ({ matchHistory, style }) => {
             marginBottom: 20,
             overflow: 'hidden',
         }, style]}>
-            <Text style={{
-                fontWeight: 'bold',
-                fontSize: 16,
-                color: '#333',
-                marginBottom: 15,
-                textAlign: 'center',
-            }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#333', marginBottom: 15, textAlign: 'center' }}>
                 {i18n.t('stats.weaponsUsed')}
             </Text>
             <PieChart

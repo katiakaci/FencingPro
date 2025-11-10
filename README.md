@@ -69,6 +69,16 @@ L’application se connecte automatiquement au module détecté, lit la caracté
 - Export CSV / partage des statistiques
 - Interface d'administration des matchs dans l'historique (édition d'une entrée sans se connecter en Bluetooth).
 
+  
+## Démonstration
+
+Voici une courte vidéo montrant le fonctionnement réel du système FencingPro :  
+
+https://github.com/user-attachments/assets/cf1a7072-cc4e-4943-9f64-2356af189aff
+
+Lorsqu’une touche est détectée, la lumière s’allume et le moteur vibre.
+
+
 ## Crédits
 Ce projet a été réalisé dans le cadre d’un projet de fin d’études en génie logiciel à l’ÉTS. Contributeurs :
 - Vincent Martins Dos Santos (Conception électronique et mécanique)

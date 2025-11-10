@@ -151,5 +151,14 @@
     "weapons": {
         "epee": "Degen",
         "foil": "Florett"
+    },
+    "days": {
+        "sunday": "Sonntag",
+        "monday": "Montag",
+        "tuesday": "Dienstag",
+        "wednesday": "Mittwoch",
+        "thursday": "Donnerstag",
+        "friday": "Freitag",
+        "saturday": "Samstag"
     }
 }

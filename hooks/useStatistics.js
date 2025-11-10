@@ -19,6 +19,7 @@
  * @returns {Object} Objet contenant toutes les statistiques calculées
  */
 import { useMemo } from 'react';
+import i18n from '../languages/i18n';
 
 export const useStatistics = (matchHistory) => {
     return useMemo(() => {
@@ -128,9 +129,9 @@ export const useStatistics = (matchHistory) => {
 
                         // Jour de la semaine favori
                         const dayOfWeek = date.getDay();
-                        const dayNames = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-                        const dayName = dayNames[dayOfWeek];
-                        dayCounts[dayName] = (dayCounts[dayName] || 0) + 1;
+                        const dayKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                        const dayKey = dayKeys[dayOfWeek];
+                        dayCounts[dayKey] = (dayCounts[dayKey] || 0) + 1;
 
                         // Activité quotidienne
                         const dateKey = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
@@ -193,9 +194,19 @@ export const useStatistics = (matchHistory) => {
                 }
             }
         });
-        const mostUsedWeapon = Object.entries(weaponCount).length > 0
-            ? Object.entries(weaponCount).sort(([, a], [, b]) => b - a)[0][0]
-            : 'Aucune';
+
+        let mostUsedWeapon = 'Aucune';
+        if (Object.entries(weaponCount).length > 0) {
+            const mostUsedWeaponKey = Object.entries(weaponCount).sort(([, a], [, b]) => b - a)[0][0];
+            // Traduire le nom de l'arme
+            if (mostUsedWeaponKey === 'Épée') {
+                mostUsedWeapon = i18n.t('weapons.epee');
+            } else if (mostUsedWeaponKey === 'Fleuret') {
+                mostUsedWeapon = i18n.t('weapons.foil');
+            } else {
+                mostUsedWeapon = mostUsedWeaponKey;
+            }
+        }
 
         const totalDurationMinutes = totalDurationSeconds / 60;
         const touchesPerMinute = totalDurationMinutes > 0 ? Math.round((totalScore / totalDurationMinutes) * 10) / 10 : 0;
@@ -210,9 +221,11 @@ export const useStatistics = (matchHistory) => {
             : 'N/A';
 
         // 3. Jour favori
-        const favoriteDay = Object.entries(dayCounts).length > 0
-            ? Object.entries(dayCounts).sort(([, a], [, b]) => b - a)[0][0]
-            : 'N/A';
+        let favoriteDay = 'N/A';
+        if (Object.entries(dayCounts).length > 0) {
+            const favoriteDayKey = Object.entries(dayCounts).sort(([, a], [, b]) => b - a)[0][0];
+            favoriteDay = i18n.t(`days.${favoriteDayKey}`);
+        }
 
         // 4. Sessions par semaine
         const sortedDates = dates.sort((a, b) => a - b);

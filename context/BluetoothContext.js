@@ -191,7 +191,7 @@ export const BluetoothProvider = ({ children }) => {
             return;
         }
 
-        const weaponCode = weaponType === 'Fleuret' ? '2' : '3'; // 2 = Fleuret, 3 = Sabre
+        const weaponCode = weaponType === 'Fleuret' ? '2' : '3'; // 2 = Fleuret, 3 = Épée
 
         console.log('Envoi arme BLE:', weaponType, '->', weaponCode);
 

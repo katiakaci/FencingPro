@@ -17,7 +17,7 @@
  * - Interface responsive et accessible
  * 
  * Types de filtres supportés :
- * - Arme : Épée, Fleuret, Sabre
+ * - Arme : Épée, Fleuret
  * - Mode : Solo, Multi
  * - Joueur : Tous les joueurs ayant participé
  * 

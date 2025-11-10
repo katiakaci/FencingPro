@@ -8,7 +8,7 @@
  * - Le support des filtres par arme, joueur et mode
  * 
  * Fonctionnalités :
- * - Filtrage par arme (Épée, Fleuret, Sabre)
+ * - Filtrage par arme (Épée, Fleuret)
  * - Filtrage par joueur (recherche partielle)
  * - Filtrage par mode (Solo/Multi)
  * - Combinaison multiple de filtres

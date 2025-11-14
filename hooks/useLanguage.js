@@ -25,7 +25,12 @@ export const AVAILABLE_LANGUAGES = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
     { code: 'es', name: 'Español', flag: '🇪🇸' },
     { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' }
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+    { code: 'zh', name: '简体中文', flag: '🇨🇳' },
+    { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+    { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
+    { code: 'ja', name: '日本語', flag: '🇯🇵' },
+    { code: 'pt', name: 'Português', flag: '🇵🇹' }
 ];
 
 export const useLanguage = () => {
@@ -58,7 +63,6 @@ export const useLanguage = () => {
     }, []);
 
     const toggleLanguage = useCallback(async () => {
-        // Cycle through languages: fr -> en -> es -> it -> de -> fr
         const currentIndex = AVAILABLE_LANGUAGES.findIndex(lang => lang.code === currentLanguage);
         const nextIndex = (currentIndex + 1) % AVAILABLE_LANGUAGES.length;
         const nextLanguage = AVAILABLE_LANGUAGES[nextIndex].code;

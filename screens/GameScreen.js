@@ -210,10 +210,6 @@ export default function GameScreen({ route, navigation }) {
     countdown.start();
   };
 
-  const startNewGameNewConfig = () => {
-    navigation.navigate('Setup');
-  };
-
   const quitToWelcome = () => {
     navigation.navigate('Bienvenue');
   };
@@ -316,13 +312,6 @@ export default function GameScreen({ route, navigation }) {
       icon: 'refresh',
       text: i18n.t('game.playAgainSameConfig'),
       onPress: startNewGameSameConfig,
-      textColor: '#fff'
-    },
-    {
-      icon: 'settings',
-      text: i18n.t('game.newGameNewConfig'),
-      onPress: startNewGameNewConfig,
-      style: { backgroundColor: '#007acc' },
       textColor: '#fff'
     },
     {

@@ -57,7 +57,6 @@
         "getReady": "Get ready...",
         "chooseNextAction": "What do you want to do?",
         "playAgainSameConfig": "Play again",
-        "newGameNewConfig": "New game",
         "quit": "Quit"
     },
     "settings": {

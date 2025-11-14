@@ -57,7 +57,6 @@
         "getReady": "Machen Sie sich bereit...",
         "chooseNextAction": "Was möchten Sie tun?",
         "playAgainSameConfig": "Nochmal spielen",
-        "newGameNewConfig": "Neues Spiel",
         "quit": "Beenden"
     },
     "settings": {

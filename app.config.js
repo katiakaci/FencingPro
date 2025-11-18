@@ -1,7 +1,7 @@
 module.exports = {
     expo: {
-        name: "Fencing",
-        slug: "Fencing",
+        name: "FencingPro",
+        slug: "FencingPro",
         version: "1.0.0",
         orientation: "portrait",
         icon: "./assets/logo.png",

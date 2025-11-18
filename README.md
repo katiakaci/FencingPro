@@ -8,9 +8,11 @@
    <img src="assets/ReadMe/logo_512x512.png" alt="FencingPro" width="200" style="border-radius: 10px; margin-bottom: 20px;">
 </div>
 
+Disponible sur le *Google Play Store* : [Télécharger l’application](https://play.google.com/store/apps/details?id=com.katiakaci.Fencing&hl=fr_CA)
+
 ## Aperçu
 
-Une application pensée pour les tireurs et entraîneurs : détection de touches sans fil, chronomètre, comptage automatique, historique et statistiques.
+Une application pensée pour les tireurs et entraîneurs : détection de touches sans fil, chronomètre, comptage automatique, historique et statistiques. 
 
 | 🏠 Accueil | 🎮 Jeu | 📜 Historique |
 |:-----------:|:------:|:--------------:|
@@ -22,47 +24,34 @@ Une application pensée pour les tireurs et entraîneurs : détection de touches
 
 ## Fonctionnalités principales
 
-- Connexion Bluetooth Low Energy (BLE) aux modules ESP32 / nRF52840
-- Détection de touches en temps réel (READ + NOTIFY)
-- Score en temps réel et chronomètre
-- Démarrage, pause et reprise du chronomètre avec alertes visuelles et sonores
+- Connexion Bluetooth Low Energy (BLE) à l'équipement *FencingPro*
+- Détection de touches en temps réel avec mise à jour instantanée du score
+- Chronomètre intégré avec commandes : démarrage, pause et reprise, accompagné d’alertes visuelles et sonores
 - Modes solo et multijoueur
-- Historique des matchs (ajout automatique à la fin d'une partie)
-- Tri, filtres et suppression (swipe-to-delete) dans l'historique
-- Statistiques visuelles : graphiques d'activité, progression, performance par arme, etc.
-- Réglages : langue, couleurs des lumières, sons, vibrations, réinitialisation des données
+- Historique automatique de tous les matchs
+- Gestion avancée de l’historique : tri, filtres, ajout manuel et suppression (swipe-to-delete)
+- Statistiques visuelles : activité, progression, performance par arme, etc.
+- Contrôle de l’équipement depuis les paramètres de l’application :
+   - Activation/désactivation de la vibration du moteur
+  - Changement de la couleur des LEDs
+- Personnalisation de la sonnerie lors d’une touche détectée
+- Application disponible en 10 langues : anglais, français, espagnol, italien, allemand, chinois simplifié, arabe, turc, japonais et portugais
 
+## Architecture électronique
+Le système repose sur deux modules électroniques sans fil :
+- Module de l’arme (détection de touches)
+- Module central (réception, traitement et envoi des données à l’application)
 
-## Installation
-Vous pouvez télécharger l’application directement depuis le *Google Play Store* : [Télécharger l’application](https://play.google.com/store/apps/details?id=com.katiakaci.Fencing&hl=fr_CA)
+Les deux modules utilisent un Seeeduino XIAO nRF52840, choisi pour sa prise en charge native du Bluetooth Low Energy (BLE), sa faible consommation énergétique et son format très compact, permettant une intégration dans une poignée et un boîtier d’escrime.
 
-### Installation locale pour développement
-
-1. Cloner le projet
-git clone https://github.com/katia-kaci/FencingPro.git
-cd FencingPro
-
-2. Installer les dépendances
-npm install
-
-3. Lancer le projet
-npx expo start
-
-Ouvrir ensuite l’application Expo Go sur un appareil mobile et scanner le code QR affiché dans le terminal pour exécuter FencingPro.
-
-## Communication Bluetooth
-
-- Service UUID : 12345678-1234-5678-1234-56789abcdef0
-- Characteristic UUID : 12345678-1234-5678-1234-56789abcdef1
-- Propriétés : READ + NOTIFY
-- Type de données : bool (1 octet)
-
-L’application se connecte automatiquement au module détecté, lit la caractéristique et s’abonne aux notifications pour détecter les touches.
+### Alimentation
+Chaque module est alimenté par :
+- une batterie Li-Po 3.7V,
+- un module de gestion de charge intégré dans le XIAO, permettant la recharge via USB-C.
 
 ## Améliorations futures
 - Système d'authentification / sauvegarde cloud : Intégrer Firebase pour synchroniser l'historique et les statistiques
 - Export CSV / partage des statistiques
-- Interface d'administration des matchs dans l'historique (édition d'une entrée sans se connecter en Bluetooth).
 
   
 ## Démonstration

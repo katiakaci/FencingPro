@@ -34,12 +34,7 @@ Une application pensée pour les tireurs et entraîneurs : détection de touches
 
 
 ## Installation
-L’application sera bientôt disponible sur le *Google Play Store* 🎉  
-(Actuellement en attente d’approbation sur la Play Console, donc accessible uniquement via une liste de distribution privée pour le moment.)
-
-### Accès Testeurs
-Tu veux essayer l’application avant sa sortie officielle ?  
-Entre ton adresse Gmail ici pour être ajouté à la liste des testeurs sur le Play Store : [Remplir le formulaire d’accès](https://katiakaci.github.io/FencingPro/access.html)
+Vous pouvez télécharger l’application directement depuis le *Google Play Store* : [Télécharger l’application](https://play.google.com/store/apps/details?id=com.katiakaci.Fencing&hl=fr_CA)
 
 ### Installation locale pour développement
 

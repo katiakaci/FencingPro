@@ -110,7 +110,9 @@
     },
     "stats": {
         "title": "Estadísticas",
-        "matchesPerPlayer": "🏆 Partidas por jugador",
+        "noData": "No hay datos disponibles",
+        "noDataSubtext": "Juega algunos partidos para ver tus estadísticas aquí",
+        "matchesPerPlayer": "🏆 Partidos por jugador",
         "dailyActivity": "📊 Actividad diaria",
         "numberOfMatches": "Núm. partidas",
         "totalTimeMin": "Tiempo total (min)",

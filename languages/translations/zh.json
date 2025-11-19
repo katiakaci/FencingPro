@@ -109,6 +109,8 @@
     },
     "stats": {
         "title": "统计",
+        "noData": "暂无数据",
+        "noDataSubtext": "玩几场比赛以查看您的统计数据",
         "matchesPerPlayer": "🏆 每位玩家的比赛",
         "dailyActivity": "📊 每日活动",
         "numberOfMatches": "比赛数",

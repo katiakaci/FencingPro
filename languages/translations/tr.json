@@ -109,6 +109,8 @@
     },
     "stats": {
         "title": "İstatistikler",
+        "noData": "Kullanılabilir veri yok",
+        "noDataSubtext": "İstatistiklerinizi görmek için birkaç maç oynayın",
         "matchesPerPlayer": "🏆 Oyuncu başına maçlar",
         "dailyActivity": "📊 Günlük aktivite",
         "numberOfMatches": "Maç sayısı",

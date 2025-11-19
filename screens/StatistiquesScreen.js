@@ -26,8 +26,8 @@ export default function StatistiquesScreen() {
         return (
             <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
                 <View style={styles.statsBox}>
-                    <Text style={styles.statsLabel}>Aucune donnée disponible</Text>
-                    <Text style={styles.noDataText}>Jouez quelques matchs pour voir vos statistiques ici</Text>
+                    <Text style={styles.statsLabel}>{i18n.t('stats.noData')}</Text>
+                    <Text style={styles.noDataText}>{i18n.t('stats.noDataSubtext')}</Text>
                 </View>
             </ScrollView>
         );

@@ -110,6 +110,8 @@
     },
     "stats": {
         "title": "Statistiques",
+        "noData": "Aucune donnée disponible",
+        "noDataSubtext": "Jouez quelques matchs pour voir vos statistiques ici",
         "matchesPerPlayer": "🏆 Matchs par joueur",
         "dailyActivity": "📊 Activité quotidienne",
         "numberOfMatches": "Nb matchs",

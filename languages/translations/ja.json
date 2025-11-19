@@ -109,6 +109,8 @@
     },
     "stats": {
         "title": "統計",
+        "noData": "データがありません",
+        "noDataSubtext": "統計を表示するにはいくつかの試合をプレイしてください",
         "matchesPerPlayer": "🏆 プレイヤーごとの試合",
         "dailyActivity": "📊 毎日のアクティビティ",
         "numberOfMatches": "試合数",

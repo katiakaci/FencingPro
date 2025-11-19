@@ -110,6 +110,8 @@
     },
     "stats": {
         "title": "Statistiche",
+        "noData": "Nessun dato disponibile",
+        "noDataSubtext": "Gioca alcune partite per vedere le tue statistiche qui",
         "matchesPerPlayer": "🏆 Partite per giocatore",
         "dailyActivity": "📊 Attività giornaliera",
         "numberOfMatches": "N. partite",

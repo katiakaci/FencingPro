@@ -302,6 +302,7 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onChange={onDateChange}
                 maximumDate={new Date()}
+                locale={i18n.language}
               />
             )}
 
@@ -311,6 +312,7 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
                 mode="time"
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onChange={onTimeChange}
+                locale={i18n.language}
               />
             )}
 

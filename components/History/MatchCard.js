@@ -33,12 +33,30 @@ export const MatchCard = forwardRef(({ match, index, originalIndex, onDelete }, 
                 date = new Date(dateStr);
             }
 
-            return date.toLocaleString('en-US', {
+            const currentLanguage = i18n.language;
+
+            // Mapper les codes de langue vers les locales
+            const localeMap = {
+                'fr': 'fr-FR',
+                'en': 'en-US',
+                'es': 'es-ES',
+                'it': 'it-IT',
+                'de': 'de-DE',
+                'zh': 'zh-CN',
+                'ar': 'ar-SA',
+                'tr': 'tr-TR',
+                'ja': 'ja-JP',
+                'pt': 'pt-PT'
+            };
+
+            const locale = localeMap[currentLanguage] || 'en-US';
+
+            return date.toLocaleString(locale, {
                 month: 'short',
                 day: 'numeric',
                 hour: 'numeric',
                 minute: '2-digit',
-                hour12: true
+                hour12: currentLanguage === 'en' // Format 12h uniquement pour l'anglais
             });
         } catch (error) {
             console.log('Erreur formatage date:', error);

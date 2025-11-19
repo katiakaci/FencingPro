@@ -39,6 +39,18 @@ export const FilterMenu = ({
     setFilterMenuVisible,
     availableFilters
 }) => {
+    const translateWeapon = (weapon) => {
+        if (weapon === 'Épée') return i18n.t('weapons.epee');
+        if (weapon === 'Fleuret') return i18n.t('weapons.foil');
+        return weapon;
+    };
+
+    const translateMode = (mode) => {
+        if (mode === 'Solo') return i18n.t('setup.solo');
+        if (mode === 'Multi') return i18n.t('setup.multiplayer');
+        return mode;
+    };
+
     const getFilterDisplayText = () => {
         const activeFilterCount = Object.values(activeFilters).reduce((count, filters) =>
             count + (filters?.length || 0), 0
@@ -160,7 +172,7 @@ export const FilterMenu = ({
                                                     styles.optionText,
                                                     isFilterSelected('weapon', weapon) && styles.optionTextSelected
                                                 ]}>
-                                                    {weapon}
+                                                    {translateWeapon(weapon)}
                                                 </Text>
                                             </View>
                                         </TouchableOpacity>
@@ -192,7 +204,7 @@ export const FilterMenu = ({
                                                     styles.optionText,
                                                     isFilterSelected('mode', mode) && styles.optionTextSelected
                                                 ]}>
-                                                    {mode}
+                                                    {translateMode(mode)}
                                                 </Text>
                                             </View>
                                         </TouchableOpacity>

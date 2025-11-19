@@ -172,7 +172,7 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
             <Text style={styles.sectionTitle}>{mode === 'solo' ? i18n.t('addMatch.player') : i18n.t('addMatch.players')}</Text>
             <TextInput
               style={styles.input}
-              placeholder={i18n.t('addMatch.player1Placeholder')}
+              placeholder={mode === 'solo' ? i18n.t('setup.playerName') : i18n.t('addMatch.player1Placeholder')}
               value={playerName}
               onChangeText={setPlayerName}
             />

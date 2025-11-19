@@ -40,7 +40,7 @@ const StatCard = ({ value, label, color, style }) => {
             justifyContent: 'space-between',
         }, style]}>
             <Text style={[{
-                fontSize: 24,
+                fontSize: 21,
                 fontWeight: 'bold',
                 color: color || '#4a90e2',
                 marginBottom: 3,

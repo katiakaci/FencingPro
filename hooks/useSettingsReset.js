@@ -26,8 +26,7 @@ export const useSettingsReset = () => {
                 'matchHistory',
                 'userStats',
                 'gameSettings',
-                'playerProfiles',
-                'userLanguage'
+                'playerProfiles'
             ]);
 
             await clearHistory();
@@ -37,9 +36,6 @@ export const useSettingsReset = () => {
             setSoundEnabled(true);
             setVibrationEnabled(true);
             setSelectedSound('alert_touch.mp3');
-
-            // Restaurer la langue par défaut
-            await i18n.changeLanguage('fr');
 
             Alert.alert('', i18n.t('settings.resetSuccess'));
         } catch (error) {

@@ -10,7 +10,7 @@ import { FilterMenu } from '../components/History/FilterMenu';
 import { MatchCard } from '../components/History/MatchCard';
 import { EmptyState } from '../components/History/EmptyState';
 import { NoFilterResults } from '../components/History/NoFilterResults';
-import { AddMatchModal } from '../components/Statistics/AddMatchModal';
+import { AddMatchModal } from '../components/History/AddMatchModal';
 
 export default function HistoriqueScreen() {
   const { matchHistory, deleteMatch, loadHistory, addMatch } = useHistory();

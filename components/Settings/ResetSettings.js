@@ -13,9 +13,10 @@
  * - Boutons d'annulation et de confirmation
  * - Gestion des erreurs de réinitialisation
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Pressable, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { GameModal } from '../Game/Modal';
 import i18n from '../../languages/i18n';
 
 export const ResetSettings = ({
@@ -23,6 +24,17 @@ export const ResetSettings = ({
     setShowResetDialog,
     onResetData
 }) => {
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+
+    const handleReset = async () => {
+        setShowResetDialog(false);
+        await onResetData(
+            () => setShowSuccessModal(true),
+            () => setShowErrorModal(true)
+        );
+    };
+
     return (
         <>
             <View style={styles.settingBlock}>
@@ -62,7 +74,7 @@ export const ResetSettings = ({
 
                             <TouchableOpacity
                                 style={styles.confirmResetButton}
-                                onPress={onResetData}
+                                onPress={handleReset}
                             >
                                 <Text style={styles.confirmResetButtonText}>{i18n.t('settings.resetAll')}</Text>
                             </TouchableOpacity>
@@ -70,6 +82,36 @@ export const ResetSettings = ({
                     </View>
                 </View>
             </Modal>
+
+            {/* Modal de succès */}
+            <GameModal
+                visible={showSuccessModal}
+                title={i18n.t('settings.resetSuccess')}
+                titleStyle={{ color: '#27ae60' }}
+                buttons={[
+                    {
+                        text: 'OK',
+                        icon: 'checkmark-circle',
+                        style: { backgroundColor: '#27ae60' },
+                        onPress: () => setShowSuccessModal(false)
+                    }
+                ]}
+            />
+
+            {/* Modal d'erreur */}
+            <GameModal
+                visible={showErrorModal}
+                title={i18n.t('settings.resetError')}
+                titleStyle={{ color: '#e74c3c' }}
+                buttons={[
+                    {
+                        text: 'OK',
+                        icon: 'close-circle',
+                        style: { backgroundColor: '#e74c3c' },
+                        onPress: () => setShowErrorModal(false)
+                    }
+                ]}
+            />
         </>
     );
 };

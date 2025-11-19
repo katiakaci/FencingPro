@@ -59,9 +59,8 @@ export default function SettingsScreen() {
     }
   }, [setLightColor, sendColorSetting]);
 
-  const handleResetData = useCallback(async () => {
-    await resetAllData();
-    setShowResetDialog(false);
+  const handleResetData = useCallback(async (onSuccess, onError) => {
+    await resetAllData(onSuccess, onError);
   }, [resetAllData]);
 
   return (

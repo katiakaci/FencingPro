@@ -20,7 +20,7 @@ export const useSettingsReset = () => {
     const { setLightColor } = useLightColor();
     const { setSoundEnabled, setVibrationEnabled, setSelectedSound } = useSettings();
 
-    const resetAllData = useCallback(async () => {
+    const resetAllData = useCallback(async (onSuccess, onError) => {
         try {
             await AsyncStorage.multiRemove([
                 'matchHistory',
@@ -37,10 +37,18 @@ export const useSettingsReset = () => {
             setVibrationEnabled(true);
             setSelectedSound('alert_touch.mp3');
 
-            Alert.alert('', i18n.t('settings.resetSuccess'));
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                Alert.alert('', i18n.t('settings.resetSuccess'));
+            }
         } catch (error) {
             console.log('Erreur lors de la réinitialisation:', error);
-            Alert.alert('', i18n.t('settings.resetError'));
+            if (onError) {
+                onError();
+            } else {
+                Alert.alert('', i18n.t('settings.resetError'));
+            }
         }
     }, [clearHistory, setLightColor, setSoundEnabled, setVibrationEnabled, setSelectedSound]);
 

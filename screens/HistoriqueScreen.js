@@ -158,14 +158,15 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     padding: 18,
-    paddingBottom: 32,
+    paddingBottom: 100,
   },
   controlsBar: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
-    marginTop: 2,
+    marginBottom: 16,
+    marginTop: 8,
+    gap: 12,
   },
   matchList: {
     marginBottom: 10,

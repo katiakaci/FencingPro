@@ -184,8 +184,9 @@
         "dateAndTime": "Data e Hora",
         "cancel": "Cancelar",
         "add": "Adicionar",
-        "errorPlayerName": "Por favor, insira o nome do jogador",
-        "errorPlayer2Name": "Por favor, insira o nome do jogador 2",
+        "errorPlayerName": "Por favor insira o nome do jogador",
+        "errorPlayer1Name": "Por favor insira o nome do jogador 1",
+        "errorPlayer2Name": "Por favor insira o nome do jogador 2",
         "errorScore": "Por favor, insira as pontuações",
         "errorDuration": "Por favor, insira a duração da partida"
     }

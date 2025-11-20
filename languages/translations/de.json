@@ -186,6 +186,7 @@
         "cancel": "Abbrechen",
         "add": "Hinzufügen",
         "errorPlayerName": "Bitte Spielernamen eingeben",
+        "errorPlayer1Name": "Bitte Namen von Spieler 1 eingeben",
         "errorPlayer2Name": "Bitte Namen von Spieler 2 eingeben",
         "errorScore": "Bitte Punktzahlen eingeben",
         "errorDuration": "Bitte Spieldauer eingeben"

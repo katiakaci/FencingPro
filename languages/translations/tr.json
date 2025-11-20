@@ -185,7 +185,8 @@
         "cancel": "İptal",
         "add": "Ekle",
         "errorPlayerName": "Lütfen oyuncu adını girin",
-        "errorPlayer2Name": "Lütfen oyuncu 2 adını girin",
+        "errorPlayer1Name": "Lütfen 1. oyuncu adını girin",
+        "errorPlayer2Name": "Lütfen 2. oyuncu adını girin",
         "errorScore": "Lütfen skorları girin",
         "errorDuration": "Lütfen maç süresini girin"
     }

@@ -21,6 +21,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import i18n from '../../languages/i18n';
+import { GameModal } from '../Game/Modal';
 
 export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
   const [mode, setMode] = useState('solo');
@@ -35,6 +36,7 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [errorModal, setErrorModal] = useState({ visible: false, message: '' });
 
   const weaponOptions = [
     { key: 'Épée', label: i18n.t('weapons.epee') },
@@ -55,23 +57,28 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
   };
 
   const handleSubmit = () => {
-    if (!playerName.trim()) {
-      alert(i18n.t('addMatch.errorPlayerName'));
+    if (mode === 'solo' && !playerName.trim()) {
+      setErrorModal({ visible: true, message: i18n.t('addMatch.errorPlayerName') });
+      return;
+    }
+
+    if (mode === 'multi' && !playerName.trim()) {
+      setErrorModal({ visible: true, message: i18n.t('addMatch.errorPlayer1Name') });
       return;
     }
 
     if (mode === 'multi' && !player2Name.trim()) {
-      alert(i18n.t('addMatch.errorPlayer2Name'));
+      setErrorModal({ visible: true, message: i18n.t('addMatch.errorPlayer2Name') });
       return;
     }
 
     if (!score1 || (mode === 'multi' && !score2)) {
-      alert(i18n.t('addMatch.errorScore'));
+      setErrorModal({ visible: true, message: i18n.t('addMatch.errorScore') });
       return;
     }
 
     if (!durationMinutes && !durationSeconds) {
-      alert(i18n.t('addMatch.errorDuration'));
+      setErrorModal({ visible: true, message: i18n.t('addMatch.errorDuration') });
       return;
     }
 
@@ -336,6 +343,22 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
           </ScrollView>
         </View>
       </View>
+
+      <GameModal
+        visible={errorModal.visible}
+        title={i18n.t('common.error')}
+        subtitle={errorModal.message}
+        titleStyle={{ color: '#e74c3c' }}
+        buttons={[
+          {
+            text: 'OK',
+            icon: 'checkmark-circle',
+            textColor: '#fff',
+            style: { backgroundColor: '#357ab7' },
+            onPress: () => setErrorModal({ visible: false, message: '' })
+          }
+        ]}
+      />
     </Modal>
   );
 };

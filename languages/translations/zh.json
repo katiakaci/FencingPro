@@ -185,7 +185,8 @@
         "cancel": "取消",
         "add": "添加",
         "errorPlayerName": "请输入玩家姓名",
-        "errorPlayer2Name": "请输入玩家2姓名",
+        "errorPlayer1Name": "请输入玩家1的姓名",
+        "errorPlayer2Name": "请输入玩家2的姓名",
         "errorScore": "请输入得分",
         "errorDuration": "请输入比赛时长"
     }

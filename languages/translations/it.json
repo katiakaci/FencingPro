@@ -186,6 +186,7 @@
         "cancel": "Annulla",
         "add": "Aggiungi",
         "errorPlayerName": "Per favore inserisci il nome del giocatore",
+        "errorPlayer1Name": "Per favore inserisci il nome del giocatore 1",
         "errorPlayer2Name": "Per favore inserisci il nome del giocatore 2",
         "errorScore": "Per favore inserisci i punteggi",
         "errorDuration": "Per favore inserisci la durata della partita"

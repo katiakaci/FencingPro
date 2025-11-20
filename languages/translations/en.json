@@ -186,6 +186,7 @@
         "cancel": "Cancel",
         "add": "Add",
         "errorPlayerName": "Please enter player name",
+        "errorPlayer1Name": "Please enter player 1 name",
         "errorPlayer2Name": "Please enter player 2 name",
         "errorScore": "Please enter scores",
         "errorDuration": "Please enter match duration"

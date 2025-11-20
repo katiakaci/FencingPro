@@ -185,6 +185,7 @@
         "cancel": "キャンセル",
         "add": "追加",
         "errorPlayerName": "プレイヤー名を入力してください",
+        "errorPlayer1Name": "プレイヤー1の名前を入力してください",
         "errorPlayer2Name": "プレイヤー2の名前を入力してください",
         "errorScore": "スコアを入力してください",
         "errorDuration": "試合時間を入力してください"

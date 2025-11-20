@@ -4,10 +4,10 @@ module.exports = {
         slug: "FencingPro",
         version: "1.0.0",
         orientation: "portrait",
-        icon: "./assets/logo.png",
+        icon: "./assets/logoFencingPro.png",
         userInterfaceStyle: "light",
         splash: {
-            image: "./assets/logo.png",
+            image: "./assets/logoFencingPro.png",
             resizeMode: "contain",
             backgroundColor: "#ffffff"
         },
@@ -19,7 +19,7 @@ module.exports = {
         },
         android: {
             adaptiveIcon: {
-                foregroundImage: "./assets/logo.png",
+                foregroundImage: "./assets/logoFencingPro.png",
                 backgroundColor: "#ffffff"
             },
             edgeToEdge: true,
@@ -34,7 +34,7 @@ module.exports = {
             package: "com.katiakaci.Fencing"
         },
         web: {
-            favicon: "./assets/logo.png"
+            favicon: "./assets/logoFencingPro.png"
         },
         plugins: [
             [

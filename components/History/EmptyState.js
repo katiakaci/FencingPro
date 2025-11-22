@@ -19,7 +19,7 @@ import i18n from '../../languages/i18n';
 export const EmptyState = () => {
     return (
         <View style={styles.emptyContainer}>
-            <Ionicons name="calendar-outline" size={64} color="#ccc" />
+            <Ionicons name="calendar-outline" size={64} color="#0f598aff" />
             <Text style={styles.emptyText}>{i18n.t('history.noMatches')}</Text>
             <Text style={styles.emptySubtext}>{i18n.t('history.noMatchesSubtext')}</Text>
         </View>
@@ -37,14 +37,14 @@ const styles = StyleSheet.create({
     emptyText: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#666',
+        color: '#126680ff',
         marginTop: 16,
         textAlign: 'center',
         maxWidth: '90%',
     },
     emptySubtext: {
         fontSize: 14,
-        color: '#999',
+        color: '#126680ff',
         marginTop: 8,
         textAlign: 'center',
         lineHeight: 20,

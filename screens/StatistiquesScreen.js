@@ -8,6 +8,7 @@ import DailyActivityChart from '../components/Statistics/DailyActivityChart';
 import WeaponChart from '../components/Statistics/WeaponChart';
 import StatSection from '../components/Statistics/StatSection';
 import i18n from '../languages/i18n';
+import LottieView from 'lottie-react-native';
 
 export default function StatistiquesScreen() {
     const { matchHistory, loadHistory } = useHistory();
@@ -24,12 +25,21 @@ export default function StatistiquesScreen() {
 
     if (!matchHistory || matchHistory.length === 0) {
         return (
-            <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
-                <View style={styles.statsBox}>
-                    <Text style={styles.statsLabel}>{i18n.t('stats.noData')}</Text>
-                    <Text style={styles.noDataText}>{i18n.t('stats.noDataSubtext')}</Text>
-                </View>
-            </ScrollView>
+            <View style={styles.container}>
+                <LottieView
+                    source={require('../assets/animation/backgroundWelcomeScreen.json')}
+                    autoPlay
+                    loop
+                    resizeMode="cover"
+                    style={styles.backgroundAnimation}
+                />
+                <ScrollView contentContainerStyle={styles.contentWrapper}>
+                    <View style={styles.statsBox}>
+                        <Text style={styles.statsLabel}>{i18n.t('stats.noData')}</Text>
+                        <Text style={styles.noDataText}>{i18n.t('stats.noDataSubtext')}</Text>
+                    </View>
+                </ScrollView>
+            </View>
         );
     }
 
@@ -59,31 +69,39 @@ export default function StatistiquesScreen() {
     ];
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentWrapper}>
-            <PlayerChart matchHistory={matchHistory} />
-
-            <DailyActivityChart
-                matchHistory={matchHistory}
-                showScore={showScore}
-                setShowScore={setShowScore}
-                showDuration={showDuration}
-                setShowDuration={setShowDuration}
+        <View style={styles.container}>
+            <LottieView
+                source={require('../assets/animation/backgroundWelcomeScreen.json')}
+                autoPlay
+                loop
+                resizeMode="cover"
+                style={styles.backgroundAnimation}
             />
 
-            <WeaponChart matchHistory={matchHistory} />
+            <ScrollView contentContainerStyle={styles.contentWrapper}>
+                <PlayerChart matchHistory={matchHistory} />
 
-            <StatSection title={i18n.t('stats.sections.basicStats')} stats={basicStats} />
-            <StatSection title={i18n.t('stats.sections.performanceStats')} stats={performanceStats} />
-            <StatSection title={i18n.t('stats.sections.temporalStats')} stats={temporalStats} />
+                <DailyActivityChart
+                    matchHistory={matchHistory}
+                    showScore={showScore}
+                    setShowScore={setShowScore}
+                    showDuration={showDuration}
+                    setShowDuration={setShowDuration}
+                />
 
-        </ScrollView>
+                <WeaponChart matchHistory={matchHistory} />
+
+                <StatSection title={i18n.t('stats.sections.basicStats')} stats={basicStats} />
+                <StatSection title={i18n.t('stats.sections.performanceStats')} stats={performanceStats} />
+                <StatSection title={i18n.t('stats.sections.temporalStats')} stats={temporalStats} />
+            </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f7f8fa',
     },
     contentWrapper: {
         padding: 18,
@@ -116,5 +134,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontStyle: 'italic',
         padding: 20,
+    },
+    backgroundAnimation: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'black',
+        zIndex: -1,
     },
 });

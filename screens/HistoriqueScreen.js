@@ -11,6 +11,7 @@ import { MatchCard } from '../components/History/MatchCard';
 import { EmptyState } from '../components/History/EmptyState';
 import { NoFilterResults } from '../components/History/NoFilterResults';
 import { AddMatchModal } from '../components/History/AddMatchModal';
+import LottieView from 'lottie-react-native';
 
 export default function HistoriqueScreen() {
   const { matchHistory, deleteMatch, loadHistory, addMatch } = useHistory();
@@ -62,6 +63,14 @@ export default function HistoriqueScreen() {
   if (matchHistory.length === 0) {
     return (
       <View style={styles.container}>
+        <LottieView
+          source={require('../assets/animation/backgroundWelcomeScreen.json')}
+          autoPlay
+          loop
+          resizeMode="cover"
+          style={styles.backgroundAnimation}
+        />
+
         <ScrollView contentContainerStyle={styles.contentWrapper}>
           <EmptyState />
         </ScrollView>
@@ -83,6 +92,14 @@ export default function HistoriqueScreen() {
 
   return (
     <View style={styles.container}>
+      <LottieView
+        source={require('../assets/animation/backgroundWelcomeScreen.json')}
+        autoPlay
+        loop
+        resizeMode="cover"
+        style={styles.backgroundAnimation}
+      />
+
       <ScrollView contentContainerStyle={styles.contentWrapper}>
         {/* Barre de contrôles - toujours visible s'il y a des matchs dans l'historique */}
         <View style={styles.controlsBar}>
@@ -154,7 +171,6 @@ export default function HistoriqueScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f7f8fa',
   },
   contentWrapper: {
     padding: 18,
@@ -187,5 +203,10 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 8,
     zIndex: 9999,
+  },
+  backgroundAnimation: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'black',
+    zIndex: -1,
   },
 });

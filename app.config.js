@@ -4,12 +4,12 @@ module.exports = {
         slug: "FencingPro",
         version: "1.0.0",
         orientation: "portrait",
-        icon: "./assets/logoFencingPro.png",
+        icon: "./assets/logo_smaller.png",
         userInterfaceStyle: "light",
         splash: {
             image: "./assets/logoFencingPro.png",
             resizeMode: "contain",
-            backgroundColor: "#ffffff"
+            backgroundColor: "#00c7c6"
         },
         ios: {
             supportsTablet: true,
@@ -19,8 +19,8 @@ module.exports = {
         },
         android: {
             adaptiveIcon: {
-                foregroundImage: "./assets/logoFencingPro.png",
-                backgroundColor: "#ffffff"
+                foregroundImage: "./assets/logo_smaller.png",
+                backgroundColor: "#00c7c6"
             },
             edgeToEdge: true,
             permissions: [
@@ -34,7 +34,7 @@ module.exports = {
             package: "com.katiakaci.Fencing"
         },
         web: {
-            favicon: "./assets/logoFencingPro.png"
+            favicon: "./assets/logo_smaller.png"
         },
         plugins: [
             [
@@ -43,7 +43,7 @@ module.exports = {
                     androidNavigationBar: {
                         visible: 'immersive',
                         barStyle: 'light-content',
-                        backgroundColor: '#000000',
+                        backgroundColor: '#00c7c6',
                     },
                 },
             ],

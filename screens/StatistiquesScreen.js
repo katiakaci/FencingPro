@@ -9,6 +9,7 @@ import WeaponChart from '../components/Statistics/WeaponChart';
 import StatSection from '../components/Statistics/StatSection';
 import i18n from '../languages/i18n';
 import LottieView from 'lottie-react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function StatistiquesScreen() {
     const { matchHistory, loadHistory } = useHistory();
@@ -33,10 +34,11 @@ export default function StatistiquesScreen() {
                     resizeMode="cover"
                     style={styles.backgroundAnimation}
                 />
-                <ScrollView contentContainerStyle={styles.contentWrapper}>
-                    <View style={styles.statsBox}>
-                        <Text style={styles.statsLabel}>{i18n.t('stats.noData')}</Text>
-                        <Text style={styles.noDataText}>{i18n.t('stats.noDataSubtext')}</Text>
+                <ScrollView contentContainerStyle={styles.emptyWrapper}>
+                    <View style={styles.emptyContainer}>
+                        <Ionicons name="stats-chart-outline" size={64} color="#0f598aff" />
+                        <Text style={styles.emptyTitle}>{i18n.t('stats.noData')}</Text>
+                        <Text style={styles.emptySubtext}>{i18n.t('stats.noDataSubtext')}</Text>
                     </View>
                 </ScrollView>
             </View>
@@ -106,6 +108,36 @@ const styles = StyleSheet.create({
     contentWrapper: {
         padding: 18,
         paddingBottom: 32,
+    },
+    emptyWrapper: {
+        flexGrow: 1,
+        paddingHorizontal: 18,
+        paddingTop: 32,
+        paddingBottom: 100,
+    },
+    emptyContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 60,
+        paddingHorizontal: 20,
+        flex: 1,
+    },
+    emptyTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#126680ff',
+        marginTop: 16,
+        textAlign: 'center',
+        maxWidth: '90%',
+    },
+    emptySubtext: {
+        fontSize: 14,
+        color: '#126680ff',
+        marginTop: 8,
+        textAlign: 'center',
+        lineHeight: 20,
+        maxWidth: '85%',
+        flexWrap: 'wrap',
     },
     statsBox: {
         backgroundColor: '#fff',

@@ -71,7 +71,7 @@ export default function HistoriqueScreen() {
           style={styles.backgroundAnimation}
         />
 
-        <ScrollView contentContainerStyle={styles.contentWrapper}>
+        <ScrollView contentContainerStyle={styles.emptyWrapper}>
           <EmptyState />
         </ScrollView>
 
@@ -175,6 +175,13 @@ const styles = StyleSheet.create({
   contentWrapper: {
     padding: 18,
     paddingBottom: 100,
+  },
+  emptyWrapper: {
+    flexGrow: 1,
+    paddingHorizontal: 18,
+    paddingTop: 32,
+    paddingBottom: 100,
+    justifyContent: 'center',
   },
   controlsBar: {
     flexDirection: 'row',

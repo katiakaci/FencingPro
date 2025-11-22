@@ -188,7 +188,7 @@
         "errorPlayerName": "Por favor ingrese el nombre del jugador",
         "errorPlayer1Name": "Por favor ingrese el nombre del jugador 1",
         "errorPlayer2Name": "Por favor ingrese el nombre del jugador 2",
-        "errorScore": "Por favor ingrese las puntuaciones",
+        "errorScore": "Por favor ingrese el puntaje",
         "errorDuration": "Por favor ingrese la duración de la partida"
     }
 }

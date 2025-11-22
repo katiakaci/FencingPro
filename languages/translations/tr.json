@@ -187,7 +187,7 @@
         "errorPlayerName": "Lütfen oyuncu adını girin",
         "errorPlayer1Name": "Lütfen 1. oyuncu adını girin",
         "errorPlayer2Name": "Lütfen 2. oyuncu adını girin",
-        "errorScore": "Lütfen skorları girin",
+        "errorScore": "Lütfen skoru girin",
         "errorDuration": "Lütfen maç süresini girin"
     }
 }

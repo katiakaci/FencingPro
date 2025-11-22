@@ -188,7 +188,7 @@
         "errorPlayerName": "Please enter player name",
         "errorPlayer1Name": "Please enter player 1 name",
         "errorPlayer2Name": "Please enter player 2 name",
-        "errorScore": "Please enter scores",
+        "errorScore": "Please enter score",
         "errorDuration": "Please enter match duration"
     }
 }

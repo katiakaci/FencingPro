@@ -188,7 +188,7 @@
         "errorPlayerName": "Veuillez entrer le nom du joueur",
         "errorPlayer1Name": "Veuillez entrer le nom du joueur 1",
         "errorPlayer2Name": "Veuillez entrer le nom du joueur 2",
-        "errorScore": "Veuillez entrer les scores",
+        "errorScore": "Veuillez entrer le score",
         "errorDuration": "Veuillez entrer la durée du match"
     }
 }

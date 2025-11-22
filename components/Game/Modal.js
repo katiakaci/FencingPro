@@ -32,7 +32,11 @@ export const GameModal = ({
     <View style={styles.pauseMenuOverlay}>
       <View style={styles.pauseMenuContainer}>
         <Text style={[styles.pauseTitle, titleStyle]}>{title}</Text>
-        {subtitle && <Text style={styles.pauseSubtitle}>{subtitle}</Text>}
+        {subtitle && (
+          <View style={styles.subtitleWrapper}>
+            <Text style={styles.pauseSubtitle}>{subtitle}</Text>
+          </View>
+        )}
 
         {buttons.map((button, index) => (
           <TouchableOpacity
@@ -67,8 +71,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.95)',
     borderRadius: 20,
     padding: 30,
-    width: '80%',
-    maxWidth: 300,
+    width: '85%',
+    maxWidth: 350,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -88,6 +92,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
     lineHeight: 22,
+    flexWrap: 'wrap',
+    width: '100%',
+    flexShrink: 1,
+  },
+  subtitleWrapper: {
+    width: '100%',
+    alignItems: 'center',
   },
   pauseButton: {
     flexDirection: 'row',

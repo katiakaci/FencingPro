@@ -77,7 +77,11 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
       return;
     }
 
-    if (!durationMinutes && !durationSeconds) {
+    const minutes = parseInt(durationMinutes) || 0;
+    const seconds = parseInt(durationSeconds) || 0;
+    const totalSeconds = minutes * 60 + seconds;
+
+    if (totalSeconds === 0) {
       setErrorModal({ visible: true, message: i18n.t('addMatch.errorDuration') });
       return;
     }
@@ -92,8 +96,6 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
     });
 
     // Formater la durée
-    const minutes = parseInt(durationMinutes) || 0;
-    const seconds = parseInt(durationSeconds) || 0;
     const formattedDuration = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
     // Formater les joueurs et le score

@@ -76,7 +76,7 @@ export const ColorSettings = ({
       <Modal
         visible={showColorGradient}
         transparent
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setShowColorGradient(false)}
       >
         <View style={styles.modalOverlay}>

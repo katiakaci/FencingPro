@@ -142,7 +142,7 @@ export const AddMatchModal = ({ visible, onClose, onAddMatch }) => {
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       onRequestClose={onClose}
     >

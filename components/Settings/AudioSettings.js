@@ -71,7 +71,7 @@ export const AudioSettings = ({
       <Modal
         visible={showSoundPicker}
         transparent
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setShowSoundPicker(false)}
       >
         <View style={styles.modalOverlay}>
